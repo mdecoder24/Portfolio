@@ -4,7 +4,7 @@ import { showSampleRibbon } from '@/lib/format';
 export function SampleRibbon({ placeholder }: { placeholder?: boolean }) {
   if (!placeholder || !showSampleRibbon) return null;
   return (
-    <span className="inline-flex w-fit items-center rounded-sm bg-amber-soft px-2 type-caption text-amber">
+    <span className="inline-flex w-fit items-center rounded-sm bg-warn-soft px-2 type-caption text-warn">
       Sample content
     </span>
   );

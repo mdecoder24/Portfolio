@@ -3,7 +3,7 @@ import type { ReactNode } from 'react';
 import { cn } from '@/lib/cn';
 
 export const controlClasses =
-  'min-h-12 w-full rounded-sm border-[1.5px] border-line-strong bg-reef px-3.5 py-2.5 text-base text-pearl placeholder:text-mist transition-colors duration-150 hover:border-mist focus-visible:border-rose focus-visible:outline-none focus-visible:shadow-focus aria-invalid:border-coral';
+  'min-h-12 w-full rounded-sm border border-rule-strong bg-paper px-4 py-3 text-base text-ink placeholder:text-ink-2 transition-colors duration-200 hover:border-ink-2 focus-visible:border-ink focus-visible:outline-none focus-visible:shadow-focus aria-invalid:border-error';
 
 export function FormField({
   id,
@@ -24,19 +24,19 @@ export function FormField({
 }) {
   return (
     <div className={cn('grid content-start gap-2', className)}>
-      <label htmlFor={id} className="type-ui text-pearl">
+      <label htmlFor={id} className="type-code text-ink-2">
         {label}
-        {optional && <span className="font-normal text-mist"> (optional)</span>}
+        {optional && <span className="font-normal text-ink-2"> (optional)</span>}
       </label>
       {children}
       {error ? (
-        <p id={`${id}-error`} className="flex items-start gap-1.5 type-small font-[520] text-coral">
+        <p id={`${id}-error`} className="flex items-start gap-1.5 type-small font-[520] text-error">
           <CircleAlert className="mt-0.5 size-4 shrink-0" strokeWidth={1.75} aria-hidden="true" />
           {error}
         </p>
       ) : (
         hint && (
-          <p id={`${id}-hint`} className="type-small text-mist">
+          <p id={`${id}-hint`} className="type-small text-ink-2">
             {hint}
           </p>
         )

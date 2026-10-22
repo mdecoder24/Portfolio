@@ -9,11 +9,11 @@ export function Footer({ config, name }: { config: Config; name: string }) {
     year: 'numeric',
     timeZone: 'Asia/Kolkata',
   });
-  const link = 'rounded-xs text-mist underline-offset-4 hover:text-pearl hover:underline focus-visible:outline-none focus-visible:shadow-focus';
+  const link = 'rounded-xs text-ink-2 underline-offset-4 hover:text-ink hover:underline focus-visible:outline-none focus-visible:shadow-focus';
 
   return (
-    <footer className="relative z-content border-t border-line">
-      <div className="container-nacre grid gap-8 py-12 type-small text-mist">
+    <footer className="relative z-content border-t border-rule">
+      <div className="container-kit grid gap-8 py-12 type-small text-ink-2 [&>*]:min-w-0">
         <div className="flex flex-wrap items-start justify-between gap-8">
           <nav aria-label="Footer">
             <ul className="flex flex-wrap gap-x-6 gap-y-2">
@@ -58,6 +58,9 @@ export function Footer({ config, name }: { config: Config; name: string }) {
             {name}
           </p>
         </div>
+        <p aria-hidden="true" className="metal depth -mb-[0.12em] select-none whitespace-nowrap text-center text-[clamp(2.5rem,12.4vw,15rem)] leading-[0.82] font-black uppercase tracking-[-0.055em] opacity-90">
+          Kushwant KR
+        </p>
       </div>
     </footer>
   );

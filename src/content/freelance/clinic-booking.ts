@@ -13,7 +13,7 @@ export const clinicBooking = CaseStudy.parse({
   stack: ['Next.js', 'Node.js', 'Llama via Groq', 'WhatsApp Cloud API'],
   categories: ['ai-ml', 'full-stack'],
   featured: true,
-  media: { src: '/media/clinic-booking/cover.svg', alt: 'Website chat booking a consultation slot for the next morning' },
+  media: { device: 'phone', screen: '/media/clinic-booking/screen-phone.svg', src: '/media/clinic-booking/cover.svg', alt: 'Website chat booking a consultation slot for the next morning' },
   testimonialId: 'clinic-owner',
   body: {
     problem:

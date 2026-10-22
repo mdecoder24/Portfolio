@@ -3,62 +3,68 @@
 :root,
 [data-theme="dark"] {
   color-scheme: dark;
-  --lagoon: #0d2627;
-  --lagoon-veil: #0d2627db;
-  --reef: #123131;
-  --shoal: #1a3c3b;
-  --line: #2e5351;
-  --line-strong: #6a918d;
-  --pearl: #f3eee6;
-  --mist: #a3b9b5;
-  --rose: #f4a7b9;
-  --rose-hover: #f8c0cc;
-  --on-rose: #0d2627;
-  --rose-soft: #2d383b;
-  --seaglass: #86d8c3;
-  --seaglass-soft: #1e3f3d;
-  --amber: #f1c46b;
-  --amber-soft: #2d3c31;
-  --coral: #ff8e7a;
-  --coral-soft: #2f3533;
-  --scene-particle: #cfede5;
-  --scene-particle-glow: #86d8c3;
-  --scene-pearl: #ece6ef;
-  --scene-sheen-rose: #f4a7b9;
-  --scene-sheen-aqua: #9ee6e0;
-  --scene-fog: var(--lagoon);
-  --nacre-shadow-lustre: inset 0 1px 0 #f3eee60f;
-  --nacre-shadow-float: 0 24px 48px #03111166, 0 2px 8px #03111140;
-  --nacre-shadow-focus: 0 0 0 2px #0d2627, 0 0 0 4px #f4a7b9;
+  --paper: #0a0a0b;
+  --paper-veil: #0a0a0bd9;
+  --tint: #0f0f11;
+  --plate: #151517;
+  --plate-hover: #1d1d20;
+  --rule: #ffffff1f;
+  --rule-strong: #ffffff47;
+  --ink: #f3f3f1;
+  --ink-2: #a2a2a8;
+  --ink-hover: #ffffff;
+  --cream: #ece6dc;
+  --on-cream: #0a0a0b;
+  --accent: #ff5c3d;
+  --accent-hover: #ff7a60;
+  --on-accent: #0a0a0b;
+  --accent-soft: #2a1712;
+  --ok: #5fd39a;
+  --ok-soft: #12261c;
+  --warn: #f2c45a;
+  --warn-soft: #2a2210;
+  --error: #ff8f80;
+  --error-soft: #2e1614;
+  --metal-1: #f6f7f9;
+  --metal-2: #c9ccd2;
+  --metal-3: #5d626d;
+  --scene-ink: #f3f3f1;
+  --scene-accent: #ff5c3d;
+  --scene-paper: var(--paper);
+  --nacre-shadow-float: 0 20px 50px #00000080, 0 2px 8px #00000066;
+  --nacre-shadow-focus: 0 0 0 2px #0a0a0b, 0 0 0 4px #ff5c3d;
 }
 [data-theme="light"] {
   color-scheme: light;
-  --lagoon: #f0f3f1;
-  --lagoon-veil: #f0f3f1db;
-  --reef: #fafbfa;
-  --shoal: #e4eae7;
-  --line: #c9d5d1;
-  --line-strong: #6b827d;
-  --pearl: #0d2627;
-  --mist: #4a6461;
-  --rose: #a83d5a;
-  --rose-hover: #8f3049;
-  --on-rose: #ffffff;
-  --rose-soft: #e9e1e2;
-  --seaglass: #1c6e5c;
-  --seaglass-soft: #dbe6e2;
-  --amber: #855a00;
-  --amber-soft: #e5e4d9;
-  --coral: #b3261e;
-  --coral-soft: #eadedc;
-  --scene-particle: #2a5c58;
-  --scene-particle-glow: #1c6e5c;
-  --scene-pearl: #f6f2f5;
-  --scene-sheen-rose: #e8a0b2;
-  --scene-sheen-aqua: #8fd3cc;
-  --nacre-shadow-lustre: inset 0 1px 0 #ffffffcc;
-  --nacre-shadow-float: 0 18px 40px #0d262724, 0 2px 6px #0d262714;
-  --nacre-shadow-focus: 0 0 0 2px #f0f3f1, 0 0 0 4px #a83d5a;
+  --paper: #f4f3f0;
+  --paper-veil: #f4f3f0d9;
+  --tint: #ecebe6;
+  --plate: #ffffff;
+  --plate-hover: #f0efea;
+  --rule: #0a0a0b1f;
+  --rule-strong: #0a0a0b4d;
+  --ink: #0e0e10;
+  --ink-2: #55555c;
+  --ink-hover: #000000;
+  --cream: #1a1a1d;
+  --on-cream: #f4f3f0;
+  --accent: #b3300f;
+  --accent-hover: #b02e14;
+  --on-accent: #ffffff;
+  --accent-soft: #fbe3dc;
+  --ok: #17734a;
+  --ok-soft: #dff1e7;
+  --warn: #7d5300;
+  --warn-soft: #f5ecd4;
+  --error: #b42318;
+  --error-soft: #f8e3e1;
+  --metal-1: #3b3f47;
+  --metal-2: #23262c;
+  --metal-3: #0b0c0e;
+  --scene-ink: #0e0e10;
+  --scene-accent: #b3300f;
+  --nacre-shadow-float: 0 20px 50px #0a0a0b26, 0 2px 8px #0a0a0b14;
+  --nacre-shadow-focus: 0 0 0 2px #f4f3f0, 0 0 0 4px #b3300f;
 }
 
 :root {
@@ -72,20 +78,15 @@
   --space-8: 64px;
   --space-9: 96px;
   --space-10: 128px;
-  --container-max: 1200px;
-  --measure: 68ch;
+  --container-max: 1320px;
+  --measure: 66ch;
   --nav-height: 72px;
-  --hero-min-height: min(100svh, 920px);
-  --chat-panel-width: 400px;
-  --launcher-size: 56px;
-  --pearl-dot: 0.32em;
+  --hero-min-height: 100svh;
   --target-min: 44px;
   --z-canvas: 0;
   --z-content: 1;
   --z-nav: 40;
-  --z-launcher: 50;
-  --z-chat: 60;
-  --z-palette: 70;
+  --z-intro: 90;
   --z-toast: 80;
   --z-skip: 100;
 }
@@ -94,37 +95,40 @@
   --radius-*: initial;
   --radius-xs: 4px;
   --radius-sm: 8px;
-  --radius-md: 14px;
-  --radius-lg: 22px;
-  --radius-pill: 999px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-control: 999px;
 }
 
 @theme inline {
-  --color-lagoon: var(--lagoon);
-  --color-lagoon-veil: var(--lagoon-veil);
-  --color-reef: var(--reef);
-  --color-shoal: var(--shoal);
-  --color-line: var(--line);
-  --color-line-strong: var(--line-strong);
-  --color-pearl: var(--pearl);
-  --color-mist: var(--mist);
-  --color-rose: var(--rose);
-  --color-rose-hover: var(--rose-hover);
-  --color-on-rose: var(--on-rose);
-  --color-rose-soft: var(--rose-soft);
-  --color-seaglass: var(--seaglass);
-  --color-seaglass-soft: var(--seaglass-soft);
-  --color-amber: var(--amber);
-  --color-amber-soft: var(--amber-soft);
-  --color-coral: var(--coral);
-  --color-coral-soft: var(--coral-soft);
-  --color-scene-particle: var(--scene-particle);
-  --color-scene-particle-glow: var(--scene-particle-glow);
-  --color-scene-pearl: var(--scene-pearl);
-  --color-scene-sheen-rose: var(--scene-sheen-rose);
-  --color-scene-sheen-aqua: var(--scene-sheen-aqua);
-  --color-scene-fog: var(--scene-fog);
-  --inset-shadow-lustre: var(--nacre-shadow-lustre);
+  --color-paper: var(--paper);
+  --color-paper-veil: var(--paper-veil);
+  --color-tint: var(--tint);
+  --color-plate: var(--plate);
+  --color-plate-hover: var(--plate-hover);
+  --color-rule: var(--rule);
+  --color-rule-strong: var(--rule-strong);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-hover: var(--ink-hover);
+  --color-cream: var(--cream);
+  --color-on-cream: var(--on-cream);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-on-accent: var(--on-accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-ok: var(--ok);
+  --color-ok-soft: var(--ok-soft);
+  --color-warn: var(--warn);
+  --color-warn-soft: var(--warn-soft);
+  --color-error: var(--error);
+  --color-error-soft: var(--error-soft);
+  --color-metal-1: var(--metal-1);
+  --color-metal-2: var(--metal-2);
+  --color-metal-3: var(--metal-3);
+  --color-scene-ink: var(--scene-ink);
+  --color-scene-accent: var(--scene-accent);
+  --color-scene-paper: var(--scene-paper);
   --shadow-float: var(--nacre-shadow-float);
   --shadow-focus: var(--nacre-shadow-focus);
 }
@@ -138,14 +142,8 @@
 @utility z-nav {
   z-index: var(--z-nav);
 }
-@utility z-launcher {
-  z-index: var(--z-launcher);
-}
-@utility z-chat {
-  z-index: var(--z-chat);
-}
-@utility z-palette {
-  z-index: var(--z-palette);
+@utility z-intro {
+  z-index: var(--z-intro);
 }
 @utility z-toast {
   z-index: var(--z-toast);

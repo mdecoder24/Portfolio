@@ -1,22 +1,22 @@
-import { Anek_Latin, Anek_Telugu, Martian_Mono } from 'next/font/google';
+import { Geist_Mono, Instrument_Serif, Inter_Tight } from 'next/font/google';
 
-export const anek = Anek_Latin({
+// Inter Tight carries display and text (tight, heavy cuts for the big words); Instrument Serif italic is the one
+// accent word in a title; Geist Mono sets the small labels.
+export const interTight = Inter_Tight({
   subsets: ['latin', 'latin-ext'],
-  axes: ['wdth'],
-  variable: '--font-anek',
+  variable: '--font-inter-tight',
   display: 'swap',
 });
-export const anekTelugu = Anek_Telugu({
-  subsets: ['telugu'],
-  axes: ['wdth'],
-  variable: '--font-anek-telugu',
-  display: 'swap',
-  preload: false,
-});
-export const martian = Martian_Mono({
+export const instrumentSerif = Instrument_Serif({
   subsets: ['latin'],
-  axes: ['wdth'],
-  variable: '--font-martian',
+  weight: '400',
+  style: ['italic'],
+  variable: '--font-instrument',
+  display: 'swap',
+});
+export const geistMono = Geist_Mono({
+  subsets: ['latin'],
+  variable: '--font-geist-mono',
   display: 'swap',
   preload: false,
 });

@@ -2,7 +2,6 @@
 
 import { Check, Copy } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { buttonClasses } from '@/components/ui/Button';
 
 export function CopyEmail({ email }: { email: string }) {
   const [copied, setCopied] = useState(false);
@@ -15,7 +14,7 @@ export function CopyEmail({ email }: { email: string }) {
   return (
     <button
       type="button"
-      className={buttonClasses({ variant: 'quiet' })}
+      className="inline-flex items-center gap-1.5 type-small text-ink-2 transition-colors hover:text-ink"
       onClick={() =>
         navigator.clipboard.writeText(email).then(
           () => setCopied(true),
@@ -24,9 +23,9 @@ export function CopyEmail({ email }: { email: string }) {
       }
     >
       {copied ? (
-        <Check className="size-5" strokeWidth={1.75} aria-hidden="true" />
+        <Check className="size-4" strokeWidth={1.75} aria-hidden="true" />
       ) : (
-        <Copy className="size-5" strokeWidth={1.75} aria-hidden="true" />
+        <Copy className="size-4" strokeWidth={1.75} aria-hidden="true" />
       )}
       <span aria-live="polite">{copied ? 'Email copied' : 'Copy email'}</span>
     </button>
@@ -43,7 +42,5 @@ export function LocalTime({ city, timeZone }: { city: string; timeZone: string }
     const id = setInterval(tick, 60_000);
     return () => clearInterval(id);
   }, [timeZone]);
-  return (
-    <p className="min-h-[1.5em] type-small tabular text-mist">{now && `It's ${now} in ${city}`}</p>
-  );
+  return <span className="tabular-nums">{now ? `${now} in ${city}` : city}</span>;
 }

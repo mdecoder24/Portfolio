@@ -1,17 +1,13 @@
 import { Color } from 'three';
 
-// Reads the scene-* tokens once on mount; three converts these sRGB values into its linear working space.
+// Reads the scene tokens; called on mount and again when data-theme changes. Never per frame.
 const read = (name: string) => getComputedStyle(document.documentElement).getPropertyValue(`--${name}`).trim();
 
 export function sceneColors() {
-  const fog = read('scene-fog').startsWith('var(') ? read('lagoon') : read('scene-fog');
   return {
-    particle: new Color(read('scene-particle')),
-    glow: new Color(read('scene-particle-glow')),
-    pearl: new Color(read('scene-pearl')),
-    sheenRose: new Color(read('scene-sheen-rose')),
-    sheenAqua: new Color(read('scene-sheen-aqua')),
-    fog: new Color(fog),
+    ink: new Color(read('scene-ink')),
+    accent: new Color(read('scene-accent')),
+    light: document.documentElement.dataset.theme === 'light',
   };
 }
 

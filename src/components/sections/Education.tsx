@@ -1,5 +1,5 @@
 import { SampleRibbon } from '@/components/ui/SampleRibbon';
-import { Section, SectionHeader } from '@/components/ui/SectionHeader';
+import { Section } from '@/components/ui/SectionHeader';
 import type { Achievement, Config, EducationItem } from '@/content/schema';
 import { formatMonth } from '@/lib/format';
 
@@ -13,59 +13,50 @@ export function Education({
   config: Config;
 }) {
   return (
-    <Section id="education">
-      <SectionHeader
-        id="education"
-        title="Education and achievements"
-        summary="A computer science degree, a certification, and a hackathon win along the way."
-      />
-      <div className="grid gap-12 md:grid-cols-2 md:gap-8">
-        <div className="grid content-start gap-8">
-          {education.map((e) => (
-            <div key={e.degree} className="grid gap-2">
-              <SampleRibbon placeholder={e.placeholder} />
-              <h3 className="type-h4 text-pearl">{e.degree}</h3>
-              <p className="type-body text-mist tabular">
-                {e.institution},{' '}
-                <time dateTime={String(e.start)}>{e.start}</time>–<time dateTime={String(e.end)}>{e.end}</time>
-                {config.flags.showCgpa && e.cgpa && `, CGPA ${e.cgpa}`}
-              </p>
-              {e.coursework.length > 0 && (
-                <p className="type-small text-mist">Coursework: {e.coursework.join(', ')}</p>
-              )}
-              {e.finalProject && (
-                <a
-                  href={e.finalProject.href}
-                  className="w-fit rounded-xs type-body text-rose underline underline-offset-4 hover:text-rose-hover focus-visible:outline-none focus-visible:shadow-focus"
-                >
-                  {e.finalProject.label}
-                </a>
-              )}
-            </div>
+    <Section id="education" label="Education and achievements" title="Studies">
+      <div className="grid gap-12 lg:grid-cols-12">
+        {education.map((e) => (
+          <div key={e.degree} className="reveal grid content-start gap-3 rounded-lg border border-rule bg-plate p-7 lg:col-span-5">
+            <SampleRibbon placeholder={e.placeholder} />
+            <p className="type-code text-ink-2">
+              <time dateTime={String(e.start)}>{e.start}</time> – <time dateTime={String(e.end)}>{e.end}</time>
+            </p>
+            <h3 className="type-h4 text-ink">{e.degree}</h3>
+            <p className="type-body text-ink-2">
+              {e.institution}
+              {config.flags.showCgpa && e.cgpa && `, CGPA ${e.cgpa}`}
+            </p>
+            {e.coursework.length > 0 && <p className="type-small text-ink-2">{e.coursework.join(' · ')}</p>}
+            {e.finalProject && (
+              <a href={e.finalProject.href} className="w-fit type-small font-semibold text-ink underline underline-offset-4 hover:text-accent">
+                {e.finalProject.label}
+              </a>
+            )}
+          </div>
+        ))}
+        <ul className="border-t border-rule lg:col-span-7">
+          {achievements.map((a, i) => (
+            <li
+              key={a.title}
+              className="reveal grid grid-cols-[5rem_minmax(0,1fr)] items-baseline gap-4 border-b border-rule py-5"
+              style={{ '--reveal-delay': `${i * 70}ms` } as React.CSSProperties}
+            >
+              <time dateTime={a.date} className="type-code text-ink-2">
+                {formatMonth(a.date)}
+              </time>
+              <span className="type-h4 text-ink">
+                {a.href ? (
+                  <a href={a.href} className="underline underline-offset-4 hover:text-accent">
+                    {a.title}
+                  </a>
+                ) : (
+                  a.title
+                )}
+                {a.issuer && <span className="font-normal text-ink-2">, {a.issuer}</span>}
+              </span>
+            </li>
           ))}
-        </div>
-        <div className="grid content-start gap-4">
-          <h3 className="type-h4 text-pearl">Certifications and achievements</h3>
-          <ul className="grid">
-            {achievements.map((a) => (
-              <li key={a.title} className="grid grid-cols-[4.5rem_minmax(0,1fr)] gap-4 border-t border-line py-3">
-                <time dateTime={a.date} className="type-small tabular text-mist">
-                  {formatMonth(a.date).split(' ')[1]}
-                </time>
-                <span className="type-body text-pearl">
-                  {a.href ? (
-                    <a href={a.href} className="underline decoration-line-strong underline-offset-4 hover:text-rose">
-                      {a.title}
-                    </a>
-                  ) : (
-                    a.title
-                  )}
-                  {a.issuer && <span className="text-mist">, {a.issuer}</span>}
-                </span>
-              </li>
-            ))}
-          </ul>
-        </div>
+        </ul>
       </div>
     </Section>
   );

@@ -13,7 +13,7 @@ export const cafeQrOrdering = CaseStudy.parse({
   stack: ['React', 'Supabase', 'PWA'],
   categories: ['full-stack'],
   featured: true,
-  media: { src: '/media/cafe-qr-ordering/cover.svg', alt: 'Phone menu with dishes and a kitchen tablet showing incoming orders' },
+  media: { device: 'phone', screen: '/media/cafe-qr-ordering/screen-phone.svg', src: '/media/cafe-qr-ordering/cover.svg', alt: 'Phone menu with dishes and a kitchen tablet showing incoming orders' },
   body: {
     problem: 'Orders were taken on paper and walked to the kitchen, so busy hours meant long waits and lost tickets.',
     built: 'A QR menu per table that sends orders straight to a kitchen tablet, with live status back to the guest.',

@@ -25,8 +25,8 @@ Visitors are mostly in India on mid-range Android phones over 4G, plus recruiter
 - Next.js 16 static pages, one optional React Three Fiber scene, and a contact form that works without JavaScript.
 - A future AI guide called "Pearl" (week 3; the name is kept).
 - WCAG 2.2 AA, LCP ≤ 2.0 s, and everything readable with 3D and JavaScript off.
-- Light theme by default with a dark toggle (user decision, 2026-10-23).
-- One quiet 3D moment in the hero; no particles behind body text in later sections (user decision, 2026-10-23).
+- Dark theme by default with a light toggle. The look is inspired by a reference portfolio the user chose (demo.codeandchill.store/portfolio), rebuilt originally without copying its code or assets (user decision, 2026-10-23, superseding the earlier light-default request).
+- 3D in the hero (starfield and a KR pixel mosaic) plus a smoke shader behind Contact; nothing behind body text elsewhere.
 - The visual identity (Nacre palette, Anek Latin, pearl motif) is open to replacement (user decision, 2026-10-23). The docs in `Guide/` remain authoritative for content, structure and behaviour.
 
 ## Brand Commitments

@@ -7,7 +7,6 @@ type SceneState = {
   tier: Tier;
   reason: TierReason;
   ready: boolean;
-  anchors: { heroDot?: DOMRect };
   setTier: (tier: Tier, reason: TierReason) => void;
 };
 
@@ -15,6 +14,5 @@ export const useScene = create<SceneState>((set) => ({
   tier: 0,
   reason: 'gpu',
   ready: false,
-  anchors: {},
   setTier: (tier, reason) => set({ tier, reason }),
 }));

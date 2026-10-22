@@ -1,56 +1,52 @@
-import { TagList } from '@/components/ui/Badge';
-import { PearlDot } from '@/components/ui/PearlDot';
+import { ArrowDownRight } from 'lucide-react';
 import { SampleRibbon } from '@/components/ui/SampleRibbon';
-import { Section, SectionHeader } from '@/components/ui/SectionHeader';
+import { Section } from '@/components/ui/SectionHeader';
 import type { Experience as ExperienceEntry } from '@/content/schema';
 import { formatRange } from '@/lib/format';
 
-function When({ start, end }: { start: string; end?: string }) {
-  // "Jan – Jun 2026": the range formatter drops the repeated year, each half keeps its machine-readable date
-  const [from, to] = formatRange(start, end).split(' – ');
+/** Roles as full-width rows; each opens to its outcomes. Opening works without JavaScript (details/summary). */
+export function Experience({ entries }: { entries: ExperienceEntry[] }) {
   return (
-    <p className="type-small tabular font-[560] text-mist">
-      <time dateTime={start}>{from}</time>
-      {' – '}
-      {end ? <time dateTime={end}>{to}</time> : to}
-    </p>
-  );
-}
-
-export function Experience({ entries, summary }: { entries: ExperienceEntry[]; summary: string }) {
-  return (
-    <Section id="experience">
-      <SectionHeader id="experience" title="Experience" summary={summary} />
-      <ol className="grid">
-        {entries.map((e) => (
-          <li key={e.id} className="grid grid-cols-[148px_minmax(0,1fr)] gap-x-6 max-sm:grid-cols-1 max-sm:gap-y-2">
-            <div className="pt-1 max-sm:pl-8">
-              <When start={e.start} end={e.end} />
-            </div>
-            <div className="relative grid max-w-(--measure) gap-3 border-l border-line pb-12 pl-8 [li:last-child_&]:pb-0">
-              {e.current ? (
-                <PearlDot className="absolute -left-[7px] top-2 size-[13px]" />
-              ) : (
-                <span aria-hidden="true" className="absolute -left-[7px] top-2 size-[13px] rounded-full bg-lagoon ring-[1.5px] ring-inset ring-line-strong" />
-              )}
-              <SampleRibbon placeholder={e.placeholder} />
-              <div>
-                <h3 className="type-h4 text-pearl">{e.role}</h3>
-                <p className="type-body">
-                  <span className="font-semibold text-pearl">{e.org}</span>
-                  <span className="text-mist">, {e.location}</span>
-                </p>
+    <Section id="experience" label="Experience" title="Where I've worked">
+      <ul className="border-t border-rule">
+        {entries.map((e, i) => (
+          <li key={e.id} className="reveal border-b border-rule" style={{ '--reveal-delay': `${i * 80}ms` } as React.CSSProperties}>
+            <details className="group" open={e.current}>
+              <summary className="grid cursor-pointer list-none grid-cols-[minmax(0,1fr)_auto] items-center gap-x-6 gap-y-1 px-2 py-6 transition-colors duration-300 hover:bg-cream hover:text-on-cream focus-visible:outline-none focus-visible:shadow-focus sm:grid-cols-[11rem_minmax(0,1fr)_minmax(0,16rem)_auto] sm:px-4 [&::-webkit-details-marker]:hidden">
+                <span className="type-code opacity-70 max-sm:col-span-2">{formatRange(e.start, e.end)}</span>
+                <span className="text-[clamp(1.125rem,0.95rem+0.8vw,1.625rem)] font-extrabold uppercase tracking-[-0.02em]">
+                  {e.role}
+                </span>
+                <span className="type-small opacity-80 max-sm:hidden">
+                  {e.org}, {e.location}
+                </span>
+                <ArrowDownRight
+                  aria-hidden="true"
+                  strokeWidth={1.75}
+                  className="size-6 transition-transform duration-300 ease-out-quint group-open:-rotate-90"
+                />
+              </summary>
+              <div className="grid gap-4 px-2 pb-8 pt-2 sm:grid-cols-[11rem_minmax(0,1fr)] sm:px-4">
+                <div className="sm:col-start-2 grid gap-4">
+                  <SampleRibbon placeholder={e.placeholder} />
+                  <p className="type-small text-ink-2 sm:hidden">
+                    {e.org}, {e.location}
+                  </p>
+                  <ul className="grid max-w-(--measure) gap-2 type-body text-ink">
+                    {e.points.map((p) => (
+                      <li key={p} className="flex gap-3">
+                        <span aria-hidden="true" className="mt-[0.75em] h-px w-4 shrink-0 bg-accent" />
+                        {p}
+                      </li>
+                    ))}
+                  </ul>
+                  <p className="type-code text-ink-2">{e.stack.join('  ·  ')}</p>
+                </div>
               </div>
-              <ul className="grid list-disc gap-1.5 pl-5 type-body marker:text-rose">
-                {e.points.map((p) => (
-                  <li key={p}>{p}</li>
-                ))}
-              </ul>
-              <TagList items={e.stack} />
-            </div>
+            </details>
           </li>
         ))}
-      </ol>
+      </ul>
     </Section>
   );
 }

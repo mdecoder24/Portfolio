@@ -1,23 +1,33 @@
 'use client';
 
-import { Download, Menu, X } from 'lucide-react';
+import { ArrowUpRight, Menu, X } from 'lucide-react';
+import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
-import { Button } from '@/components/ui/Button';
 import { cn } from '@/lib/cn';
 import { useUi } from '@/stores/ui';
-import { Monogram } from './Monogram';
 import { NAV_ITEMS, RESUME_HREF } from './navItems';
+import { ThemeToggle } from './ThemeToggle';
 
 export function NavBar({ socials, onHome }: { socials: { label: string; href: string }[]; onHome: boolean }) {
   const active = useUi((s) => s.activeSection);
   const [scrolled, setScrolled] = useState(false);
+  const progress = useRef<HTMLSpanElement>(null);
   const dialog = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 80);
+    // The rule under the bar fills with reading progress; written straight to the element, no re-render per scroll
+    const onScroll = () => {
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      progress.current?.style.setProperty('scale', `${max > 0 ? window.scrollY / max : 0} 1`);
+      setScrolled(window.scrollY > 40);
+    };
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    window.addEventListener('resize', onScroll);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+    };
   }, []);
 
   const hash = (id: string) => (onHome ? `#${id}` : `/#${id}`);
@@ -26,11 +36,16 @@ export function NavBar({ socials, onHome }: { socials: { label: string; href: st
   return (
     <header
       data-scrolled={scrolled}
-      className="sticky top-[env(safe-area-inset-top)] z-nav h-(--nav-height) border-b border-transparent transition-[background-color,border-color] duration-200 data-[scrolled=true]:border-line data-[scrolled=true]:bg-lagoon-veil data-[scrolled=true]:backdrop-blur-md"
+      className="sticky top-0 z-nav h-(--nav-height) bg-paper/0 transition-[background-color] duration-300 data-[scrolled=true]:bg-paper-veil data-[scrolled=true]:backdrop-blur-md"
     >
-      <nav aria-label="Main" className="container-nacre flex h-full items-center gap-8">
-        <Monogram />
-        <ul className="ml-auto hidden items-center gap-1 min-[860px]:flex">
+      <nav aria-label="Main" className="container-kit flex h-full items-center gap-6">
+        <Link
+          href="/#top"
+          className="rounded-xs text-[1.0625rem] font-black uppercase tracking-[0.02em] text-ink focus-visible:outline-none focus-visible:shadow-focus"
+        >
+          Kushwant KR
+        </Link>
+        <ul className="ml-auto hidden items-center gap-7 min-[900px]:flex">
           {NAV_ITEMS.map((item) => {
             const current = onHome && active === item.id;
             return (
@@ -39,8 +54,9 @@ export function NavBar({ socials, onHome }: { socials: { label: string; href: st
                   href={hash(item.id)}
                   aria-current={current ? 'location' : undefined}
                   className={cn(
-                    'relative inline-flex min-h-11 items-center rounded-xs px-3 type-ui font-[560] text-mist transition-colors duration-150 hover:text-pearl focus-visible:outline-none focus-visible:shadow-focus',
-                    'after:absolute after:inset-x-3 after:bottom-0.5 after:h-0.5 after:rounded-full after:bg-rose after:opacity-0 after:transition-opacity aria-[current=location]:text-pearl aria-[current=location]:after:opacity-100',
+                    'relative inline-flex min-h-11 items-center rounded-xs text-[0.8125rem] font-semibold uppercase tracking-[0.06em] text-ink-2 transition-colors duration-200 hover:text-ink focus-visible:outline-none focus-visible:shadow-focus',
+                    'after:absolute after:inset-x-0 after:bottom-2 after:h-px after:origin-left after:scale-x-0 after:bg-ink after:transition-transform after:duration-300 after:ease-out-quint hover:after:scale-x-100',
+                    'aria-[current=location]:text-ink aria-[current=location]:after:scale-x-100',
                   )}
                 >
                   {item.label}
@@ -49,65 +65,71 @@ export function NavBar({ socials, onHome }: { socials: { label: string; href: st
             );
           })}
         </ul>
-        <div className="ml-auto flex items-center gap-2 min-[860px]:ml-0">
-          <Button href={RESUME_HREF} download="Kushwant-KR-Resume.pdf" variant="secondary" size="sm" icon={<Download className="size-4" strokeWidth={1.75} aria-hidden="true" />}>
+        <div className="ml-auto flex items-center gap-2 min-[900px]:ml-2">
+          <a
+            href={RESUME_HREF}
+            download="Kushwant-KR-Resume.pdf"
+            className="inline-flex min-h-10 items-center gap-1.5 rounded-control border border-rule-strong px-4 text-[0.8125rem] font-semibold text-ink transition-colors duration-200 hover:bg-cream hover:text-on-cream focus-visible:outline-none focus-visible:shadow-focus"
+          >
             Résumé
-          </Button>
+            <ArrowUpRight className="size-4" strokeWidth={1.75} aria-hidden="true" />
+          </a>
+          <ThemeToggle />
           <button
             type="button"
             aria-label="Open menu"
             aria-haspopup="dialog"
             onClick={() => dialog.current?.showModal()}
-            className="inline-flex size-11 items-center justify-center rounded-pill text-pearl hover:bg-shoal focus-visible:outline-none focus-visible:shadow-focus min-[860px]:hidden"
+            className="inline-flex size-10 items-center justify-center rounded-full border border-rule text-ink hover:bg-plate-hover focus-visible:outline-none focus-visible:shadow-focus min-[900px]:hidden"
           >
             <Menu className="size-5" strokeWidth={1.75} aria-hidden="true" />
           </button>
         </div>
       </nav>
+      <span aria-hidden="true" className="absolute inset-x-0 bottom-0 h-px bg-rule" />
+      <span
+        ref={progress}
+        aria-hidden="true"
+        className="absolute inset-x-0 bottom-0 h-px origin-left bg-ink"
+        style={{ scale: '0 1' }}
+      />
 
       <dialog
         ref={dialog}
         aria-label="Menu"
-        className="m-0 ml-auto h-dvh max-h-none w-full max-w-md rounded-l-lg bg-reef p-0 text-pearl inset-shadow-lustre backdrop:bg-lagoon-veil backdrop:backdrop-blur-sm open:flex open:flex-col"
+        className="m-0 h-dvh max-h-none w-full max-w-none bg-paper p-0 text-ink backdrop:bg-transparent open:flex open:flex-col"
         onClick={(e) => e.target === e.currentTarget && close()}
       >
-        <div className="flex h-(--nav-height) items-center justify-between px-4">
-          <span className="type-ui text-mist">Menu</span>
+        <div className="container-kit flex h-(--nav-height) items-center justify-between">
+          <span className="text-[1.0625rem] font-black uppercase">Kushwant KR</span>
           <button
             type="button"
             aria-label="Close menu"
             onClick={close}
-            className="inline-flex size-11 items-center justify-center rounded-pill hover:bg-shoal focus-visible:outline-none focus-visible:shadow-focus"
+            className="inline-flex size-10 items-center justify-center rounded-full border border-rule hover:bg-plate-hover focus-visible:outline-none focus-visible:shadow-focus"
           >
             <X className="size-5" strokeWidth={1.75} aria-hidden="true" />
           </button>
         </div>
-        <ul className="grid gap-1 px-4 pt-4">
+        <ul className="container-kit grid pt-6">
           {NAV_ITEMS.map((item) => (
-            <li key={item.id}>
+            <li key={item.id} className="border-b border-rule">
               <a
                 href={hash(item.id)}
                 onClick={close}
-                className="flex min-h-14 items-center rounded-sm px-2 type-h3 hover:bg-shoal focus-visible:outline-none focus-visible:shadow-focus"
+                className="flex min-h-20 items-center type-h2 uppercase hover:text-accent focus-visible:outline-none focus-visible:shadow-focus"
               >
                 {item.label}
               </a>
             </li>
           ))}
         </ul>
-        <div className="mt-auto grid gap-4 border-t border-line p-6 pb-[max(24px,env(safe-area-inset-bottom))]">
-          <Button href={RESUME_HREF} download="Kushwant-KR-Resume.pdf" variant="secondary" icon={<Download className="size-5" strokeWidth={1.75} aria-hidden="true" />}>
-            Résumé
-          </Button>
-          <ul className="flex flex-wrap gap-4">
-            {socials.map((s) => (
-              <li key={s.label}>
-                <a href={s.href} className="type-ui text-rose underline underline-offset-4 hover:text-rose-hover">
-                  {s.label}
-                </a>
-              </li>
-            ))}
-          </ul>
+        <div className="container-kit mt-auto flex flex-wrap gap-6 pb-[max(32px,env(safe-area-inset-bottom))]">
+          {socials.map((s) => (
+            <a key={s.label} href={s.href} className="type-code text-ink-2 hover:text-ink">
+              {s.label}
+            </a>
+          ))}
         </div>
       </dialog>
     </header>

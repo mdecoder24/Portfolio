@@ -217,7 +217,7 @@ function Chevron({ children }: { children: React.ReactNode }) {
       {children}
       <ChevronDown
         aria-hidden="true"
-        className="pointer-events-none absolute right-3.5 top-1/2 size-5 -translate-y-1/2 text-mist"
+        className="pointer-events-none absolute right-3.5 top-1/2 size-5 -translate-y-1/2 text-ink-2"
         strokeWidth={1.75}
       />
     </div>

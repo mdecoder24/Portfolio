@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import { useScroll } from '@/stores/scroll';
-import { hydratePrefs, SECTION_IDS, useUi, type SectionId } from '@/stores/ui';
+import { hydratePrefs, prefersReducedMotion, SECTION_IDS, useUi, type SectionId } from '@/stores/ui';
 
 /** Feeds the ui and scroll stores: preferences, the section in view, and section offsets for the 3D layer. */
 export function PageObserver() {
@@ -38,7 +38,26 @@ export function PageObserver() {
     window.addEventListener('scroll', onScroll, { passive: true });
     measure();
 
+    // Scroll reveals: opt in only when motion is allowed, so content is never hidden without JavaScript
+    let revealIo: IntersectionObserver | undefined;
+    if (!prefersReducedMotion()) {
+      document.documentElement.dataset.reveal = '';
+      revealIo = new IntersectionObserver(
+        (entries) => {
+          for (const e of entries)
+            if (e.isIntersecting) {
+              (e.target as HTMLElement).dataset.shown = '';
+              revealIo?.unobserve(e.target);
+            }
+        },
+        { rootMargin: '0px 0px -8% 0px' },
+      );
+      document.querySelectorAll('.reveal, .reveal-words').forEach((el) => revealIo?.observe(el));
+    }
+
     return () => {
+      revealIo?.disconnect();
+      delete document.documentElement.dataset.reveal;
       io.disconnect();
       ro.disconnect();
       window.removeEventListener('scroll', onScroll);

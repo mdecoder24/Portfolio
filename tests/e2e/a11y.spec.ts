@@ -1,6 +1,11 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test } from '@playwright/test';
 
+// Scan the settled page: with reduced motion nothing is mid-fade, so contrast is measured on final colours
+test.beforeEach(async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem('kr-motion', 'reduced'));
+});
+
 for (const path of ['/?3d=off', '/projects/documind?3d=off', '/freelance/clinic-booking?3d=off', '/privacy', '/no-such-page']) {
   test(`no axe violations on ${path}`, async ({ page }) => {
     await page.goto(path);
@@ -27,4 +32,21 @@ test('the mobile menu traps focus and closes on Escape', async ({ page }) => {
   await page.keyboard.press('Escape');
   await expect(page.getByRole('dialog', { name: 'Menu' })).toBeHidden();
   await expect(open).toBeFocused();
+});
+
+test('no axe violations in the light theme', async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem('kr-theme', 'light'));
+  await page.goto('/?3d=off');
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
+  const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa']).analyze();
+  expect(results.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target).join(', ')}`)).toEqual([]);
+});
+
+test('the theme toggle switches to dark and remembers it', async ({ page }) => {
+  await page.goto('/?3d=off');
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+  await page.getByRole('button', { name: 'Switch to light theme' }).click();
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
+  await page.reload();
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
 });

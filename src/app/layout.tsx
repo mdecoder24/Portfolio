@@ -1,10 +1,10 @@
 import type { Metadata, Viewport } from 'next';
 import { PageObserver } from '@/components/layout/PageObserver';
-import { SceneMount } from '@/components/layout/SceneMount';
 import { SkipLink } from '@/components/layout/SkipLink';
 import { config, profile } from '@/content';
-import { anek, anekTelugu, martian } from './fonts';
 import tokens from '../../design/tokens.json';
+import { Intro } from '@/components/layout/Intro';
+import { geistMono, instrumentSerif, interTight } from './fonts';
 import './globals.css';
 
 export const ensureStatic = 'navigation';
@@ -20,18 +20,25 @@ export const metadata: Metadata = {
   twitter: { card: 'summary_large_image' },
 };
 
-const lagoon = tokens.color.tokens.find((t) => t.name === 'lagoon')?.value.dark;
-export const viewport: Viewport = { themeColor: lagoon, colorScheme: 'dark', viewportFit: 'cover' };
+// Theme colours for the browser chrome, read from the tokens rather than repeated here
+const paper = tokens.color.tokens.find((t) => t.name === 'paper')?.value ?? { light: '', dark: '' };
+export const viewport: Viewport = {
+  themeColor: [
+    { media: '(prefers-color-scheme: dark)', color: paper.dark },
+    { media: '(prefers-color-scheme: light)', color: paper.light },
+  ],
+  viewportFit: 'cover',
+};
 
-// Applies the saved motion preference before first paint, so reduced motion never flashes an animation
-const prefScript = `try{var m=localStorage.getItem('kr-motion');if(m)document.documentElement.dataset.motion=m}catch(e){}`;
+// Applies saved theme and motion preferences before first paint, so neither flashes
+const prefScript = `try{var d=document.documentElement,t=localStorage.getItem('kr-theme');if(t==='dark'||t==='light')d.dataset.theme=t;var m=localStorage.getItem('kr-motion');if(m)d.dataset.motion=m}catch(e){}`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html
       lang="en-IN"
       data-theme="dark"
-      className={`${anek.variable} ${anekTelugu.variable} ${martian.variable}`}
+      className={`${interTight.variable} ${instrumentSerif.variable} ${geistMono.variable}`}
       suppressHydrationWarning
     >
       <head>
@@ -39,7 +46,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body id="top">
         <SkipLink />
-        {config.flags.threeD && <SceneMount />}
+        <Intro />
         <PageObserver />
         {children}
       </body>

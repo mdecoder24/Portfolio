@@ -24,15 +24,15 @@ export function Toast({ toast, onDismiss }: { toast: ToastData | null; onDismiss
           key={toast.id}
           role={toast.tone === 'error' ? 'alert' : 'status'}
           className={cn(
-            'pointer-events-auto flex w-full max-w-[420px] items-start gap-3 rounded-md bg-shoal p-4 shadow-float inset-shadow-lustre',
-            'transition-[opacity,translate] duration-240 ease-nacre-out starting:translate-y-2 starting:opacity-0 motion-reduce:starting:translate-y-0',
+            'pointer-events-auto flex w-full max-w-[420px] items-start gap-3 rounded-sm bg-plate-hover p-4 shadow-float',
+            'transition-[opacity,translate] duration-240 ease-out-quint starting:translate-y-2 starting:opacity-0 calm:starting:translate-y-0',
           )}
         >
           <span
             aria-hidden="true"
             className={cn(
               'grid size-7 shrink-0 place-items-center rounded-full',
-              toast.tone === 'success' ? 'bg-seaglass-soft text-seaglass' : 'bg-coral-soft text-coral',
+              toast.tone === 'success' ? 'bg-ok-soft text-ok' : 'bg-error-soft text-error',
             )}
           >
             {toast.tone === 'success' ? (
@@ -42,14 +42,14 @@ export function Toast({ toast, onDismiss }: { toast: ToastData | null; onDismiss
             )}
           </span>
           <div className="grid flex-1 gap-0.5">
-            <p className="type-ui text-pearl">{toast.title}</p>
-            {toast.detail && <p className="type-small text-mist">{toast.detail}</p>}
+            <p className="type-ui text-ink">{toast.title}</p>
+            {toast.detail && <p className="type-small text-ink-2">{toast.detail}</p>}
           </div>
           <button
             type="button"
             aria-label="Dismiss"
             onClick={onDismiss}
-            className="-m-1 inline-flex size-8 items-center justify-center rounded-pill text-mist hover:bg-reef hover:text-pearl focus-visible:outline-none focus-visible:shadow-focus"
+            className="-m-1 inline-flex size-8 items-center justify-center rounded-control text-ink-2 hover:bg-plate hover:text-ink focus-visible:outline-none focus-visible:shadow-focus"
           >
             <X className="size-4" strokeWidth={1.75} />
           </button>

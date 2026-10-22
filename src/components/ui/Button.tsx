@@ -18,19 +18,19 @@ type AsButton = Common & { href?: undefined } & Omit<ComponentProps<'button'>, '
 
 export function buttonClasses({ variant = 'primary', size = 'md' }: { variant?: Variant; size?: 'md' | 'sm' }) {
   return cn(
-    'inline-flex min-h-12 items-center justify-center gap-2 whitespace-nowrap rounded-pill px-6 type-ui',
-    'transition-[background-color,color,transform] duration-150 ease-nacre-out focus-visible:outline-none focus-visible:shadow-focus active:translate-y-px',
-    'aria-disabled:opacity-45 aria-disabled:pointer-events-none',
-    variant === 'primary' && 'bg-rose text-on-rose hover:bg-rose-hover',
-    variant === 'secondary' && 'border-[1.5px] border-line-strong text-pearl hover:bg-shoal',
-    variant === 'quiet' && 'min-h-11 px-2 text-rose hover:text-rose-hover hover:underline underline-offset-4',
-    size === 'sm' && variant !== 'quiet' && 'min-h-10 px-4 text-sm',
+    'inline-flex min-h-12 items-center justify-center gap-2 whitespace-nowrap rounded-control px-6 type-ui',
+    'transition-[background-color,color,border-color,translate] duration-300 ease-out-quint focus-visible:outline-none focus-visible:shadow-focus active:translate-y-px',
+    'aria-disabled:pointer-events-none aria-disabled:opacity-45',
+    variant === 'primary' && 'bg-cream text-on-cream hover:-translate-y-0.5',
+    variant === 'secondary' && 'border border-rule-strong text-ink hover:bg-plate-hover',
+    variant === 'quiet' && 'min-h-11 px-1 text-accent underline decoration-1 underline-offset-4 hover:text-accent-hover',
+    size === 'sm' && variant !== 'quiet' && 'min-h-10 px-3.5 type-small font-semibold',
   );
 }
 
 function Spinner() {
   return (
-    <svg className="size-5 animate-spin motion-reduce:animate-none" viewBox="0 0 24 24" aria-hidden="true">
+    <svg className="size-5 animate-spin calm:animate-none" viewBox="0 0 24 24" aria-hidden="true">
       <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" strokeOpacity="0.3" strokeWidth="2.5" />
       <path d="M21 12a9 9 0 0 0-9-9" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
     </svg>

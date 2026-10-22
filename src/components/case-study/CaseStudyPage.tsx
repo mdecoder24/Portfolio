@@ -20,17 +20,17 @@ export function CaseStudyPage({ study, list }: { study: CaseStudy; list: CaseStu
     ['Team', study.team],
     ['Stack', study.stack.join(', ')],
   ] as const;
-  const h2 = 'type-h3 text-pearl';
+  const h2 = 'type-h3 text-ink';
 
   return (
     <SiteChrome>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(caseStudyLd(study)) }} />
-      <article className="container-nacre grid gap-12 py-(--section-pad)">
+      <article className="container-kit grid gap-12 py-(--section-pad)">
         <header className="grid gap-6 lg:mx-[calc(2/12*100%)]">
           <nav aria-label="Breadcrumb">
-            <ol className="flex flex-wrap gap-2 type-small text-mist">
+            <ol className="flex flex-wrap gap-2 type-small text-ink-2">
               <li>
-                <Link href={`/#${section.hash}`} className="rounded-xs underline underline-offset-4 hover:text-pearl">
+                <Link href={`/#${section.hash}`} className="rounded-xs underline underline-offset-4 hover:text-ink">
                   {section.label}
                 </Link>
                 <span aria-hidden="true"> /</span>
@@ -39,14 +39,14 @@ export function CaseStudyPage({ study, list }: { study: CaseStudy; list: CaseStu
             </ol>
           </nav>
           <SampleRibbon placeholder={study.placeholder} />
-          <p className="type-small text-mist">{study.context}</p>
-          <h1 className="type-h1 text-pearl">{study.title}</h1>
-          <p className="type-lead max-w-[60ch] text-pearl">{study.outcome}</p>
+          <p className="type-small text-ink-2">{study.context}</p>
+          <h1 className="metal type-display uppercase">{study.title}</h1>
+          <p className="type-lead max-w-[60ch] text-ink-2">{study.outcome}</p>
           <dl className="grid gap-x-8 gap-y-4 sm:grid-cols-2 lg:grid-cols-4">
             {facts.map(([k, v]) => (
-              <div key={k} className="grid gap-0.5">
-                <dt className="type-small text-mist">{k}</dt>
-                <dd className="type-body tabular text-pearl">{v}</dd>
+              <div key={k} className="grid content-start gap-0.5 border-t border-rule pt-3">
+                <dt className="type-small text-ink-2">{k}</dt>
+                <dd className="type-body tabular text-ink">{v}</dd>
               </div>
             ))}
           </dl>
@@ -63,7 +63,7 @@ export function CaseStudyPage({ study, list }: { study: CaseStudy; list: CaseStu
           )}
         </header>
 
-        <div className="overflow-hidden rounded-sm bg-shoal">
+        <div className="overflow-hidden rounded-md border border-rule bg-plate">
           <Image
             src={study.media.src}
             alt={study.media.alt}
@@ -89,16 +89,16 @@ export function CaseStudyPage({ study, list }: { study: CaseStudy; list: CaseStu
             <h2 className={h2}>Key decisions</h2>
             <ul className="grid gap-6">
               {study.body.decisions.map((d) => (
-                <li key={d.title} className="grid gap-1 border-t border-line pt-4">
-                  <h3 className="type-h4 text-pearl">{d.title}</h3>
-                  <p className="type-body text-mist">{d.detail}</p>
+                <li key={d.title} className="grid gap-1 border-t border-rule pt-4">
+                  <h3 className="type-h4 text-ink">{d.title}</h3>
+                  <p className="type-body text-ink-2">{d.detail}</p>
                 </li>
               ))}
             </ul>
           </section>
           <section className="grid gap-4">
             <h2 className={h2}>Results</h2>
-            <ul className="grid list-disc gap-1.5 pl-5 type-body marker:text-rose">
+            <ul className="grid list-disc gap-1.5 pl-5 type-body marker:text-accent">
               {study.body.results.map((r) => (
                 <li key={r}>{r}</li>
               ))}
@@ -106,11 +106,11 @@ export function CaseStudyPage({ study, list }: { study: CaseStudy; list: CaseStu
           </section>
           {quote && (
             <figure className="grid gap-3">
-              <blockquote className="type-lead max-w-[56ch] font-medium text-pearl">
+              <blockquote className="type-lead max-w-[56ch] font-medium text-ink">
                 <p>&ldquo;{quote.quote}&rdquo;</p>
               </blockquote>
-              <figcaption className="type-small text-mist">
-                {quote.name && <span className="font-semibold text-pearl">{quote.name}, </span>}
+              <figcaption className="type-small text-ink-2">
+                {quote.name && <span className="font-semibold text-ink">{quote.name}, </span>}
                 {quote.role}
               </figcaption>
             </figure>
@@ -120,14 +120,14 @@ export function CaseStudyPage({ study, list }: { study: CaseStudy; list: CaseStu
             <p className="type-body">{study.body.differently}</p>
           </section>
 
-          <nav aria-label="More case studies" className="grid gap-4 border-t border-line pt-8 sm:grid-cols-2">
-            <Link href={caseStudyHref(prev)} className="group grid gap-1 rounded-md p-4 -m-4 hover:bg-reef focus-visible:outline-none focus-visible:shadow-focus">
-              <span className="type-small text-mist">Previous</span>
-              <span className="type-h4 text-pearl">{prev.title}</span>
+          <nav aria-label="More case studies" className="grid gap-4 border-t border-rule pt-8 sm:grid-cols-2">
+            <Link href={caseStudyHref(prev)} className="group grid gap-1 rounded-sm p-4 -m-4 hover:bg-plate focus-visible:outline-none focus-visible:shadow-focus">
+              <span className="type-small text-ink-2">Previous</span>
+              <span className="type-h4 text-ink">{prev.title}</span>
             </Link>
-            <Link href={caseStudyHref(next)} className="group grid gap-1 rounded-md p-4 -m-4 hover:bg-reef focus-visible:outline-none focus-visible:shadow-focus sm:text-right">
-              <span className="type-small text-mist">Next</span>
-              <span className="type-h4 text-pearl">{next.title}</span>
+            <Link href={caseStudyHref(next)} className="group grid gap-1 rounded-sm p-4 -m-4 hover:bg-plate focus-visible:outline-none focus-visible:shadow-focus sm:text-right">
+              <span className="type-small text-ink-2">Next</span>
+              <span className="type-h4 text-ink">{next.title}</span>
             </Link>
           </nav>
         </div>

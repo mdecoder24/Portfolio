@@ -16,14 +16,14 @@ function Segmented<T extends string>({
   return (
     <fieldset className="flex items-center gap-2">
       <legend className="sr-only">{label}</legend>
-      <span aria-hidden="true" className="type-small text-mist">
+      <span aria-hidden="true" className="type-small text-ink-2">
         {label}
       </span>
-      <div className="flex rounded-pill border border-line p-0.5">
+      <div className="flex rounded-control border border-rule p-0.5">
         {options.map((o) => (
           <label
             key={o.value}
-            className="relative inline-flex min-h-7 cursor-pointer items-center rounded-pill px-3 type-small text-mist transition-colors duration-150 hover:text-pearl has-checked:bg-shoal has-checked:text-pearl has-focus-visible:shadow-focus"
+            className="relative inline-flex min-h-7 cursor-pointer items-center rounded-control px-3 type-small text-ink-2 transition-colors duration-150 hover:text-ink has-checked:bg-plate-hover has-checked:text-ink has-focus-visible:shadow-focus"
           >
             <input
               type="radio"
@@ -55,6 +55,7 @@ export function PreferenceToggles({ threeD }: { threeD: boolean }) {
         options={[
           { value: 'auto', label: 'Auto' },
           { value: 'reduced', label: 'Reduced' },
+          { value: 'full', label: 'Full' },
         ]}
         onChange={setMotion}
       />

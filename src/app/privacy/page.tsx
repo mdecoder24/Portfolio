@@ -8,9 +8,9 @@ export default function Privacy() {
   const p = 'type-body max-w-(--measure)';
   return (
     <SiteChrome>
-      <article className="container-nacre grid gap-8 py-(--section-pad) lg:pl-[calc(2/12*100%)]">
-        <h1 className="type-h1 text-pearl">Privacy</h1>
-        <p className="type-lead max-w-[60ch] text-mist">What this site collects, why, and how to have it deleted.</p>
+      <article className="container-kit grid gap-8 py-(--section-pad) lg:pl-[calc(2/12*100%)]">
+        <h1 className="type-h1 text-ink">Privacy</h1>
+        <p className="type-lead max-w-[60ch] text-ink-2">What this site collects, why, and how to have it deleted.</p>
         <section className="grid gap-3">
           <h2 className="type-h3">Contact form</h2>
           <p className={p}>
@@ -29,7 +29,7 @@ export default function Privacy() {
           <h2 className="type-h3">Your rights</h2>
           <p className={p}>
             To see or delete anything you sent me, email{' '}
-            <a href={`mailto:${config.links.email}`} className="text-rose underline underline-offset-4">
+            <a href={`mailto:${config.links.email}`} className="text-accent underline underline-offset-4">
               {config.links.email}
             </a>
             . I act on requests within 7 days, following the notice-and-consent principles of India&apos;s Digital

@@ -1,9 +1,9 @@
 import { create } from 'zustand';
 
-export const SECTION_IDS = ['hero', 'about', 'experience', 'freelance', 'projects', 'skills', 'education', 'contact'] as const;
+export const SECTION_IDS = ['hero', 'about', 'experience', 'services', 'work', 'education', 'contact'] as const;
 export type SectionId = (typeof SECTION_IDS)[number];
 
-export type MotionPref = 'auto' | 'reduced';
+export type MotionPref = 'auto' | 'reduced' | 'full';
 export type QualityPref = 'auto' | 'low' | 'off';
 
 type UiState = {
@@ -55,11 +55,14 @@ export function hydratePrefs() {
   const params = new URLSearchParams(location.search);
   const forced = params.get('3d') === 'off' || params.get('tier') === 'off' ? 'off' : null;
   useUi.setState({
-    motionPref: read(KEY.motion, ['auto', 'reduced'] as const, 'auto'),
+    motionPref: read(KEY.motion, ['auto', 'reduced', 'full'] as const, 'auto'),
     qualityPref: forced ?? read(KEY.quality, ['auto', 'low', 'off'] as const, 'auto'),
   });
 }
 
+/** Reduced when the visitor chose Reduced, or when the OS asks and the visitor has not chosen Full. */
 export function prefersReducedMotion(): boolean {
-  return useUi.getState().motionPref === 'reduced' || matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const pref = useUi.getState().motionPref;
+  if (pref === 'full') return false;
+  return pref === 'reduced' || matchMedia('(prefers-reduced-motion: reduce)').matches;
 }

@@ -6,6 +6,7 @@ import { useScene, type Tier } from '@/stores/scene';
 import { prefersReducedMotion, useUi } from '@/stores/ui';
 
 // The only way into src/scene's three.js code: loaded after hydration and idle, never in the first-load bundle.
+// Renders inside a positioned box (the hero figure); the poster beneath it stays until the canvas is ready.
 const SceneRoot = dynamic(() => import('@/scene/SceneRoot'), { ssr: false });
 
 const TIER_QUERY: Record<string, Tier> = { high: 3, medium: 2, low: 1, off: 0 };
@@ -66,7 +67,7 @@ export function SceneMount() {
   return (
     <div
       aria-hidden="true"
-      className="pointer-events-none fixed inset-0 z-canvas opacity-0 transition-opacity duration-400 ease-nacre-out in-data-[scene=ready]:opacity-100"
+      className="absolute inset-0 opacity-0 transition-opacity duration-1000 ease-out-quint in-data-[scene=ready]:opacity-100"
     >
       <SceneRoot key={`${tier}-${still}`} tier={tier as 1 | 2 | 3} still={still} />
     </div>
