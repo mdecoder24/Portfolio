@@ -1,0 +1,5 @@
+allowBuilds:
+  unrs-resolver: true
+  sharp: true
+minimumReleaseAgeExclude:
+  - zustand@5.0.16

@@ -1,0 +1,155 @@
+/* Generated from design/tokens.json by scripts/tokens.ts. Edit the design system, not this file. */
+
+:root,
+[data-theme="dark"] {
+  color-scheme: dark;
+  --lagoon: #0d2627;
+  --lagoon-veil: #0d2627db;
+  --reef: #123131;
+  --shoal: #1a3c3b;
+  --line: #2e5351;
+  --line-strong: #6a918d;
+  --pearl: #f3eee6;
+  --mist: #a3b9b5;
+  --rose: #f4a7b9;
+  --rose-hover: #f8c0cc;
+  --on-rose: #0d2627;
+  --rose-soft: #2d383b;
+  --seaglass: #86d8c3;
+  --seaglass-soft: #1e3f3d;
+  --amber: #f1c46b;
+  --amber-soft: #2d3c31;
+  --coral: #ff8e7a;
+  --coral-soft: #2f3533;
+  --scene-particle: #cfede5;
+  --scene-particle-glow: #86d8c3;
+  --scene-pearl: #ece6ef;
+  --scene-sheen-rose: #f4a7b9;
+  --scene-sheen-aqua: #9ee6e0;
+  --scene-fog: var(--lagoon);
+  --nacre-shadow-lustre: inset 0 1px 0 #f3eee60f;
+  --nacre-shadow-float: 0 24px 48px #03111166, 0 2px 8px #03111140;
+  --nacre-shadow-focus: 0 0 0 2px #0d2627, 0 0 0 4px #f4a7b9;
+}
+[data-theme="light"] {
+  color-scheme: light;
+  --lagoon: #f0f3f1;
+  --lagoon-veil: #f0f3f1db;
+  --reef: #fafbfa;
+  --shoal: #e4eae7;
+  --line: #c9d5d1;
+  --line-strong: #6b827d;
+  --pearl: #0d2627;
+  --mist: #4a6461;
+  --rose: #a83d5a;
+  --rose-hover: #8f3049;
+  --on-rose: #ffffff;
+  --rose-soft: #e9e1e2;
+  --seaglass: #1c6e5c;
+  --seaglass-soft: #dbe6e2;
+  --amber: #855a00;
+  --amber-soft: #e5e4d9;
+  --coral: #b3261e;
+  --coral-soft: #eadedc;
+  --scene-particle: #2a5c58;
+  --scene-particle-glow: #1c6e5c;
+  --scene-pearl: #f6f2f5;
+  --scene-sheen-rose: #e8a0b2;
+  --scene-sheen-aqua: #8fd3cc;
+  --nacre-shadow-lustre: inset 0 1px 0 #ffffffcc;
+  --nacre-shadow-float: 0 18px 40px #0d262724, 0 2px 6px #0d262714;
+  --nacre-shadow-focus: 0 0 0 2px #f0f3f1, 0 0 0 4px #a83d5a;
+}
+
+:root {
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  --space-9: 96px;
+  --space-10: 128px;
+  --container-max: 1200px;
+  --measure: 68ch;
+  --nav-height: 72px;
+  --hero-min-height: min(100svh, 920px);
+  --chat-panel-width: 400px;
+  --launcher-size: 56px;
+  --pearl-dot: 0.32em;
+  --target-min: 44px;
+  --z-canvas: 0;
+  --z-content: 1;
+  --z-nav: 40;
+  --z-launcher: 50;
+  --z-chat: 60;
+  --z-palette: 70;
+  --z-toast: 80;
+  --z-skip: 100;
+}
+
+@theme {
+  --radius-*: initial;
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
+  --radius-pill: 999px;
+}
+
+@theme inline {
+  --color-lagoon: var(--lagoon);
+  --color-lagoon-veil: var(--lagoon-veil);
+  --color-reef: var(--reef);
+  --color-shoal: var(--shoal);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-pearl: var(--pearl);
+  --color-mist: var(--mist);
+  --color-rose: var(--rose);
+  --color-rose-hover: var(--rose-hover);
+  --color-on-rose: var(--on-rose);
+  --color-rose-soft: var(--rose-soft);
+  --color-seaglass: var(--seaglass);
+  --color-seaglass-soft: var(--seaglass-soft);
+  --color-amber: var(--amber);
+  --color-amber-soft: var(--amber-soft);
+  --color-coral: var(--coral);
+  --color-coral-soft: var(--coral-soft);
+  --color-scene-particle: var(--scene-particle);
+  --color-scene-particle-glow: var(--scene-particle-glow);
+  --color-scene-pearl: var(--scene-pearl);
+  --color-scene-sheen-rose: var(--scene-sheen-rose);
+  --color-scene-sheen-aqua: var(--scene-sheen-aqua);
+  --color-scene-fog: var(--scene-fog);
+  --inset-shadow-lustre: var(--nacre-shadow-lustre);
+  --shadow-float: var(--nacre-shadow-float);
+  --shadow-focus: var(--nacre-shadow-focus);
+}
+
+@utility z-canvas {
+  z-index: var(--z-canvas);
+}
+@utility z-content {
+  z-index: var(--z-content);
+}
+@utility z-nav {
+  z-index: var(--z-nav);
+}
+@utility z-launcher {
+  z-index: var(--z-launcher);
+}
+@utility z-chat {
+  z-index: var(--z-chat);
+}
+@utility z-palette {
+  z-index: var(--z-palette);
+}
+@utility z-toast {
+  z-index: var(--z-toast);
+}
+@utility z-skip {
+  z-index: var(--z-skip);
+}
