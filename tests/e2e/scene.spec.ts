@@ -16,6 +16,16 @@ test('?3d=off renders the poster and no canvas', async ({ page }) => {
   await page.goto('/?3d=off');
   await page.waitForTimeout(3000);
   await expect(page.locator('#hero canvas')).toHaveCount(0);
+  // The flat portrait stays visible in its frame
+  await expect(page.locator('#hero-portrait img')).toBeVisible();
+  await expect(page.locator('#hero-portrait')).not.toHaveAttribute('data-mosaic', 'on');
+});
+
+test('the portrait becomes a pixel mosaic, and the flat photo hands over to it', async ({ page }) => {
+  await page.goto('/?tier=low');
+  const frame = page.locator('#hero-portrait');
+  await expect(frame).toHaveAttribute('data-mosaic', 'on', { timeout: 15_000 });
+  await expect(frame.locator('img')).toHaveCSS('opacity', '0');
 });
 
 test('the footer 3D toggle removes the canvas', async ({ page }) => {
