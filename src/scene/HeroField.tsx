@@ -4,7 +4,7 @@ import { useFrame, useThree } from '@react-three/fiber';
 import { useEffect, useMemo, useState } from 'react';
 import { AdditiveBlending, BufferAttribute, BufferGeometry, NormalBlending, ShaderMaterial, Vector2 } from 'three';
 import type { SceneColors } from './colors';
-import { maskToCells, mulberry32, scatter, starfield } from './mosaic';
+import { imageToCells, maskToCells, mulberry32, scatter, starfield } from './mosaic';
 
 export const FOV = 35;
 export const CAMERA_Z = 10;
@@ -12,21 +12,24 @@ const HALF_H = CAMERA_Z * Math.tan((FOV * Math.PI) / 360);
 const ASSEMBLE_SECONDS = 2.4;
 // The KR glyphs span about two thirds of the sampled mask's width; the monogram fills this share of the frame's width
 const GLYPH_SHARE = 0.66;
-const FRAME_FILL = 0.74;
+const MONOGRAM_FILL = 0.74;
+// Photo cells per row for a given tier step (5, 6, 8 → 72, 60, 45 columns)
+const PHOTO_COLS_PER_STEP = 360;
+const PORTRAIT_ASPECT = 5 / 4;
 
-type Anchor = { x: number; y: number; width: number; show: boolean };
+type Anchor = { x: number; y: number; width: number; src: string | null; frame: HTMLElement | null };
+type Cells = { geometry: BufferGeometry; cell: number; photo: boolean };
 
 /**
- * Where the hero's empty portrait frame (#hero-portrait[data-empty]) sits, in world units at z = 0 relative to the
- * canvas centre. Measured on mount, on resize and once fonts settle; never per frame. No empty frame (a photo is set,
- * or the page has none) hides the monogram.
+ * Where the hero's portrait frame (#hero-portrait) sits, in world units at z = 0 relative to the canvas centre, and
+ * which photo it holds (data-src). Measured on mount, on resize and once fonts settle; never per frame.
  */
-function useFrameAnchor(): Anchor {
+function useFrameAnchor(): Anchor | null {
   const canvas = useThree((s) => s.gl.domElement);
-  const [anchor, setAnchor] = useState<Anchor>({ x: 0, y: 0, width: 1, show: false });
+  const [anchor, setAnchor] = useState<Anchor | null>(null);
 
   useEffect(() => {
-    const frame = document.querySelector<HTMLElement>('#hero-portrait[data-empty]');
+    const frame = document.getElementById('hero-portrait');
     if (!frame) return;
     const measure = () => {
       const f = frame.getBoundingClientRect();
@@ -36,8 +39,9 @@ function useFrameAnchor(): Anchor {
       setAnchor({
         x: (f.left + f.width / 2 - (c.left + c.width / 2)) * unit,
         y: (c.top + c.height / 2 - (f.top + f.height / 2)) * unit,
-        width: (f.width * unit * FRAME_FILL) / GLYPH_SHARE,
-        show: true,
+        width: f.width * unit,
+        src: frame.dataset.src ?? null,
+        frame,
       });
     };
     const ro = new ResizeObserver(measure);
@@ -56,8 +60,10 @@ uniform float uProgress, uTime, uPush, uProjScale, uCell;
 uniform vec2 uPointer;
 attribute vec3 aStart;
 attribute float aSeed;
+attribute float aTone;
 varying float vShade;
 varying float vAccent;
+varying float vTone;
 void main() {
   float t = clamp(uProgress * 1.35 - aSeed * 0.35, 0.0, 1.0);
   float e = 1.0 - pow(1.0 - t, 5.0);
@@ -71,17 +77,26 @@ void main() {
   gl_PointSize = uCell * uProjScale / -mv.z * 0.82;
   vShade = 0.35 + 0.65 * fract(aSeed * 91.7) + 0.12 * sin(uTime * 2.4 + aSeed * 210.0);
   vAccent = step(0.988, aSeed);
+  vTone = aTone;
 }
 `;
 
+// The monogram shades each cell from the ink colour; the photo uses each cell's own luminance with a slight flicker.
+// Both keep the scattering of accent cells.
 const mosaicFrag = /* glsl */ `
 uniform vec3 uInk, uAccent;
-uniform float uOpacity;
+uniform float uOpacity, uPhoto;
 varying float vShade;
 varying float vAccent;
+varying float vTone;
 void main() {
-  vec3 colour = mix(uInk * clamp(vShade, 0.15, 1.0), uAccent, vAccent);
-  gl_FragColor = vec4(colour, uOpacity);
+  vec3 monogram = uInk * clamp(vShade, 0.15, 1.0);
+  // A gentle S-curve lifts the photo's contrast so it still reads through the gaps between cells; photo cells are
+  // opaque so the page colour behind never washes them out
+  float tone = smoothstep(0.0, 1.0, pow(vTone, 0.9));
+  vec3 photo = vec3(tone) * (0.9 + 0.2 * fract(vShade * 7.0));
+  vec3 colour = mix(mix(monogram, photo, uPhoto), uAccent, vAccent);
+  gl_FragColor = vec4(colour, mix(uOpacity, 1.0, uPhoto));
   #include <colorspace_fragment>
 }
 `;
@@ -133,6 +148,72 @@ function sampleMonogram(): { alpha: Uint8ClampedArray; width: number; height: nu
   return { alpha, width, height };
 }
 
+/** Loads the portrait and scales it, cover-cropped to 4:5, to one pixel per mosaic cell. */
+async function samplePhoto(src: string, cols: number) {
+  const img = new Image();
+  img.decoding = 'async';
+  img.src = src;
+  await img.decode();
+  const rows = Math.round(cols * PORTRAIT_ASPECT);
+  const canvas = document.createElement('canvas');
+  canvas.width = cols;
+  canvas.height = rows;
+  const ctx = canvas.getContext('2d', { willReadFrequently: true });
+  if (!ctx) return null;
+  const target = cols / rows;
+  let sw = img.naturalWidth;
+  let sh = img.naturalHeight;
+  if (sw / sh > target) sw = sh * target;
+  else sh = sw / target;
+  ctx.drawImage(img, (img.naturalWidth - sw) / 2, (img.naturalHeight - sh) / 2, sw, sh, 0, 0, cols, rows);
+  return imageToCells(ctx.getImageData(0, 0, cols, rows).data, cols, rows);
+}
+
+function cellsGeometry(positions: Float32Array, count: number, tones?: Float32Array) {
+  const g = new BufferGeometry();
+  g.setAttribute('position', new BufferAttribute(positions, 3));
+  g.setAttribute('aStart', new BufferAttribute(scatter(count), 3));
+  const rand = mulberry32(3);
+  g.setAttribute('aSeed', new BufferAttribute(Float32Array.from({ length: count }, rand), 1));
+  g.setAttribute('aTone', new BufferAttribute(tones ?? new Float32Array(count), 1));
+  return g;
+}
+
+/**
+ * The frame's mosaic: the portrait's pixels when the frame names a photo, otherwise the KR monogram. The photo loads
+ * asynchronously; once its cells exist the frame is marked data-mosaic="on" so the flat photo underneath can fade out.
+ */
+function useMosaic(src: string | null | undefined, frame: HTMLElement | null, step: number): Cells | null {
+  const [cells, setCells] = useState<Cells | null>(null);
+
+  useEffect(() => {
+    if (src === undefined) return;
+    let cancelled = false;
+    let made: Cells | null = null;
+    const build = async () => {
+      if (src) {
+        const photo = await samplePhoto(src, Math.round(PHOTO_COLS_PER_STEP / step)).catch(() => null);
+        if (cancelled || !photo) return;
+        made = { geometry: cellsGeometry(photo.positions, photo.count, photo.tones), cell: photo.cell, photo: true };
+      } else {
+        const { alpha, width, height } = sampleMonogram();
+        const mask = maskToCells(alpha, width, height, step, 1);
+        made = { geometry: cellsGeometry(mask.positions, mask.count), cell: mask.cell, photo: false };
+      }
+      setCells(made);
+      if (frame) frame.dataset.mosaic = 'on';
+    };
+    void build();
+    return () => {
+      cancelled = true;
+      made?.geometry.dispose();
+      if (frame) delete frame.dataset.mosaic;
+    };
+  }, [src, frame, step]);
+
+  return cells;
+}
+
 export function HeroField({
   colors,
   stars,
@@ -147,18 +228,8 @@ export function HeroField({
   delay: number;
 }) {
   const size = useThree((s) => s.size);
-  const { x, y, width, show } = useFrameAnchor();
-
-  const mosaic = useMemo(() => {
-    const { alpha, width, height } = sampleMonogram();
-    const cells = maskToCells(alpha, width, height, step, 1);
-    const g = new BufferGeometry();
-    g.setAttribute('position', new BufferAttribute(cells.positions, 3));
-    g.setAttribute('aStart', new BufferAttribute(scatter(cells.count), 3));
-    const rand = mulberry32(3);
-    g.setAttribute('aSeed', new BufferAttribute(Float32Array.from({ length: cells.count }, rand), 1));
-    return { geometry: g, cell: cells.cell };
-  }, [step]);
+  const anchor = useFrameAnchor();
+  const mosaic = useMosaic(anchor ? anchor.src : undefined, anchor?.frame ?? null, step);
 
   const field = useMemo(() => {
     const g = new BufferGeometry();
@@ -182,6 +253,7 @@ export function HeroField({
           uPointer: { value: new Vector2(99, 99) },
           uProjScale: { value: 1 },
           uCell: { value: 1 },
+          uPhoto: { value: 0 },
           uInk: { value: colors.ink },
           uAccent: { value: colors.accent },
           uOpacity: { value: colors.light ? 0.9 : 0.95 },
@@ -199,20 +271,32 @@ export function HeroField({
     [colors, still],
   );
 
+  // A new set of cells (the photo arriving after its download) assembles from the start
+  useEffect(() => {
+    if (!mosaic) return;
+    const m = materials.mosaic.uniforms;
+    m.uPhoto.value = mosaic.photo ? 1 : 0;
+    m.uProgress.value = still ? 1 : 0;
+  }, [mosaic, materials, still]);
+
   useEffect(
     () => () => {
-      mosaic.geometry.dispose();
       field.dispose();
       materials.mosaic.dispose();
       materials.stars.dispose();
     },
-    [mosaic, field, materials],
+    [field, materials],
   );
 
-  // The monogram is `width` world units wide and sits in the portrait frame between the two halves of the name
+  // The mosaic is `width` world units wide, centred in the portrait frame: the photo fills the frame, the monogram
+  // sits inside it with a margin
   const halfAspect = HALF_H * (size.width / size.height);
+  const x = anchor?.x ?? 0;
+  const y = anchor?.y ?? 0;
+  const width = anchor ? (mosaic?.photo ? anchor.width * 0.96 : (anchor.width * MONOGRAM_FILL) / GLYPH_SHARE) : 1;
 
   useFrame((state, delta) => {
+    if (!mosaic) return;
     const m = materials.mosaic.uniforms;
     const dpr = state.viewport.dpr;
     m.uProjScale.value = (size.height * dpr) / (2 * Math.tan((FOV * Math.PI) / 360));
@@ -223,7 +307,7 @@ export function HeroField({
     m.uTime.value += delta;
     materials.stars.uniforms.uTime.value += delta;
     if (m.uTime.value > delay) m.uProgress.value = Math.min(1, m.uProgress.value + delta / ASSEMBLE_SECONDS);
-    // Pointer in the monogram's local space: world units at z = 0, then undo its position and scale
+    // Pointer in the mosaic's local space: world units at z = 0, then undo its position and scale
     const target = 1 - Math.exp(-delta / 0.12);
     m.uPointer.value.x += ((state.pointer.x * halfAspect - x) / width - m.uPointer.value.x) * target;
     m.uPointer.value.y += ((state.pointer.y * HALF_H - y) / width - m.uPointer.value.y) * target;
@@ -234,14 +318,15 @@ export function HeroField({
   return (
     <>
       <points geometry={field} material={materials.stars} frustumCulled={false} />
-      <points
-        geometry={mosaic.geometry}
-        material={materials.mosaic}
-        position={[x, y, 0]}
-        scale={width}
-        visible={show}
-        frustumCulled={false}
-      />
+      {mosaic && (
+        <points
+          geometry={mosaic.geometry}
+          material={materials.mosaic}
+          position={[x, y, 0]}
+          scale={width}
+          frustumCulled={false}
+        />
+      )}
     </>
   );
 }

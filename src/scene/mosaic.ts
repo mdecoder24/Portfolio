@@ -24,6 +24,26 @@ export function maskToCells(alpha: ArrayLike<number>, width: number, height: num
   return { positions: new Float32Array(out), count: out.length / 3, cell: step * scale };
 }
 
+/**
+ * Turns an RGBA image already scaled to `cols × rows` (one pixel per cell) into mosaic cells: every pixel becomes a
+ * cell, centred on the origin, one unit wide. `tones` holds each cell's luminance in linear light (0–1), since the
+ * shader's colour-space step expects linear values.
+ */
+export function imageToCells(rgba: ArrayLike<number>, cols: number, rows: number) {
+  const count = cols * rows;
+  const positions = new Float32Array(count * 3);
+  const tones = new Float32Array(count);
+  for (let y = 0; y < rows; y++)
+    for (let x = 0; x < cols; x++) {
+      const i = y * cols + x;
+      positions[i * 3] = (x + 0.5) / cols - 0.5;
+      positions[i * 3 + 1] = ((rows / 2 - y - 0.5) / rows) * (rows / cols);
+      const luma = (0.2126 * rgba[i * 4] + 0.7152 * rgba[i * 4 + 1] + 0.0722 * rgba[i * 4 + 2]) / 255;
+      tones[i] = Math.pow(luma, 2.2);
+    }
+  return { positions, tones, count, cell: 1 / cols };
+}
+
 /** Where each mosaic cell starts before it assembles: scattered on a shell (in monogram widths), seeded. */
 export function scatter(count: number, seed = 7): Float32Array {
   const rand = mulberry32(seed);

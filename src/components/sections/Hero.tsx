@@ -7,26 +7,25 @@ import { MetalTitle } from '@/components/ui/MetalTitle';
 import type { Config, Profile } from '@/content/schema';
 
 /**
- * The photograph's frame, between the two halves of the name. While it is empty it is the stage for the 3D KR monogram:
- * the scene measures this element (#hero-portrait[data-empty]) and draws the monogram inside it. A flat KR shows until
- * the canvas is ready, and stays when 3D is off.
+ * The photograph's frame, centred between the two halves of the name. The 3D scene measures this element and redraws
+ * its contents as a pixel mosaic that assembles on load: the photo named in data-src, or the KR monogram when there is
+ * no photo yet. The flat image (or a flat KR) shows until the mosaic is ready (data-mosaic="on"), and stays when 3D
+ * is off.
  */
 function Portrait({ src }: { src?: string }) {
-  const frame = 'relative block aspect-[4/5] w-[min(52vw,14rem)] overflow-hidden rounded-lg border border-rule lg:w-[clamp(12rem,19vw,18rem)]';
+  const frame =
+    'group/portrait relative block aspect-[4/5] w-[min(52vw,14rem)] overflow-hidden rounded-lg border border-rule bg-plate/40 lg:w-[clamp(12rem,19vw,18rem)]';
+  const fade = 'transition-opacity duration-700 group-data-[mosaic=on]/portrait:opacity-0';
   if (src)
     return (
-      <span id="hero-portrait" className={frame}>
-        <Image src={src} alt="" fill priority sizes="(min-width: 1024px) 19vw, 52vw" className="object-cover" />
+      <span id="hero-portrait" data-src={src} className={frame}>
+        {/* Inside the h1, beside the name, so the photo needs no alt text of its own */}
+        <Image src={src} alt="" fill priority sizes="(min-width: 1024px) 19vw, 52vw" className={`object-cover grayscale ${fade}`} />
       </span>
     );
   return (
-    <span
-      id="hero-portrait"
-      data-empty=""
-      aria-hidden="true"
-      className={`${frame} grid place-items-center bg-[radial-gradient(ellipse_at_50%_30%,var(--plate-hover),var(--tint)_75%)]`}
-    >
-      <span className="type-h1 text-rule-strong transition-opacity duration-700 in-data-[scene=ready]:opacity-0">KR</span>
+    <span id="hero-portrait" aria-hidden="true" className={`${frame} grid place-items-center`}>
+      <span className={`type-h1 text-rule-strong ${fade}`}>KR</span>
     </span>
   );
 }
@@ -38,8 +37,9 @@ function Portrait({ src }: { src?: string }) {
 export function Hero({ profile, config }: { profile: Profile; config: Config }) {
   const [first, ...rest] = profile.name.split(' ');
   const last = rest.join(' ');
-  // On wide screens the name shares its line with the portrait, so it steps down a size to fit beside it
-  const word = 'type-display lg:text-[length:min(10.4vw,10.5rem)]';
+  // On wide screens the name shares its line with the portrait, so it steps down a size: each half must fit in the
+  // space beside the centred frame
+  const word = 'type-display lg:text-[length:min(7.6vw,8.5rem)]';
 
   return (
     <section
@@ -61,13 +61,13 @@ export function Hero({ profile, config }: { profile: Profile; config: Config }) 
             <Badge tone={config.availability.freelance}>{config.availability.freelanceLabel}</Badge>
           </div>
           <h1 id="hero-title" className="grid justify-items-center gap-5 sm:gap-6">
-            <span className="flex flex-wrap items-center justify-center gap-x-4 gap-y-6 lg:flex-nowrap lg:gap-x-[3vw]">
-              <span className="rise order-first flex basis-full justify-center [--rise-delay:40ms] lg:order-none lg:basis-auto">
+            <span className="flex flex-wrap items-center justify-center gap-x-4 gap-y-6 lg:grid lg:w-full lg:grid-cols-[1fr_auto_1fr] lg:gap-x-[2.5vw]">
+              <span className="rise order-first flex basis-full justify-center [--rise-delay:40ms] lg:col-start-2 lg:row-start-1">
                 <Portrait src={profile.portrait} />
               </span>
-              <MetalTitle as="span" text={first} entrance="load" className={`${word} lg:-order-1 [--rise-delay:120ms]`} />
+              <MetalTitle as="span" text={first} entrance="load" className={`${word} lg:col-start-1 lg:row-start-1 lg:justify-self-end [--rise-delay:120ms]`} />
               <span className="sr-only"> </span>
-              {last && <MetalTitle as="span" text={last} entrance="load" className={`${word} [--rise-delay:200ms]`} />}
+              {last && <MetalTitle as="span" text={last} entrance="load" className={`${word} lg:col-start-3 lg:row-start-1 lg:justify-self-start [--rise-delay:200ms]`} />}
             </span>
             <span className="sr-only">, </span>
             <span className="rise type-h3 font-medium text-ink-2 [--rise-delay:280ms]">Full-stack &amp; AI engineer</span>
