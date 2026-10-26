@@ -1,62 +1,53 @@
 import { ArrowUpRight } from 'lucide-react';
-import Link from 'next/link';
+import { Button } from '@/components/ui/Button';
 import { SampleRibbon } from '@/components/ui/SampleRibbon';
-import { Label, Section } from '@/components/ui/SectionHeader';
+import { Section } from '@/components/ui/SectionHeader';
 import { caseStudyHref, testimonials } from '@/content';
 import type { CaseStudy } from '@/content/schema';
 import { cn } from '@/lib/cn';
 import { DeviceStage } from './DeviceStage';
 
-/** "Clinic booking assistant" → "Clinic booking" + italic "assistant": the last word carries the serif accent. */
-function Title({ text }: { text: string }) {
-  const words = text.split(' ');
-  if (words.length < 2) return <>{text}</>;
-  return (
-    <>
-      {words.slice(0, -1).join(' ')} <span className="type-accent font-normal">{words.at(-1)}</span>
-    </>
-  );
-}
-
 function Row({ study, n, flip }: { study: CaseStudy; n: number; flip: boolean }) {
   const quote = testimonials.find((t) => t.id === study.testimonialId);
   return (
-    <article className="grid items-center gap-8 lg:grid-cols-12 lg:gap-14">
-      <div className={cn('reveal lg:col-span-6', flip && 'lg:order-2')}>
+    <article className="grid items-center gap-8 lg:grid-cols-12 lg:gap-8">
+      <div className={cn('reveal lg:col-span-7', flip && 'lg:order-2 lg:col-start-6')}>
         <DeviceStage study={study} />
       </div>
-      <div className={cn('reveal grid content-center gap-5 lg:col-span-6 [--reveal-delay:120ms]', flip && 'lg:order-1')}>
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <span className="type-code text-ink">{String(n).padStart(2, '0')}</span>
-          <SampleRibbon placeholder={study.placeholder} />
+      <div
+        className={cn(
+          'reveal grid content-center gap-5 lg:col-span-5 lg:pl-6 [--reveal-delay:120ms]',
+          flip && 'lg:order-1 lg:pl-0 lg:pr-6',
+        )}
+      >
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-2 type-code text-ink-2">
+          <span className="text-ink">{String(n).padStart(2, '0')}</span>
+          <span aria-hidden="true" className="h-px w-6 bg-rule-strong max-sm:hidden" />
+          <span className="max-sm:basis-full">{study.context}</span>
         </div>
-        <h3 className="type-h3 text-ink">
-          <Title text={study.title} />
-        </h3>
-        <p className="type-code text-ink-2">{study.context}</p>
-        <p className="max-w-[54ch] type-body text-ink-2">
+        <SampleRibbon placeholder={study.placeholder} />
+        <h4 className="type-h3 text-ink">{study.title}</h4>
+        <p className="max-w-[48ch] type-body text-ink-2">
           <span className="text-ink">{study.outcome}</span> {study.body.built}
         </p>
-        {quote && <p className="max-w-[54ch] type-small italic text-ink-2">&ldquo;{quote.quote}&rdquo; {quote.role}</p>}
-        <p className="type-code text-ink-2">{study.stack.join('  ·  ')}</p>
-        <div className="flex flex-wrap gap-3">
-          <Link
-            href={caseStudyHref(study)}
-            className="inline-flex min-h-11 items-center gap-2 rounded-control bg-cream px-5 type-ui text-on-cream transition-transform duration-300 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:shadow-focus"
-          >
-            Read more
+        {quote && (
+          <figure className="grid max-w-[48ch] gap-1 border-l border-rule-strong pl-4 type-small">
+            <blockquote className="text-ink">&ldquo;{quote.quote}&rdquo;</blockquote>
+            <figcaption className="text-ink-2">{quote.role}</figcaption>
+          </figure>
+        )}
+        <p className="type-code text-ink-2">{study.stack.join(', ')}</p>
+        <div className="flex flex-wrap gap-3 pt-1">
+          <Button href={caseStudyHref(study)}>
+            Read the case study
             <ArrowUpRight className="size-4" strokeWidth={1.75} aria-hidden="true" />
-            <span className="sr-only">about {study.title}</span>
-          </Link>
+            <span className="sr-only">: {study.title}</span>
+          </Button>
           {study.links.map((l) => (
-            <a
-              key={l.href}
-              href={l.href}
-              className="inline-flex min-h-11 items-center gap-2 rounded-control border border-rule-strong px-5 type-ui text-ink transition-colors duration-300 hover:bg-plate-hover focus-visible:outline-none focus-visible:shadow-focus"
-            >
+            <Button key={l.href} href={l.href} variant="secondary">
               {l.label === 'Live' ? 'Live site' : l.label}
               <ArrowUpRight className="size-4" strokeWidth={1.75} aria-hidden="true" />
-            </a>
+            </Button>
           ))}
         </div>
       </div>
@@ -64,24 +55,35 @@ function Row({ study, n, flip }: { study: CaseStudy; n: number; flip: boolean })
   );
 }
 
-export function Work({ freelance, projects }: { freelance: CaseStudy[]; projects: CaseStudy[] }) {
+function Group({ title, studies, offset }: { title: string; studies: CaseStudy[]; offset: number }) {
+  if (studies.length === 0) return null;
   return (
-    <Section id="work" label="Selected work" title="Projects">
-      <div className="grid gap-10">
-        <Label className="reveal">Client work</Label>
-        <div className="grid gap-20 lg:gap-28">
-          {freelance.map((s, i) => (
-            <Row key={s.slug} study={s} n={i + 1} flip={i % 2 === 1} />
-          ))}
-        </div>
+    <div className="grid gap-12">
+      <h3 className="reveal flex items-baseline justify-between gap-4 border-b border-rule pb-4 type-h4 text-ink">
+        {title}
+        <span className="type-code text-ink-2">{studies.length} projects</span>
+      </h3>
+      <div className="grid gap-20 lg:gap-28">
+        {studies.map((s, i) => (
+          <Row key={s.slug} study={s} n={offset + i + 1} flip={i % 2 === 1} />
+        ))}
       </div>
-      <div className="grid gap-10 pt-8">
-        <Label className="reveal">Personal and academic</Label>
-        <div className="grid gap-20 lg:gap-28">
-          {projects.map((s, i) => (
-            <Row key={s.slug} study={s} n={freelance.length + i + 1} flip={i % 2 === 1} />
-          ))}
-        </div>
+    </div>
+  );
+}
+
+export function Work({ index, freelance, projects }: { index: number; freelance: CaseStudy[]; projects: CaseStudy[] }) {
+  return (
+    <Section
+      id="work"
+      index={index}
+      label="Selected work"
+      title="Things I've shipped"
+      intro="Client projects first, then the personal and academic work where I try new ideas. Each one has a write-up of the problem, the decisions and the results."
+    >
+      <div className="grid gap-24 lg:gap-32">
+        <Group title="Client work" studies={freelance} offset={0} />
+        <Group title="Personal and academic" studies={projects} offset={freelance.length} />
       </div>
     </Section>
   );

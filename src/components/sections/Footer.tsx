@@ -58,7 +58,7 @@ export function Footer({ config, name }: { config: Config; name: string }) {
             {name}
           </p>
         </div>
-        <p aria-hidden="true" className="metal depth -mb-[0.12em] select-none whitespace-nowrap text-center text-[clamp(2.5rem,12.4vw,15rem)] leading-[0.82] font-black uppercase tracking-[-0.055em] opacity-90">
+        <p aria-hidden="true" className="-mb-[0.14em] select-none whitespace-nowrap text-center text-[clamp(3rem,14.6vw,17.5rem)] leading-[0.86] font-semibold tracking-[-0.065em] text-rule">
           Kushwant KR
         </p>
       </div>

@@ -79,6 +79,8 @@ export const Profile = z.object({
   facts: z.array(z.object({ term: z.string(), detail: z.string() })).min(2).max(5),
   interests: z.array(z.string()).min(1).max(5),
   now: z.string(),
+  /** The hero photograph (a path under /public, 4:5 crop). Until it is set, the 3D KR monogram fills the frame. */
+  portrait: z.object({ src: z.string(), alt: z.string().min(1) }).optional(),
   placeholder: z.boolean().default(false),
 });
 

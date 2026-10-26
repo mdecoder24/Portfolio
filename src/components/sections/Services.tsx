@@ -1,15 +1,18 @@
-import { ArrowDownRight, ArrowUpRight } from 'lucide-react';
+import { ArrowUpRight, Plus } from 'lucide-react';
 import { Badge } from '@/components/ui/Badge';
-import { Label, Section } from '@/components/ui/SectionHeader';
+import { Button } from '@/components/ui/Button';
+import { Section } from '@/components/ui/SectionHeader';
 import type { Config, Service } from '@/content/schema';
 import { formatRupees } from '@/lib/format';
 
-/** Services as numbered rows that fill cream on hover and open to the details. */
+/** Services as numbered rows that open to the details, then the four steps of a project. */
 export function Services({
+  index,
   config,
   services,
   steps,
 }: {
+  index: number;
   config: Config;
   services: Service[];
   steps: { name: string; description: string }[];
@@ -17,38 +20,26 @@ export function Services({
   return (
     <Section
       id="services"
-      label="Freelance services"
-      align="right"
-      title={"What I\ncan build"}
-      aside={
-        <div className="reveal grid max-w-sm gap-3 self-end">
-          <Badge tone={config.availability.freelance}>{config.availability.freelanceLabel}</Badge>
-          <p className="type-small text-ink-2">
-            For clinics, cafés, agencies and startups. I reply {config.availability.replyTime}.
-          </p>
-        </div>
-      }
+      index={index}
+      label="Freelance"
+      title="What I can build"
+      intro={<>For clinics, cafés, agencies and startups. I reply {config.availability.replyTime}.</>}
+      aside={<Badge tone={config.availability.freelance}>{config.availability.freelanceLabel}</Badge>}
     >
       <ol className="border-t border-rule">
         {services.map((s, i) => (
-          <li key={s.id} className="reveal border-b border-rule" style={{ '--reveal-delay': `${i * 70}ms` } as React.CSSProperties}>
+          <li key={s.id} className="reveal border-b border-rule" style={{ '--reveal-delay': `${i * 60}ms` } as React.CSSProperties}>
             <details className="group">
-              <summary className="grid cursor-pointer list-none grid-cols-[3.5rem_minmax(0,1fr)_auto] items-center gap-4 px-2 py-6 transition-colors duration-300 hover:bg-cream hover:text-on-cream focus-visible:outline-none focus-visible:shadow-focus sm:px-6 sm:py-7 [&::-webkit-details-marker]:hidden">
-                <span className="text-[clamp(1.25rem,1rem+0.8vw,1.75rem)] font-light tabular-nums">
-                  {String(i + 1).padStart(2, '0')}
+              <summary className="grid cursor-pointer list-none grid-cols-[2.5rem_minmax(0,1fr)_auto] items-center gap-x-4 py-6 transition-colors duration-200 hover:text-ink-hover focus-visible:outline-none focus-visible:shadow-focus lg:grid-cols-12 lg:gap-x-8 [&::-webkit-details-marker]:hidden">
+                <span className="type-code text-ink-2 lg:col-span-3">{String(i + 1).padStart(2, '0')}</span>
+                <span className="type-h3 text-ink lg:col-span-8">{s.name}</span>
+                <span className="grid size-10 place-items-center rounded-full border border-rule text-ink-2 transition-[rotate,border-color,color] duration-200 ease-out group-hover:border-rule-strong group-hover:text-ink group-open:rotate-45 lg:col-span-1 lg:justify-self-end">
+                  <Plus aria-hidden="true" strokeWidth={1.75} className="size-4" />
                 </span>
-                <span className="text-[clamp(1.125rem,0.95rem+0.9vw,1.75rem)] font-extrabold uppercase tracking-[-0.02em]">
-                  {s.name}
-                </span>
-                <ArrowDownRight
-                  aria-hidden="true"
-                  strokeWidth={1.75}
-                  className="size-6 transition-transform duration-300 ease-out-quint group-open:-rotate-90"
-                />
               </summary>
-              <div className="grid gap-3 px-2 pb-8 pt-1 sm:grid-cols-[3.5rem_minmax(0,1fr)] sm:px-6">
-                <div className="grid gap-3 sm:col-start-2">
-                  <p className="max-w-[52ch] type-lead text-ink">{s.description}</p>
+              <div className="grid pb-8 lg:grid-cols-12 lg:gap-x-8">
+                <div className="grid gap-3 max-lg:pl-14 lg:col-span-8 lg:col-start-4">
+                  <p className="max-w-[52ch] type-lead text-ink-2">{s.description}</p>
                   <p className="type-code text-ink-2">
                     {s.timeline} · {s.stack}
                     {config.flags.showPrices && s.startingFrom && ` · from ${formatRupees(s.startingFrom)}`}
@@ -60,31 +51,29 @@ export function Services({
         ))}
       </ol>
 
-      <div className="grid gap-6">
-        <Label className="reveal">How a project works</Label>
-        <ol className="grid gap-px overflow-hidden rounded-md border border-rule bg-rule sm:grid-cols-2 lg:grid-cols-4">
-          {steps.map((s, i) => (
-            <li
-              key={s.name}
-              className="reveal grid content-start gap-3 bg-paper p-6"
-              style={{ '--reveal-delay': `${i * 80}ms` } as React.CSSProperties}
-            >
-              <span className="type-code text-accent">Step {i + 1}</span>
-              <h3 className="type-h4 text-ink">{s.name}</h3>
-              <p className="type-small text-ink-2">{s.description}</p>
-            </li>
-          ))}
-        </ol>
-        <div className="reveal flex flex-wrap items-center gap-4">
-          <a
-            href="#contact"
-            data-topic="freelance"
-            className="inline-flex min-h-12 items-center gap-2 rounded-control bg-cream px-6 type-ui text-on-cream transition-[opacity,translate] duration-300 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:shadow-focus"
-          >
-            Start a project
-            <ArrowUpRight className="size-4" strokeWidth={1.75} aria-hidden="true" />
-          </a>
-          <p className="type-small text-ink-2">A written scope and quote within 2 days.</p>
+      <div className="grid gap-6 lg:grid-cols-12 lg:gap-8">
+        <h3 className="reveal type-h4 text-ink lg:col-span-3">How a project works</h3>
+        <div className="grid gap-8 lg:col-span-9">
+          <ol className="grid gap-px overflow-hidden rounded-md border border-rule bg-rule sm:grid-cols-2">
+            {steps.map((s, i) => (
+              <li
+                key={s.name}
+                className="reveal grid content-start gap-2 bg-paper p-6"
+                style={{ '--reveal-delay': `${i * 60}ms` } as React.CSSProperties}
+              >
+                <span className="type-code text-accent">{String(i + 1).padStart(2, '0')}</span>
+                <h4 className="type-h4 text-ink">{s.name}</h4>
+                <p className="type-small text-ink-2">{s.description}</p>
+              </li>
+            ))}
+          </ol>
+          <div className="reveal flex flex-wrap items-center gap-x-5 gap-y-3">
+            <Button href="#contact" data-topic="freelance">
+              Start a project
+              <ArrowUpRight className="size-4" strokeWidth={1.75} aria-hidden="true" />
+            </Button>
+            <p className="type-small text-ink-2">A written scope and quote within 2 days.</p>
+          </div>
         </div>
       </div>
     </Section>

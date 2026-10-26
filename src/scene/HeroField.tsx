@@ -169,9 +169,13 @@ export function HeroField({
     [mosaic, field, materials],
   );
 
-  // The monogram is `width` world units wide: large and high on desktop, smaller and above the type on phones
-  const width = phone ? 3.4 : Math.min(7.5, HALF_H * (size.width / size.height) * 1.3);
-  const y = phone ? 1.35 : 0.55;
+  // The monogram is `width` world units wide. It sits as a mark in the top-right corner, clear of the name, which runs
+  // across the left and middle of the hero; on phones it shrinks into the corner above the availability badge.
+  const halfAspect = HALF_H * (size.width / size.height);
+  // The glyphs fill about two thirds of the mask's width, so 0.34 × width puts their right edge on the page gutter.
+  const width = phone ? 1.6 : Math.min(3.6, halfAspect * 0.7);
+  const x = halfAspect * 0.92 - width * 0.34;
+  const y = HALF_H * (phone ? 0.7 : 0.55);
 
   useFrame((state, delta) => {
     const m = materials.mosaic.uniforms;
@@ -185,9 +189,8 @@ export function HeroField({
     materials.stars.uniforms.uTime.value += delta;
     if (m.uTime.value > delay) m.uProgress.value = Math.min(1, m.uProgress.value + delta / ASSEMBLE_SECONDS);
     // Pointer in the monogram's local space: world units at z = 0, then undo its position and scale
-    const halfW = HALF_H * (size.width / size.height);
     const target = 1 - Math.exp(-delta / 0.12);
-    m.uPointer.value.x += ((state.pointer.x * halfW) / width - m.uPointer.value.x) * target;
+    m.uPointer.value.x += ((state.pointer.x * halfAspect - x) / width - m.uPointer.value.x) * target;
     m.uPointer.value.y += ((state.pointer.y * HALF_H - y) / width - m.uPointer.value.y) * target;
     const fine = state.pointer.x !== 0 || state.pointer.y !== 0;
     m.uPush.value += ((fine ? 1 : 0) - m.uPush.value) * target;
@@ -196,7 +199,7 @@ export function HeroField({
   return (
     <>
       <points geometry={field} material={materials.stars} frustumCulled={false} />
-      <points geometry={mosaic.geometry} material={materials.mosaic} position={[0, y, 0]} scale={width} frustumCulled={false} />
+      <points geometry={mosaic.geometry} material={materials.mosaic} position={[x, y, 0]} scale={width} frustumCulled={false} />
     </>
   );
 }

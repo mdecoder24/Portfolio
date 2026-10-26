@@ -19,10 +19,11 @@ type AsButton = Common & { href?: undefined } & Omit<ComponentProps<'button'>, '
 export function buttonClasses({ variant = 'primary', size = 'md' }: { variant?: Variant; size?: 'md' | 'sm' }) {
   return cn(
     'inline-flex min-h-12 items-center justify-center gap-2 whitespace-nowrap rounded-control px-6 type-ui',
-    'transition-[background-color,color,border-color,translate] duration-300 ease-out-quint focus-visible:outline-none focus-visible:shadow-focus active:translate-y-px',
+    // Press feedback is a slight scale; colour changes carry the hover
+    'transition-[background-color,color,border-color,scale] duration-160 ease-out focus-visible:outline-none focus-visible:shadow-focus active:scale-[0.97]',
     'aria-disabled:pointer-events-none aria-disabled:opacity-45',
-    variant === 'primary' && 'bg-cream text-on-cream hover:-translate-y-0.5',
-    variant === 'secondary' && 'border border-rule-strong text-ink hover:bg-plate-hover',
+    variant === 'primary' && 'bg-cream text-on-cream hover:bg-ink-hover',
+    variant === 'secondary' && 'border border-rule-strong text-ink hover:border-ink-2 hover:bg-plate-hover',
     variant === 'quiet' && 'min-h-11 px-1 text-accent underline decoration-1 underline-offset-4 hover:text-accent-hover',
     size === 'sm' && variant !== 'quiet' && 'min-h-10 px-3.5 type-small font-semibold',
   );

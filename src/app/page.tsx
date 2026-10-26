@@ -11,16 +11,19 @@ import { jsonLd, personLd } from '@/lib/seo';
 
 export default function Home() {
   const { config, profile } = content;
+  // Sections are numbered in reading order, so hiding freelance services never leaves a gap in the count
+  const showFreelance = config.flags.showFreelance;
+  const n = (i: number) => (showFreelance || i < 3 ? i : i - 1);
   return (
     <SiteChrome onHome>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(personLd()) }} />
       <Hero profile={profile} config={config} />
       <About profile={profile} skills={content.skills} />
       <Experience entries={content.experience} />
-      {config.flags.showFreelance && <Services config={config} services={content.services} steps={content.process} />}
-      <Work freelance={config.flags.showFreelance ? content.freelance : []} projects={content.projects} />
-      <Education education={content.education} achievements={content.achievements} config={config} />
-      <Contact config={config} profile={profile} />
+      {showFreelance && <Services index={3} config={config} services={content.services} steps={content.process} />}
+      <Work index={n(4)} freelance={showFreelance ? content.freelance : []} projects={content.projects} />
+      <Education index={n(5)} education={content.education} achievements={content.achievements} config={config} />
+      <Contact index={n(6)} config={config} profile={profile} />
     </SiteChrome>
   );
 }

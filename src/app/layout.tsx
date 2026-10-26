@@ -3,8 +3,7 @@ import { PageObserver } from '@/components/layout/PageObserver';
 import { SkipLink } from '@/components/layout/SkipLink';
 import { config, profile } from '@/content';
 import tokens from '../../design/tokens.json';
-import { Intro } from '@/components/layout/Intro';
-import { geistMono, instrumentSerif, interTight } from './fonts';
+import { geist, geistMono } from './fonts';
 import './globals.css';
 
 export const ensureStatic = 'navigation';
@@ -38,7 +37,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html
       lang="en-IN"
       data-theme="dark"
-      className={`${interTight.variable} ${instrumentSerif.variable} ${geistMono.variable}`}
+      className={`${geist.variable} ${geistMono.variable}`}
       suppressHydrationWarning
     >
       <head>
@@ -46,7 +45,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body id="top">
         <SkipLink />
-        <Intro />
         <PageObserver />
         {children}
       </body>

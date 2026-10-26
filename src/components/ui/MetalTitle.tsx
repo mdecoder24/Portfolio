@@ -13,6 +13,7 @@ export function MetalTitle({
   delay = 0,
   letters = false,
   decorative = false,
+  entrance = 'scroll',
 }: {
   text: string;
   as?: 'h1' | 'h2' | 'p' | 'span';
@@ -23,12 +24,14 @@ export function MetalTitle({
   letters?: boolean;
   /** Hide from assistive technology entirely (the words exist elsewhere on the page) */
   decorative?: boolean;
+  /** 'scroll' rises when scrolled into view (needs JavaScript); 'load' plays on first paint, for the first viewport */
+  entrance?: 'scroll' | 'load';
 }) {
   let i = 0;
   const lines = text.split('\n');
   return createElement(
     as,
-    { id, className: cn('reveal-words', className), 'aria-hidden': decorative || undefined },
+    { id, className: cn(entrance === 'load' ? 'rise-words' : 'reveal-words', className), 'aria-hidden': decorative || undefined },
     !decorative && <span className="sr-only">{text.replace(/\n/g, ' ')}</span>,
     lines.map((line, li) => (
       <span key={li} aria-hidden="true" className="block">

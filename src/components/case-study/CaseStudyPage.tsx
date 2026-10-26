@@ -39,13 +39,13 @@ export function CaseStudyPage({ study, list }: { study: CaseStudy; list: CaseStu
             </ol>
           </nav>
           <SampleRibbon placeholder={study.placeholder} />
-          <p className="type-small text-ink-2">{study.context}</p>
-          <h1 className="metal type-display uppercase">{study.title}</h1>
+          <p className="type-code text-ink-2">{study.context}</p>
+          <h1 className="type-h1 text-ink">{study.title}</h1>
           <p className="type-lead max-w-[60ch] text-ink-2">{study.outcome}</p>
           <dl className="grid gap-x-8 gap-y-4 sm:grid-cols-2 lg:grid-cols-4">
             {facts.map(([k, v]) => (
               <div key={k} className="grid content-start gap-0.5 border-t border-rule pt-3">
-                <dt className="type-small text-ink-2">{k}</dt>
+                <dt className="type-code text-ink-2">{k}</dt>
                 <dd className="type-body tabular text-ink">{v}</dd>
               </div>
             ))}

@@ -8,6 +8,23 @@ test('no horizontal scroll, and the hero headline is visible in the first viewpo
   await expect(page.getByRole('link', { name: 'Résumé' }).first()).toBeVisible();
 });
 
+test('the hero leads with the name, role, availability and key facts', async ({ page }) => {
+  await page.goto('/?3d=off');
+  const h1 = page.getByRole('heading', { level: 1 });
+  await expect(h1).toHaveAccessibleName(/^Kushwant KR\s*,\s*Full-stack & AI engineer$/);
+  const hero = page.locator('#hero');
+  await expect(hero.getByText(/^Freelance: /)).toBeInViewport();
+  await expect(hero.getByRole('term')).toHaveText(['Based in', 'Degree', 'Day job', 'Freelance']);
+});
+
+test('section numbers run in reading order', async ({ page }) => {
+  await page.goto('/?3d=off');
+  const numbers = await page.locator('main section[id]:not(#hero)').evaluateAll((sections) =>
+    sections.map((s) => s.querySelector('.type-code > .text-ink')?.textContent),
+  );
+  expect(numbers).toEqual(['01', '02', '03', '04', '05', '06']);
+});
+
 test('case-study pages render with previous and next links', async ({ page }) => {
   await page.goto('/projects/pulse?3d=off');
   await expect(page.getByRole('heading', { level: 1, name: 'Pulse' })).toBeVisible();

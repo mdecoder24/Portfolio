@@ -1,17 +1,10 @@
-import { Geist_Mono, Instrument_Serif, Inter_Tight } from 'next/font/google';
+import { Geist, Geist_Mono } from 'next/font/google';
 
-// Inter Tight carries display and text (tight, heavy cuts for the big words); Instrument Serif italic is the one
-// accent word in a title; Geist Mono sets the small labels.
-export const interTight = Inter_Tight({
+// Geist carries display and text (one family, many weights, so hierarchy comes from size and weight alone);
+// Geist Mono sets dates, numbers and small metadata.
+export const geist = Geist({
   subsets: ['latin', 'latin-ext'],
-  variable: '--font-inter-tight',
-  display: 'swap',
-});
-export const instrumentSerif = Instrument_Serif({
-  subsets: ['latin'],
-  weight: '400',
-  style: ['italic'],
-  variable: '--font-instrument',
+  variable: '--font-geist',
   display: 'swap',
 });
 export const geistMono = Geist_Mono({

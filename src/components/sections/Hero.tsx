@@ -1,52 +1,70 @@
-import { ArrowDownLeft, ArrowUpRight } from 'lucide-react';
+import { ArrowDown, ArrowUpRight } from 'lucide-react';
 import { SceneMount } from '@/components/layout/SceneMount';
+import { Badge } from '@/components/ui/Badge';
+import { Button } from '@/components/ui/Button';
 import { MetalTitle } from '@/components/ui/MetalTitle';
 import type { Config, Profile } from '@/content/schema';
 
+/**
+ * The first viewport answers a recruiter's questions in order: who (the name), what (the role), where and for whom
+ * (employer, city), and whether I'm free (the availability badge), then the four facts in a ruled strip.
+ */
 export function Hero({ profile, config }: { profile: Profile; config: Config }) {
   return (
     <section
       id="hero"
       aria-labelledby="hero-title"
-      className="relative isolate -mt-(--nav-height) flex min-h-svh flex-col justify-end overflow-hidden"
+      className="relative isolate -mt-(--nav-height) flex flex-col justify-end overflow-hidden lg:min-h-svh"
     >
       {/* Star dust and the KR mosaic; a radial vignette keeps the edges quiet */}
-      <div aria-hidden="true" className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_50%_40%,var(--tint),var(--paper)_72%)]" />
+      <div aria-hidden="true" className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_70%_35%,var(--tint),var(--paper)_70%)]" />
       {config.flags.threeD && (
         <div className="absolute inset-0 -z-10">
           <SceneMount />
         </div>
       )}
 
-      <div className="container-kit grid gap-6 pb-10 pt-32 sm:pb-14">
-        <MetalTitle as="p" text="PORTFOLIO" letters decorative delay={2} className="type-mega select-none text-center" />
-        <div className="grid items-end gap-6 sm:grid-cols-[minmax(0,1fr)_auto]">
-          <div className="reveal grid gap-3 [--reveal-delay:120ms]">
-            <h1 id="hero-title" className="text-[clamp(1.5rem,1.1rem+1.6vw,2.5rem)] font-bold leading-tight tracking-[-0.03em] text-ink">
-              <span className="sr-only">{profile.name}, </span>
-              Full-stack &amp; AI <span className="type-accent font-normal">engineer</span>
-            </h1>
-            <p className="max-w-[46ch] type-small text-ink-2">
-              {profile.headline}. {profile.employment}, freelancing from {profile.location.city}.
-            </p>
+      <div className="container-kit grid gap-10 pb-8 pt-[calc(var(--nav-height)+var(--space-9))] sm:gap-12 sm:pb-10">
+        <div className="grid gap-6 sm:gap-8">
+          <div className="rise">
+            <Badge tone={config.availability.freelance}>{config.availability.freelanceLabel}</Badge>
           </div>
-          <div className="reveal flex items-center gap-3 [--reveal-delay:220ms]">
-            <a
-              href="#work"
-              aria-label="Jump to my work"
-              className="grid size-12 place-items-center rounded-full border border-rule-strong text-ink transition-[background-color,color,rotate] duration-300 ease-out-quint hover:-rotate-45 hover:bg-cream hover:text-on-cream focus-visible:outline-none focus-visible:shadow-focus"
-            >
-              <ArrowDownLeft className="size-5" strokeWidth={1.75} aria-hidden="true" />
-            </a>
-            <a
-              href="#contact"
-              className="inline-flex min-h-12 items-center gap-2 rounded-control border border-rule-strong px-6 type-ui text-ink transition-colors duration-300 hover:bg-cream hover:text-on-cream focus-visible:outline-none focus-visible:shadow-focus"
-            >
-              <span className="type-accent text-[1.0625rem]">Contact</span>
+          <h1 id="hero-title" className="grid gap-4 sm:gap-6">
+            <MetalTitle as="span" text={profile.name} entrance="load" className="-ml-[0.05em] type-display [--rise-delay:80ms]" />
+            <span className="sr-only">, </span>
+            <span className="rise type-h3 font-medium text-ink-2 [--rise-delay:280ms]">
+              Full-stack &amp; AI engineer
+            </span>
+          </h1>
+        </div>
+
+        <div className="rise grid gap-8 lg:grid-cols-12 lg:items-end [--rise-delay:380ms]">
+          <p className="max-w-[44ch] type-lead text-ink lg:col-span-7">
+            {profile.headline}. <span className="text-ink-2">{profile.subheadline}</span>
+          </p>
+          <div className="flex flex-wrap gap-3 lg:col-span-5 lg:justify-end">
+            <Button href="#work">
+              View my work
+              <ArrowDown className="size-4" strokeWidth={1.75} aria-hidden="true" />
+            </Button>
+            <Button href="#contact" variant="secondary">
+              Get in touch
               <ArrowUpRight className="size-4" strokeWidth={1.75} aria-hidden="true" />
-            </a>
+            </Button>
           </div>
         </div>
+
+        <dl className="rise grid grid-cols-2 border-t border-rule lg:grid-cols-4 [--rise-delay:460ms]">
+          {profile.facts.map((f) => (
+            <div
+              key={f.term}
+              className="grid content-start gap-1 border-rule py-5 max-lg:odd:pr-4 max-lg:even:border-l max-lg:even:pl-4 max-lg:[&:nth-child(n+3)]:border-t lg:px-5 lg:first:pl-0 lg:[&+&]:border-l"
+            >
+              <dt className="type-code text-ink-2">{f.term}</dt>
+              <dd className="type-ui text-ink">{f.detail}</dd>
+            </div>
+          ))}
+        </dl>
       </div>
     </section>
   );

@@ -41,9 +41,12 @@ export function NavBar({ socials, onHome }: { socials: { label: string; href: st
       <nav aria-label="Main" className="container-kit flex h-full items-center gap-6">
         <Link
           href="/#top"
-          className="rounded-xs text-[1.0625rem] font-black uppercase tracking-[0.02em] text-ink focus-visible:outline-none focus-visible:shadow-focus"
+          className="inline-flex min-h-11 items-center gap-2.5 rounded-xs type-ui font-semibold text-ink focus-visible:outline-none focus-visible:shadow-focus"
         >
-          Kushwant KR
+          <span aria-hidden="true" className="grid size-7 place-items-center rounded-xs bg-ink type-code font-medium text-paper">
+            KR
+          </span>
+          <span className="max-[400px]:sr-only">Kushwant KR</span>
         </Link>
         <ul className="ml-auto hidden items-center gap-7 min-[900px]:flex">
           {NAV_ITEMS.map((item) => {
@@ -54,8 +57,8 @@ export function NavBar({ socials, onHome }: { socials: { label: string; href: st
                   href={hash(item.id)}
                   aria-current={current ? 'location' : undefined}
                   className={cn(
-                    'relative inline-flex min-h-11 items-center rounded-xs text-[0.8125rem] font-semibold uppercase tracking-[0.06em] text-ink-2 transition-colors duration-200 hover:text-ink focus-visible:outline-none focus-visible:shadow-focus',
-                    'after:absolute after:inset-x-0 after:bottom-2 after:h-px after:origin-left after:scale-x-0 after:bg-ink after:transition-transform after:duration-300 after:ease-out-quint hover:after:scale-x-100',
+                    'relative inline-flex min-h-11 items-center rounded-xs type-small font-medium text-ink-2 transition-colors duration-150 hover:text-ink focus-visible:outline-none focus-visible:shadow-focus',
+                    'after:absolute after:inset-x-0 after:bottom-2 after:h-px after:origin-left after:scale-x-0 after:bg-ink after:transition-transform after:duration-200 after:ease-out-quint',
                     'aria-[current=location]:text-ink aria-[current=location]:after:scale-x-100',
                   )}
                 >
@@ -69,7 +72,7 @@ export function NavBar({ socials, onHome }: { socials: { label: string; href: st
           <a
             href={RESUME_HREF}
             download="Kushwant-KR-Resume.pdf"
-            className="inline-flex min-h-10 items-center gap-1.5 rounded-control border border-rule-strong px-4 text-[0.8125rem] font-semibold text-ink transition-colors duration-200 hover:bg-cream hover:text-on-cream focus-visible:outline-none focus-visible:shadow-focus"
+            className="inline-flex min-h-10 items-center gap-1.5 rounded-control bg-cream px-4 type-small font-medium text-on-cream transition-[background-color,scale] duration-150 hover:bg-ink-hover focus-visible:outline-none focus-visible:shadow-focus active:scale-[0.97]"
           >
             Résumé
             <ArrowUpRight className="size-4" strokeWidth={1.75} aria-hidden="true" />
@@ -101,7 +104,7 @@ export function NavBar({ socials, onHome }: { socials: { label: string; href: st
         onClick={(e) => e.target === e.currentTarget && close()}
       >
         <div className="container-kit flex h-(--nav-height) items-center justify-between">
-          <span className="text-[1.0625rem] font-black uppercase">Kushwant KR</span>
+          <span className="type-ui font-semibold">Kushwant KR</span>
           <button
             type="button"
             aria-label="Close menu"
@@ -117,7 +120,7 @@ export function NavBar({ socials, onHome }: { socials: { label: string; href: st
               <a
                 href={hash(item.id)}
                 onClick={close}
-                className="flex min-h-20 items-center type-h2 uppercase hover:text-accent focus-visible:outline-none focus-visible:shadow-focus"
+                className="flex min-h-18 items-center type-h2 text-ink hover:text-ink-2 focus-visible:outline-none focus-visible:shadow-focus"
               >
                 {item.label}
               </a>
@@ -126,7 +129,7 @@ export function NavBar({ socials, onHome }: { socials: { label: string; href: st
         </ul>
         <div className="container-kit mt-auto flex flex-wrap gap-6 pb-[max(32px,env(safe-area-inset-bottom))]">
           {socials.map((s) => (
-            <a key={s.label} href={s.href} className="type-code text-ink-2 hover:text-ink">
+            <a key={s.label} href={s.href} className="inline-flex min-h-11 items-center type-ui text-ink-2 hover:text-ink">
               {s.label}
             </a>
           ))}
