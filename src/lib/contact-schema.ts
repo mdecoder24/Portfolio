@@ -11,7 +11,7 @@ export const TOPICS = [
 export const PROJECT_TYPES = ['Web app or dashboard', 'AI chatbot or automation', 'Landing page', '3D or interactive', 'Something else'] as const;
 export const BUDGETS = ['Under ₹40,000', '₹40,000 – ₹1,00,000', '₹1,00,000 – ₹2,50,000', 'Above ₹2,50,000', 'Not sure yet'] as const;
 export const TIMELINES = ['As soon as possible', 'In 1–3 months', 'Later this year', 'Flexible'] as const;
-`
+
 const optionalEnum = <T extends readonly [string, ...string[]]>(values: T) =>
   z.preprocess((v) => (v === '' ? undefined : v), z.enum(values).optional());
 

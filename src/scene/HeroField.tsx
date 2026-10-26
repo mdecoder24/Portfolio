@@ -1,7 +1,7 @@
 'use client';
 
 import { useFrame, useThree } from '@react-three/fiber';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { AdditiveBlending, BufferAttribute, BufferGeometry, NormalBlending, ShaderMaterial, Vector2 } from 'three';
 import type { SceneColors } from './colors';
 import { maskToCells, mulberry32, scatter, starfield } from './mosaic';
@@ -10,6 +10,46 @@ export const FOV = 35;
 export const CAMERA_Z = 10;
 const HALF_H = CAMERA_Z * Math.tan((FOV * Math.PI) / 360);
 const ASSEMBLE_SECONDS = 2.4;
+// The KR glyphs span about two thirds of the sampled mask's width; the monogram fills this share of the frame's width
+const GLYPH_SHARE = 0.66;
+const FRAME_FILL = 0.74;
+
+type Anchor = { x: number; y: number; width: number; show: boolean };
+
+/**
+ * Where the hero's empty portrait frame (#hero-portrait[data-empty]) sits, in world units at z = 0 relative to the
+ * canvas centre. Measured on mount, on resize and once fonts settle; never per frame. No empty frame (a photo is set,
+ * or the page has none) hides the monogram.
+ */
+function useFrameAnchor(): Anchor {
+  const canvas = useThree((s) => s.gl.domElement);
+  const [anchor, setAnchor] = useState<Anchor>({ x: 0, y: 0, width: 1, show: false });
+
+  useEffect(() => {
+    const frame = document.querySelector<HTMLElement>('#hero-portrait[data-empty]');
+    if (!frame) return;
+    const measure = () => {
+      const f = frame.getBoundingClientRect();
+      const c = canvas.getBoundingClientRect();
+      if (c.height === 0) return;
+      const unit = (2 * HALF_H) / c.height;
+      setAnchor({
+        x: (f.left + f.width / 2 - (c.left + c.width / 2)) * unit,
+        y: (c.top + c.height / 2 - (f.top + f.height / 2)) * unit,
+        width: (f.width * unit * FRAME_FILL) / GLYPH_SHARE,
+        show: true,
+      });
+    };
+    const ro = new ResizeObserver(measure);
+    ro.observe(frame);
+    ro.observe(canvas);
+    void document.fonts.ready.then(measure);
+    measure();
+    return () => ro.disconnect();
+  }, [canvas]);
+
+  return anchor;
+}
 
 const mosaicVert = /* glsl */ `
 uniform float uProgress, uTime, uPush, uProjScale, uCell;
@@ -107,7 +147,7 @@ export function HeroField({
   delay: number;
 }) {
   const size = useThree((s) => s.size);
-  const phone = size.width / size.height < 0.8;
+  const { x, y, width, show } = useFrameAnchor();
 
   const mosaic = useMemo(() => {
     const { alpha, width, height } = sampleMonogram();
@@ -169,13 +209,8 @@ export function HeroField({
     [mosaic, field, materials],
   );
 
-  // The monogram is `width` world units wide. It sits as a mark in the top-right corner, clear of the name, which runs
-  // across the left and middle of the hero; on phones it shrinks into the corner above the availability badge.
+  // The monogram is `width` world units wide and sits in the portrait frame between the two halves of the name
   const halfAspect = HALF_H * (size.width / size.height);
-  // The glyphs fill about two thirds of the mask's width, so 0.34 × width puts their right edge on the page gutter.
-  const width = phone ? 1.6 : Math.min(3.6, halfAspect * 0.7);
-  const x = halfAspect * 0.92 - width * 0.34;
-  const y = HALF_H * (phone ? 0.7 : 0.55);
 
   useFrame((state, delta) => {
     const m = materials.mosaic.uniforms;
@@ -199,7 +234,14 @@ export function HeroField({
   return (
     <>
       <points geometry={field} material={materials.stars} frustumCulled={false} />
-      <points geometry={mosaic.geometry} material={materials.mosaic} position={[x, y, 0]} scale={width} frustumCulled={false} />
+      <points
+        geometry={mosaic.geometry}
+        material={materials.mosaic}
+        position={[x, y, 0]}
+        scale={width}
+        visible={show}
+        frustumCulled={false}
+      />
     </>
   );
 }
