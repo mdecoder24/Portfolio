@@ -215,19 +215,13 @@ function useMosaic(src: string | null | undefined, frame: HTMLElement | null, st
         made = { geometry: cellsGeometry(mask.positions, mask.count), cell: mask.cell, photo: false };
       }
       setCells(made);
-      if (frame) {
-        delete frame.dataset.joined;
-        frame.dataset.mosaic = 'on';
-      }
+      if (frame) frame.dataset.mosaic = 'diffusing';
     };
     void build();
     return () => {
       cancelled = true;
       made?.geometry.dispose();
-      if (frame) {
-        delete frame.dataset.mosaic;
-        delete frame.dataset.joined;
-      }
+      if (frame) delete frame.dataset.mosaic;
     };
   }, [src, frame, step]);
 
@@ -300,7 +294,7 @@ export function HeroField({
     m.uPhoto.value = mosaic.photo ? 1 : 0;
     m.uProgress.value = still ? 1 : 0;
     m.uReveal.value = still && mosaic.photo ? 0 : 1;
-    if (still && anchor?.frame) anchor.frame.dataset.joined = 'on';
+    if (still && anchor?.frame) anchor.frame.dataset.mosaic = 'on';
     invalidate();
   }, [mosaic, materials, still, anchor, invalidate]);
 
@@ -334,7 +328,7 @@ export function HeroField({
     if (m.uTime.value > delay) {
       m.uProgress.value = Math.min(1, m.uProgress.value + delta / ASSEMBLE_SECONDS);
       if (m.uProgress.value >= 1) {
-        if (anchor?.frame && !anchor.frame.dataset.joined) anchor.frame.dataset.joined = 'on';
+        if (anchor?.frame && anchor.frame.dataset.mosaic !== 'on') anchor.frame.dataset.mosaic = 'on';
         if (mosaic.photo) m.uReveal.value = Math.max(0, m.uReveal.value - delta * 2.2);
       }
     }

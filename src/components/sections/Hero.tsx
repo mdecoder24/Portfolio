@@ -13,8 +13,7 @@ import type { Config, Profile } from '@/content/schema';
  */
 function Portrait({ src }: { src?: string }) {
   const frame = 'group/portrait relative block aspect-[4/5] w-[min(65vw,17rem)] lg:w-[clamp(14rem,20vw,19rem)]';
-  const fade =
-    'transition-opacity duration-500 group-data-[mosaic=on]/portrait:opacity-0 group-data-[joined=on]/portrait:opacity-100';
+  const fade = 'transition-opacity duration-500 group-data-[mosaic=diffusing]/portrait:opacity-0';
   if (src)
     return (
       <span id="hero-portrait" data-src={src} className={frame}>

@@ -25,7 +25,6 @@ test('the portrait diffuses as a pixel mosaic and reveals the photo once joined'
   await page.goto('/?tier=low');
   const frame = page.locator('#hero-portrait');
   await expect(frame).toHaveAttribute('data-mosaic', 'on', { timeout: 15_000 });
-  await expect(frame).toHaveAttribute('data-joined', 'on', { timeout: 15_000 });
   await expect(frame.locator('img')).toHaveCSS('opacity', '1');
 });
 
