@@ -1,7 +1,6 @@
 import { ArrowDown, ArrowUpRight } from 'lucide-react';
 import Image from 'next/image';
 import { SceneMount } from '@/components/layout/SceneMount';
-import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { MetalTitle } from '@/components/ui/MetalTitle';
 import type { Config, Profile } from '@/content/schema';
@@ -64,9 +63,6 @@ export function Hero({ profile, config }: { profile: Profile; config: Config }) 
 
       <div className="container-kit grid gap-10 pb-8 pt-[calc(var(--nav-height)+var(--space-7))] sm:gap-12 sm:pb-10">
         <div className="grid justify-items-center gap-6 text-center sm:gap-8">
-          <div className="rise">
-            <Badge tone={config.availability.freelance}>{config.availability.freelanceLabel}</Badge>
-          </div>
           <h1 id="hero-title" className="grid justify-items-center gap-5 sm:gap-6">
             {/* Portrait and name share one grid cell; the name sits on the frame's lower edge and overhangs it. The
                 wrapper carries the name's size so its bottom padding reserves exactly that overhang */}
