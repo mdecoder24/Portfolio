@@ -18,7 +18,7 @@ ${best.map((p) => `- [${p.title}](${url}${caseStudyHref(p)}): ${p.outcome}`).joi
 ## Freelance services
 ${services.map((s) => `- ${s.name}: ${s.description}`).join('\n')}
 
-Availability: ${config.availability.freelanceLabel}
+Availability: ${config.availability.freelanceLabel ?? config.availability.freelance}
 
 ## Contact
 - Email: ${config.links.email}

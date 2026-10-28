@@ -3,7 +3,6 @@ import { Config } from './schema.ts';
 export const config = Config.parse({
   availability: {
     freelance: 'limited',
-    freelanceLabel: 'Freelance: 1 slot open in November',
     openToRoles: false,
     replyTime: 'within 24 hours',
   },

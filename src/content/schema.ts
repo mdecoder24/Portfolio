@@ -45,7 +45,7 @@ export const CaseStudy = z.object({
 export const Config = z.object({
   availability: z.object({
     freelance: z.enum(['available', 'limited', 'booked']),
-    freelanceLabel: z.string(), // "Freelance: 1 slot open in November"
+    freelanceLabel: z.string().optional(),
     openToRoles: z.boolean(),
     replyTime: z.string(),
   }),
