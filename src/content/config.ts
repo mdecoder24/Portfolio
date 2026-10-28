@@ -10,7 +10,7 @@ export const config = Config.parse({
   links: {
     email: 'hello@kushwantkr.dev',
     linkedin: 'https://www.linkedin.com/in/kushwantkr',
-    github: 'https://github.com/kushwantkr',
+    github: 'https://github.com/mdecoder24',
   },
   site: { url: 'https://kushwantkr.dev', lastUpdated: '2026-10-22' },
   placeholder: true,
