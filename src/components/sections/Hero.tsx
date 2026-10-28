@@ -37,8 +37,8 @@ function Portrait({ src }: { src?: string }) {
 export function Hero({ profile, config }: { profile: Profile; config: Config }) {
   const [first, ...rest] = profile.name.split(' ');
   const last = rest.join(' ');
-  // On wide screens the name shares its line with the portrait, so it steps down a size: each half must fit in the
-  // space beside the centred frame
+  // On wide screens the name shares its line with the portrait, so it steps down a size. Name and portrait centre as
+  // one group: pinning the frame to the page centre left the short surname with a wide empty margin
   const word = 'type-display lg:text-[length:min(7.6vw,8.5rem)]';
 
   return (
@@ -61,7 +61,7 @@ export function Hero({ profile, config }: { profile: Profile; config: Config }) 
             <Badge tone={config.availability.freelance}>{config.availability.freelanceLabel}</Badge>
           </div>
           <h1 id="hero-title" className="grid justify-items-center gap-5 sm:gap-6">
-            <span className="flex flex-wrap items-center justify-center gap-x-4 gap-y-6 lg:grid lg:w-full lg:grid-cols-[1fr_auto_1fr] lg:gap-x-[2.5vw]">
+            <span className="flex flex-wrap items-center justify-center gap-x-4 gap-y-6 lg:grid lg:w-full lg:grid-cols-[auto_auto_auto] lg:justify-center lg:gap-x-[2.5vw]">
               <span className="rise order-first flex basis-full justify-center [--rise-delay:40ms] lg:col-start-2 lg:row-start-1">
                 <Portrait src={profile.portrait} />
               </span>

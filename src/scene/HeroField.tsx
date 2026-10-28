@@ -64,20 +64,26 @@ attribute float aTone;
 varying float vShade;
 varying float vAccent;
 varying float vTone;
+varying float vLift;
 void main() {
   float t = clamp(uProgress * 1.35 - aSeed * 0.35, 0.0, 1.0);
   float e = 1.0 - pow(1.0 - t, 5.0);
   vec3 p = mix(aStart, position, e);
+  // The cursor parts the cells like a hand through sand: near cells are pushed out and lifted toward the camera,
+  // each by a slightly different amount so the edge of the hole stays ragged rather than a clean circle
   vec2 d = p.xy - uPointer;
   float r = length(d);
-  p.xy += normalize(d + 1e-5) * (1.0 - smoothstep(0.0, 0.16, r)) * 0.07 * uPush * e;
-  p.z += sin(uTime * 0.6 + aSeed * 40.0) * 0.006;
+  float near = (1.0 - smoothstep(0.0, 0.26, r)) * uPush * e;
+  float jitter = 0.7 + 0.6 * fract(aSeed * 53.1);
+  p.xy += normalize(d + 1e-5) * near * near * 0.16 * jitter;
+  p.z += near * 0.35 * jitter + sin(uTime * 0.6 + aSeed * 40.0) * 0.006;
   vec4 mv = modelViewMatrix * vec4(p, 1.0);
   gl_Position = projectionMatrix * mv;
-  gl_PointSize = uCell * uProjScale / -mv.z * 0.82;
+  gl_PointSize = clamp(uCell * uProjScale / -mv.z * 0.86, 1.0, 64.0);
   vShade = 0.35 + 0.65 * fract(aSeed * 91.7) + 0.12 * sin(uTime * 2.4 + aSeed * 210.0);
   vAccent = step(0.988, aSeed);
   vTone = aTone;
+  vLift = near;
 }
 `;
 
@@ -89,13 +95,17 @@ uniform float uOpacity, uPhoto;
 varying float vShade;
 varying float vAccent;
 varying float vTone;
+varying float vLift;
 void main() {
   vec3 monogram = uInk * clamp(vShade, 0.15, 1.0);
   // A gentle S-curve lifts the photo's contrast so it still reads through the gaps between cells; photo cells are
-  // opaque so the page colour behind never washes them out
-  float tone = smoothstep(0.0, 1.0, pow(vTone, 0.9));
+  // opaque so the page colour behind never washes them out. The lower exponent opens up the shadows, which the
+  // gaps between cells otherwise crush to black
+  float tone = smoothstep(0.0, 1.0, pow(vTone, 0.78));
   vec3 photo = vec3(tone) * (0.9 + 0.2 * fract(vShade * 7.0));
   vec3 colour = mix(mix(monogram, photo, uPhoto), uAccent, vAccent);
+  // Cells lifted by the cursor catch the light
+  colour = mix(colour, uInk, vLift * 0.45);
   gl_FragColor = vec4(colour, mix(uOpacity, 1.0, uPhoto));
   #include <colorspace_fragment>
 }
