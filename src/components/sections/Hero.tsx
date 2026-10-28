@@ -12,20 +12,21 @@ import type { Config, Profile } from '@/content/schema';
  * is off.
  */
 function Portrait({ src }: { src?: string }) {
-  const frame = 'group/portrait relative block aspect-[4/5] w-[min(65vw,17rem)] lg:w-[clamp(14rem,20vw,19rem)]';
+  const frame =
+    'group/portrait relative block aspect-[4/5] w-[min(84vw,22rem)] sm:w-[25rem] lg:w-[clamp(22rem,32vw,29rem)]';
   const fade = 'transition-opacity duration-500 group-data-[mosaic=diffusing]/portrait:opacity-0';
   if (src)
     return (
       <span id="hero-portrait" data-src={src} className={frame}>
-        {/* Inside the h1, behind the name, so the photo needs no alt text of its own */}
+        {/* Decorative portrait beside the heading; the h1 carries the accessible name */}
         <Image
           src={src}
           alt=""
           fill
           priority
           unoptimized
-          sizes="(min-width: 1024px) 20vw, 65vw"
-          className={`object-contain grayscale ${fade}`}
+          sizes="(min-width: 1024px) 32vw, 84vw"
+          className={`object-contain object-bottom grayscale ${fade}`}
         />
       </span>
     );
@@ -37,63 +38,60 @@ function Portrait({ src }: { src?: string }) {
 }
 
 /**
- * The first viewport answers a recruiter's questions in order: who (the name over the portrait), what (the role),
- * where and for whom (employer, city), and whether I'm free (the availability badge), then four facts in a ruled strip.
+ * Split editorial hero: the left column leads with the name, role, summary, and primary actions; the right column
+ * showcases the large borderless portrait (which diffuses in as a 3D pixel mosaic on load), grounded by the four-fact
+ * strip across the bottom.
  */
 export function Hero({ profile, config }: { profile: Profile; config: Config }) {
   const [first, ...rest] = profile.name.split(' ');
   const last = rest.join(' ');
-  // The name is one line laid over the portrait, so it stays a single lockup instead of two halves around the frame.
-  // On wide screens it steps down from the full display size so the whole name fits the container
-  const word = 'type-display lg:text-[length:min(10.5vw,11rem)]';
+  const word = 'type-display text-[length:clamp(3.25rem,11vw,5.75rem)] lg:text-[length:clamp(4.25rem,6.6vw,7.25rem)]';
 
   return (
     <section
       id="hero"
       aria-labelledby="hero-title"
-      className="relative isolate -mt-(--nav-height) flex flex-col justify-end overflow-hidden lg:min-h-svh"
+      className="relative isolate -mt-(--nav-height) flex flex-col justify-between overflow-hidden lg:min-h-svh"
     >
-      {/* Star dust and the KR mosaic; a radial vignette keeps the edges quiet */}
-      <div aria-hidden="true" className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_50%_40%,var(--tint),var(--paper)_70%)]" />
+      {/* Star dust and the portrait mosaic; a radial vignette keeps the edges quiet */}
+      <div aria-hidden="true" className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_68%_42%,var(--tint),var(--paper)_72%)]" />
       {config.flags.threeD && (
         <div className="absolute inset-0 -z-10">
           <SceneMount />
         </div>
       )}
 
-      <div className="container-kit grid gap-10 pb-8 pt-[calc(var(--nav-height)+var(--space-7))] sm:gap-12 sm:pb-10">
-        <div className="grid justify-items-center gap-6 text-center sm:gap-8">
-          <h1 id="hero-title" className="grid justify-items-center gap-5 sm:gap-6">
-            {/* Portrait and name share one grid cell; the name sits on the frame's lower edge and overhangs it. The
-                wrapper carries the name's size so its bottom padding reserves exactly that overhang */}
-            <span className={`grid place-items-center pb-[0.32em] ${word}`}>
-              <span className="[grid-area:1/1]">
-                <Portrait src={profile.portrait} />
-              </span>
-              <span className="relative flex translate-y-[0.32em] flex-wrap items-baseline justify-center self-end gap-x-[0.18em] [grid-area:1/1]">
-                <MetalTitle as="span" text={first} entrance="load" className={`${word} [--rise-delay:120ms]`} />
+      <div className="container-kit my-auto grid gap-10 pb-8 pt-[calc(var(--nav-height)+var(--space-6))] sm:gap-12 sm:pb-10">
+        <div className="grid items-center gap-10 lg:grid-cols-12 lg:gap-8">
+          <div className="grid content-start gap-6 lg:col-span-7 sm:gap-8">
+            <h1 id="hero-title" className="grid gap-4 sm:gap-5">
+              <span className="flex flex-wrap items-baseline gap-x-[0.18em]">
+                <MetalTitle as="span" text={first} entrance="load" className={`${word} [--rise-delay:80ms]`} />
                 <span className="sr-only"> </span>
-                {last && <MetalTitle as="span" text={last} entrance="load" className={`${word} [--rise-delay:200ms]`} />}
+                {last && <MetalTitle as="span" text={last} entrance="load" className={`${word} [--rise-delay:160ms]`} />}
               </span>
-            </span>
-            <span className="sr-only">, </span>
-            <span className="rise type-h3 font-medium text-ink [--rise-delay:280ms]">Full-stack &amp; AI engineer</span>
-          </h1>
-        </div>
+              <span className="sr-only">, </span>
+              <span className="rise type-h3 font-medium text-ink [--rise-delay:240ms]">Full-stack &amp; AI engineer</span>
+            </h1>
 
-        <div className="rise grid gap-8 lg:grid-cols-12 lg:items-end [--rise-delay:380ms]">
-          <p className="max-w-[44ch] type-lead text-ink lg:col-span-7">
-            {profile.headline}. <span className="text-ink-2">{profile.subheadline}</span>
-          </p>
-          <div className="flex flex-wrap gap-3 lg:col-span-5 lg:justify-end">
-            <Button href="#work">
-              View my work
-              <ArrowDown className="size-4" strokeWidth={1.75} aria-hidden="true" />
-            </Button>
-            <Button href="#contact" variant="secondary">
-              Get in touch
-              <ArrowUpRight className="size-4" strokeWidth={1.75} aria-hidden="true" />
-            </Button>
+            <p className="rise max-w-[46ch] type-lead text-ink [--rise-delay:320ms]">
+              {profile.headline}. <span className="text-ink-2">{profile.subheadline}</span>
+            </p>
+
+            <div className="rise flex flex-wrap gap-3 pt-1 [--rise-delay:400ms]">
+              <Button href="#work">
+                View my work
+                <ArrowDown className="size-4" strokeWidth={1.75} aria-hidden="true" />
+              </Button>
+              <Button href="#contact" variant="secondary">
+                Get in touch
+                <ArrowUpRight className="size-4" strokeWidth={1.75} aria-hidden="true" />
+              </Button>
+            </div>
+          </div>
+
+          <div aria-hidden="true" className="grid place-items-center lg:col-span-5 lg:justify-self-end">
+            <Portrait src={profile.portrait} />
           </div>
         </div>
 

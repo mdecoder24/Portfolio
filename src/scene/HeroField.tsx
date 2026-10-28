@@ -13,8 +13,8 @@ const ASSEMBLE_SECONDS = 2.0;
 // The KR glyphs span about two thirds of the sampled mask's width; the monogram fills this share of the frame's width
 const GLYPH_SHARE = 0.66;
 const MONOGRAM_FILL = 0.74;
-// Photo cells per row for a given tier step (5, 6, 8 → 80, 67, 50 columns)
-const PHOTO_COLS_PER_STEP = 400;
+// Photo cells per row for a given tier step (5, 6, 8 → 96, 80, 60 columns)
+const PHOTO_COLS_PER_STEP = 480;
 const PORTRAIT_ASPECT = 5 / 4;
 
 type Anchor = { x: number; y: number; width: number; src: string | null; frame: HTMLElement | null };
