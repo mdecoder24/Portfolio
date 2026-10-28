@@ -1,7 +1,7 @@
 import { Profile } from './schema.ts';
 
 export const profile = Profile.parse({
-  name: 'Kushwant KR',
+  name: 'Kushwant  KR',
   role: 'Software Engineer · Full-Stack & AI',
   nameLine: 'Kushwant KR, software engineer for full-stack and AI',
   headline: 'I build web products that think and move',
