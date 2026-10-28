@@ -1,0 +1,2088 @@
+Nacre
+The design system for Kushwant KR's
+portfolio
+
+Version 2, 22 October 2026. Placeholder content throughout; replace it before launch.
+Contents
+The design system for Kushwant KR's portfolio: a deep lagoon, one iridescent
+pearl, and type from an Indian foundry.
+
+ 1. Brand book
+ 2. Colour
+ 3. Typography
+ 4. Space, shape and elevation
+ 5. Components
+     1. Button                                      10. ProcessSteps
+     2. Chip                                        11. SkillTiers
+     3. Badge                                       12. Testimonial
+     4. NavBar                                      13. FormField
+     5. Hero                                        14. Toast
+     6. SectionHeader                               15. PearlLauncher
+     7. TimelineItem                                16. ChatPanel
+     8. CaseStudyCard                               17. CodeBlock
+     9. ServiceList
+
+ 6. Layout
+ 7. Motion and 3D
+ 8. Pearl chat
+ 9. Writing
+10. Implementation
+11. Fonts and licences
+
+
+
+
+Nacre design system for Kushwant KR's portfolio                                1 of 40
+Brand book
+Nacre is the visual language of Kushwant KR's portfolio: a deep lagoon, one iridescent pearl,
+and type from an Indian foundry. Hyderabad is the City of Pearls, and a pearl grows layer by
+layer, the way an engineer does. Keep everything quiet so the pearl stays the one
+memorable thing.
+
+Principles
+ 1. The pearl is the only ornament. The 3D pearl in the hero, the headline's full stop, the KR
+    monogram's dot, and the Pearl chat launcher are one object at four sizes. Nothing else
+    glows, floats, or carries a gradient.
+ 2. Round means press. Use radius-pill and circles only for things a visitor presses:
+    buttons, chips, the launcher, the send button. Things you read or fill in use radius-sm to
+     radius-lg .
+ 3. Layers, not cards. Content sits on tonal layers: lagoon , then reef , then shoal . Give
+    an element a fill or an outline only when it is a separate object, such as a case study you can
+    open.
+ 4. Evidence looks like evidence. Dates, metrics, and links get one treatment everywhere:
+    tabular figures, numbers in pearl , links in rose with an underline.
+ 5. Motion answers people. Two things move unprompted: the hero's opening, where the pearl
+    grows out of the full stop, and the particles responding to scroll. Everything else moves only
+    when a visitor acts.
+
+Colour
+   Set the page and the 3D canvas on lagoon . Use reef for case-study cards, form fields,
+   code blocks, and the chat panel; use shoal for hover states, visitor chat bubbles, menus,
+   and toasts.
+   Set text in pearl and secondary text in mist . Both reach 5.2:1 or more on lagoon ,
+    reef , and shoal in both themes.
+    rose is the single accent: primary buttons, links, the active nav underline, list markers, and
+   the focus ring. Use one rose-filled button per view, with on-rose text on it.
+    seaglass means available or success, amber means limited or warning, coral means
+   error. Pair each with a word or an icon, and put it on its -soft ground. Success leans blue-
+   green and danger leans orange-red, so they never rely on a red-green distinction.
+   Use line for decoration only. The boundary of any control is line-strong (3.4:1 or
+   more against every surface).
+   The scene-* tokens are for WebGL and the CSS pearl only.
+   Never use gradients in interface chrome, purple or blue glows, neon green, or pure black or
+   white grounds.
+   The dark Lagoon theme is the default and ships at launch. The light Pearl theme is defined
+   for P2: it swaps grounds and text and darkens the accent so every pair still clears 4.5:1.
+
+ Pair (Lagoon theme)                                                                                  Contrast
+
+  pearl on lagoon                                                                                     13.7:1
+
+  mist on reef                                                                                        6.7:1
+
+  rose on lagoon                                                                                      8.4:1
+
+  on-rose on rose                                                                                     8.4:1
+
+  seaglass on seaglass-soft                                                                           6.9:1
+
+  line-strong on shoal                                                                                3.5:1
+
+
+Typography
+   Use one family, Anek Latin from Ek Type in Mumbai, variable in weight (100–800) and width
+   (75–125). Width carries the hierarchy: display at wdth 114, h1 110, h2 108, h3 104,
+   everything else 100.
+   Use the styles by role: display for the hero headline only, h1 for case-study titles, h2
+   for section titles, h3 for sub-headings and featured project titles, h4 for item titles,
+    lead for the sub-headline and section summaries, body for running text, ui for
+   buttons and labels, small for badges and metadata, caption for image captions and
+   the chat disclosure.
+
+
+
+
+Nacre design system for Kushwant KR's portfolio                                                                  2 of 40
+  Sizes come from the classical scale (12, 14, 16, 18, 21, 24, 36, 48, 60, 72) and are fluid between
+  360 and 1440 px; each style's usage note gives its clamp() .
+  Keep running text at measure (68ch) or less, line height 1.6. Balance headings with text-
+  wrap: balance .
+  Write in sentence case everywhere. No all-caps labels, no letterspaced eyebrows, and no
+  single word in a heading set in italic, bold, or a second colour.
+  Telugu text falls through the stack to Anek Telugu, the same design family; set Pearl's Telugu
+  answers in telugu-body (line height 1.7).
+  Use Martian Mono ( code , code-inline ) for code and nothing else.
+  Use tabular figures for dates, metrics, and timelines.
+
+Shape, borders, and elevation
+  Radii by role: radius-xs for inline code and keys; radius-sm for inputs, badges, and
+  media; radius-md for cards, code blocks, and toasts; radius-lg for the chat panel,
+  sheets, and the command palette; radius-pill for anything pressable.
+  Borders are 1 px line for decoration and 1.5 px line-strong for controls.
+  Elevation comes from the surface step plus shadow-lustre , a one-pixel highlight along
+  the top edge. Use shadow-float only for things that float over the page: the chat panel,
+  the launcher, toasts, the command palette. There are no other shadows.
+  Every interactive element shows shadow-focus on keyboard focus: a 2 px lagoon gap,
+  then a solid 2 px rose ring.
+
+Layout
+  A 12-column grid inside container-max (1200 px), with a side gutter of max(16px,
+  env(safe-area-inset-left)) on phones, 32 px on tablets, and 48 px on desktop.
+  Align everything to the left edge of the grid. Nothing is centred except the 404 page.
+  Section padding is space-10 on desktop, space-9 on tablets, and space-8 on
+  phones. The gap from a section header to its content is space-7 .
+  The Layout section has breakpoints and a wireframe of every section.
+
+The pearl, in CSS and in 3D
+  In CSS, .kr-pearl paints the pearl from scene-pearl , scene-sheen-rose ,
+   scene-sheen-aqua , and a white highlight, at pearl-dot (0.32em) when it replaces a
+  full stop.
+  In WebGL it is a physical material with iridescence and clearcoat under procedural studio
+  light; the Motion and 3D section lists every parameter.
+  Use the pearl in exactly four places: the hero (3D), the headline's full stop, the monogram,
+  and Pearl (launcher, avatar, typing dots). Nowhere else.
+
+Iconography
+  Use Lucide icons (lucide-react) at 20 px with a 1.75 stroke in currentColor , and 16 px
+  inside small buttons and toasts.
+  No emoji in the interface, the copy, or Pearl's answers.
+  Every icon-only button carries an aria-label . The launcher has no icon: the pearl is the
+  icon.
+  There is no logo file. The monogram is live type: "KR" in Anek Latin 780 at wdth 112, followed
+  by the pearl dot.
+
+Imagery
+  Show real screenshots and screen recordings of the work at 16:10 on a shoal mat with
+   radius-sm . Videos are muted, looped, under 2 MB, with a poster frame.
+  No stock photos, no device-frame mockups, no AI-generated illustrations.
+  An optional portrait is duotone: lagoon in the shadows, pearl in the highlights.
+
+Content fundamentals
+  The site speaks in the first person ("I built…"). Pearl speaks about Kushwant in the third
+  person and never pretends to be him.
+  Be confident, specific, and warm. Lead with outcomes and numbers, and write numbers in
+  digits.
+  Use Indian digit grouping for rupees (₹1,50,000) and plain digits elsewhere.
+
+
+
+
+Nacre design system for Kushwant KR's portfolio                                                        3 of 40
+   Never write: passionate, hard-working, ninja, rockstar, guru, cutting-edge, synergy, or a "Hi,
+   I'm…" greeting with a waving hand.
+   Model copy: "I build web products that think and move." "Hire me for a project." "Freelance: 1
+   slot open in November." "Enter an email address like name@example.com." "Message sent.
+   Kushwant replies within 24 hours."
+   The Writing section has the full list of interface copy.
+
+Accessibility
+   Meet WCAG 2.2 AA: the contrast pairs above, focus always visible and never hidden under the
+   sticky bar, targets of at least 24 px (primary actions target-min , 44 px), and reflow at
+   320 px with no horizontal scroll.
+   The canvas is aria-hidden and carries no information of its own; everything it shows
+   also exists in the HTML.
+   Honour prefers-reduced-motion : no opening move, no morphing, no shimmer. The
+   3D scene renders one still frame.
+   Pearl's log is role="log" with polite announcements, and its confirm card is a real form
+   with real buttons.
+
+Using these files in the codebase
+    tokens.json is the single source. The Implementation section shows the Tailwind v4
+   theme, the fonts, and a script that turns tokens.json into
+    src/styles/tokens.css .
+    components/bundle.css is a plain-CSS reference for every component;
+    components/index.d.ts is the React prop contract each component in the codebase
+   implements.
+
+
+
+
+Nacre design system for Kushwant KR's portfolio                                                     4 of 40
+Colour
+Every colour in the system, in both themes. Lagoon (default) ships at launch; Pearl
+(P2) is defined for later.
+
+ Token                Lagoon (default)   Pearl (P2)          Use it for
+
+ lagoon                      #0d2627             #f0f3f1     Page background and the 3D canvas clear colour. Every section sits directly on it.
+
+
+ lagoon-veil                 #0d2627db           #f0f3f1db   The sticky navigation bar after 80 px of scroll, with a 12 px backdrop blur. Text on it uses pearl and mist as on lagoon.
+
+
+ reef                        #123131             #fafbfa     First layer: case-study cards, media mats, form fields, code blocks, the chat panel body.
+
+
+ shoal                       #1a3c3b             #e4eae7     Raised layer: hovered cards, the visitor's chat bubbles, menus, the command palette, toasts.
+
+
+ line                        #2e5351             #c9d5d1     Decorative hairlines: card outlines, dividers between list rows, the timeline's growth line. Never the only boundary of a
+                                                             control.
+
+ line-strong                 #6a918d             #6b827d     Boundaries of controls (inputs, outline buttons, filter chips) and past-role timeline rings: 3.4:1 or more on lagoon, reef
+                                                             and shoal in both themes.
+
+ pearl                       #f3eee6             #0d2627     Primary text and headings on lagoon, reef and shoal: 10.4:1 or more in both themes.
+
+
+ mist                        #a3b9b5             #4a6461     Secondary text (summaries, metadata, captions, placeholders) on lagoon, reef and shoal: 5.2:1 or more in both themes.
+
+
+ rose                        #f4a7b9             #a83d5a     The one accent: primary button fill, links, the active nav underline, the focus ring, list markers. As text on lagoon, reef,
+                                                             shoal and rose-soft: 4.7:1 or more in both themes.
+
+ rose-hover                  #f8c0cc             #8f3049     Hover and pressed state of rose fills and rose links.
+
+
+ on-rose                     #0d2627             #ffffff     Label text and icons on a rose or rose-hover fill: 7.8:1 or more. Never literal white in the dark theme.
+
+
+ rose-soft                   #2d383b             #e9e1e2     Ground behind rose text: the selected filter chip, the active command-palette row.
+
+
+ seaglass                    #86d8c3             #1c6e5c     Available and success: the availability dot, success text and icons. Always paired with a word.
+
+
+ seaglass-soft               #1e3f3d             #dbe6e2     Ground behind seaglass text in status badges and success toasts (4.8:1 or more).
+
+
+ amber                       #f1c46b             #855a00     Limited and warning: limited availability, rate-limit notices. Always paired with a word.
+
+
+ amber-soft                  #2d3c31             #e5e4d9     Ground behind amber text (4.7:1 or more).
+
+
+ coral                       #ff8e7a             #b3261e     Errors: field errors and failed sends. Always with an icon and a sentence that says how to fix it.
+
+
+ coral-soft                  #2f3533             #eadedc     Ground behind coral text in error banners and error toasts (5.0:1 or more).
+
+
+ scene-particle              #cfede5             #2a5c58     WebGL only: the main particle colour. Additive blending in the dark theme, normal blending in the light theme.
+
+
+ scene-particle-             #86d8c3             #1c6e5c     WebGL only: the brightest 15% of particles, and the pulse while Pearl is answering.
+ glow
+
+ scene-pearl                 #ece6ef             #f6f2f5     WebGL only: base colour of the pearl's physical material; also the body of the CSS pearl.
+
+
+ scene-sheen-rose            #f4a7b9             #e8a0b2     WebGL only: the warm iridescent overtone and sheen colour; also the CSS pearl's warm edge.
+
+
+ scene-sheen-aqua            #9ee6e0             #8fd3cc     WebGL only: the cool iridescent overtone and rim light; also the CSS pearl's cool edge.
+
+
+ scene-fog                   = lagoon            = lagoon    WebGL only: fog colour, an alias of lagoon so distant particles dissolve into the page in either theme.
+
+
+
+
+Nacre design system for Kushwant KR's portfolio                                                                                                                                  5 of 40
+Typography
+Anek Latin for everything, Anek Telugu for Telugu, Martian Mono for code. Sizes
+below are the desktop end of each fluid style.
+
+
+Display and headings
+Width carries the hierarchy: set font-variation-settings 'wdth' as each usage says. Sizes are
+the desktop end of a fluid clamp() between 360 and 1440 px, on the classical scale 12-14-16-
+18-21-24-36-48-60-72.
+
+display 72px / 1.02, weight 760, width 114
+
+
+
+
+I build web products
+that think and move
+The hero headline only, once per site. wdth 114. Fluid clamp(3rem, 2.5rem + 2.222vw, 4.5rem).
+Its full stop is the pearl dot.
+
+h1 60px / 1.05, weight 720, width 110
+
+
+
+Clinic booking assistant
+Case-study page titles. wdth 110. Fluid clamp(3rem, 2.75rem + 1.111vw, 3.75rem).
+
+h2 48px / 1.08, weight 700, width 108
+
+
+Freelance and client work
+Home-page section titles. wdth 108. Fluid clamp(2.25rem, 2rem + 1.111vw, 3rem).
+
+h3 36px / 1.15, weight 660, width 104
+
+
+What I built
+Sub-headings inside case studies and featured project titles. wdth 104. Fluid clamp(1.5rem,
+1.25rem + 1.111vw, 2.25rem).
+
+h4 24px / 1.25, weight 620, width 100
+
+Associate Software Engineer
+Item titles: roles, services, card titles, tier names. wdth 100. Fluid clamp(1.3125rem, 1.25rem +
+0.2778vw, 1.5rem).
+
+
+
+Text
+wdth 100 for all running text. Body measure 68ch at most. Weights sit slightly above 400
+because light text on lagoon reads thinner than dark text on white.
+
+lead 21px / 1.5, weight 460
+
+Full-stack apps with a soft spot for AI and 3D.
+The hero sub-headline and the one-line summary under every section title, in mist. Fluid
+clamp(1.125rem, 1.0625rem + 0.2778vw, 1.3125rem).
+
+body 18px / 1.6, weight 460
+
+I turned a phone-only booking process into a website chat that books consultations.
+Running text in pearl. Fluid clamp(1rem, 0.9583rem + 0.1852vw, 1.125rem). Max 68ch.
+
+ui 16px / 1.25, weight 600
+Hire me for a project
+Buttons, nav links (at 560), form labels, the chat composer.
+
+
+
+
+Nacre design system for Kushwant KR's portfolio                                                     6 of 40
+small 14px / 1.5, weight 520
+Freelance: 1 slot open in November
+Badges, chips, metadata, form hints, chat source chips, timeline dates (tabular figures).
+
+caption 12px / 1.4, weight 540
+Booking flow on mobile, week 3 demo
+Image captions and the chat disclosure line only, in mist. Never for anything a visitor must
+act on.
+
+
+
+Indic
+Pearl answers in the visitor's language. Telugu falls through the sans stack to Anek Telugu,
+the same design family from the same foundry, so mixed-script answers keep one voice.
+
+telugu-body 18px / 1.7, weight 460
+నమస్కారం
+Telugu text in Pearl's answers. Telugu needs the taller 1.7 line height for its stacked
+conjuncts.
+
+
+
+Code
+Code only. Never for labels, metadata, dates or numbers in running text.
+
+code 15px / 1.6, weight 420, width 87
+
+const pearl = useRef<Mesh>(null)
+Code blocks in case studies and in Pearl's developer answers. wdth 87.5.
+
+code-inline 0.9em / 1.4, weight 460
+useFrame
+Inline code inside running text, on reef with radius-xs.
+
+
+
+
+Nacre design system for Kushwant KR's portfolio                                                7 of 40
+Space, shape and elevation
+Spacing
+A 4 px base. Lay out siblings with gap, never per-element margins.
+
+ Token               Value                                                   Use it for
+
+ space-1              4px                                                    Icon-to-text nudges; the gap inside a badge's dot and label.
+
+ space-2              8px                                                    Gap between chips and badges; button icon gap; label-to-field gap.
+
+ space-3              12px                                                   Gap between a heading and its summary; badge and chip side padding.
+
+ space-4              16px                                                   Minimum page gutter on phones; card padding on phones; gap between form fields.
+
+ space-5              24px                                                   Card padding; button side padding; grid column gap; chat panel padding.
+
+ space-6              32px                                                   Gap between a card's media and text; nav side padding on desktop.
+
+ space-7              48px                                                   Gap between a section header and its content; between timeline entries.
+
+ space-8              64px                                                   Section padding on phones; gap between case-study rows.
+
+ space-9              96px                                                   Section padding on tablets.
+
+ space-10             128px                                                  Section padding on desktop; the breathing room above the hero headline.
+
+
+
+Radius
+Shape encodes meaning: a pill or circle is something you press; a rounded rectangle is
+something you read or fill in.
+
+ Token                   Value                               Use it for
+
+ radius-xs                  4px                              Inline code, keyboard keys, focus target of nav links.
+
+
+
+ radius-sm                  8px                              Inputs, badges and tags (read-only), media inside cards, tooltips.
+
+
+
+ radius-md                  14px                             Case-study cards, code blocks, chat cards, toasts, the chat composer.
+
+
+
+ radius-lg                  22px                             The chat panel, the mobile menu sheet, the command palette.
+
+
+
+ radius-pill                999px                            Things you press: buttons, filter and starter chips, source chips, the send button, the pearl launcher.
+
+
+
+
+Shadows
+Elevation comes from surface steps first. These three shadows are the only ones in the
+system.
+
+ Token              On lagoon                Value                                                  Use it for
+
+ shadow-                                      inset 0 1px 0 #f3eee60f                               A one-pixel top highlight on reef and shoal surfaces, like light on nacre. Cards, chat panel, toasts.
+ lustre                                      Light: inset 0 1px 0 #ffffffcc
+
+
+ shadow-                                      0 24px 48px #03111166, 0 2px 8px                      Only for things that float over the page: the chat panel, the pearl launcher, toasts, the command
+ float                                       #03111140                                              palette.
+                                             Light: 0 18px 40px #0d262724, 0 2px
+                                             6px #0d262714
+
+ shadow-                                      0 0 0 2px #0d2627, 0 0 0 4px                          The keyboard focus ring on every interactive element: a 2 px gap in lagoon, then a solid 2 px rose
+ focus                                       #f4a7b9                                                ring (5.4:1 or more on every surface).
+                                             Light: 0 0 0 2px #f0f3f1, 0 0 0 4px
+                                             #a83d5a
+
+
+
+Sizes
+Fixed dimensions that layout and components share.
+
+ Token                             Value                                   Use it for
+
+ container-max                      1200px                                 Maximum content width; the 12-column grid lives inside it.
+
+
+
+
+Nacre design system for Kushwant KR's portfolio                                                                                                                                                 8 of 40
+ Token                          Value                 Use it for
+
+ measure                         68ch                 Maximum width of running text.
+
+ nav-height                      72px                 Navigation bar height on desktop (64px on phones); also scroll-margin-top for section anchors.
+
+ hero-min-height                 min(100svh, 920px)   Hero height: fills a phone screen, never taller than 920px on large monitors.
+
+ chat-panel-width                400px                Pearl's side panel on desktop; phones use a 90svh bottom sheet.
+
+ launcher-size                   56px                 The pearl launcher's diameter (48px on phones).
+
+ pearl-dot                       0.32em               Diameter of the CSS pearl that replaces a full stop: the headline's end and the KR monogram.
+
+ target-min                      44px                 Minimum height and width of primary touch targets; secondary targets never go below 24px.
+
+
+
+Stacking
+One stacking map for the whole site.
+
+ Token                                    Value        Use it for
+
+ z-canvas                                 0            The fixed WebGL canvas behind everything.
+
+ z-content                                1            All page sections.
+
+ z-nav                                    40           The sticky navigation bar.
+
+ z-launcher                               50           The pearl launcher.
+
+ z-chat                                   60           Pearl's panel and its mobile sheet.
+
+ z-palette                                70           The command palette and its backdrop.
+
+ z-toast                                  80           Toasts, above everything a visitor can open.
+
+ z-skip                                   100          The skip-to-content link when focused.
+
+
+
+
+Nacre design system for Kushwant KR's portfolio                                                                                                        9 of 40
+Components
+Each component as it renders in the Lagoon theme, followed by its contract.
+Plain-CSS references are in components/bundle.css ; React prop types in
+components/index.d.ts .
+
+Button
+Primary, secondary, quiet, small, busy
+
+
+
+
+Buttons start an action; a rose primary button appears at most once per view, for the thing
+that view exists to do.
+
+Variants
+   primary: rose fill with an on-rose label. "View my work" in the hero, "Send message" in
+   Contact.
+   secondary: no fill, 1.5 px line-strong border, pearl label. "Hire me for a project",
+   "Résumé".
+   quiet: rose text with no box, 44 px tall. Inline actions such as "Ask Pearl about me" and
+   "Copy email".
+   size sm: 40 px tall with a 14 px label, for the navigation's Résumé button and actions inside
+   chat cards.
+
+What the consumer provides
+A verb-first label in sentence case (2 to 4 words), an optional 20 px leading icon from lucide-
+react, and either href (renders <a> ) or onClick (renders <button
+type="button"> ). busy swaps the icon for a spinner and sets aria-busy ; the label
+stays so the button doesn't change width.
+
+States
+Hover ( rose-hover on primary, shoal on secondary), keyboard focus ( shadow-
+focus ), pressed (moves down 1 px), disabled (45% opacity with aria-disabled , so it
+stays focusable and the reason sits next to it), busy.
+
+Tailwind recipe
+   Base: inline-flex min-h-12 items-center justify-center gap-2
+   whitespace-nowrap rounded-pill px-6 text-base font-semibold
+   transition-colors focus-visible:outline-none focus-
+   visible:shadow-focus active:translate-y-px
+   Primary: bg-rose text-on-rose hover:bg-rose-hover
+   Secondary: border-[1.5px] border-line-strong text-pearl hover:bg-
+   shoal
+   Quiet: min-h-11 px-2 text-rose hover:text-rose-hover
+   hover:underline underline-offset-4
+
+Do and don't
+   Name the result, and keep that name through the flow: "Send message" leads to the toast
+   "Message sent".
+   Never append arrows ("View work →"), use all caps, or put two primary buttons side by side.
+   Never build a button from a div ; icon-only buttons need an aria-label .
+
+
+
+
+Nacre design system for Kushwant KR's portfolio                                                    10 of 40
+Chip
+Filter, starter, source
+
+
+
+
+Chips are small pressable pills: project filters, Pearl's starter prompts, and the source links
+under Pearl's answers.
+
+Kinds
+    filter: toggles a project filter. Renders <button aria-pressed> . Pressed chips use
+     rose text and border on rose-soft . Exactly one filter is pressed at a time ("All" by
+    default).
+    starter: a suggested question in Pearl. Pressing it sends the text as the visitor's message. Up
+    to four at once, written as the visitor would ask ("Show me his best project").
+    source: a link under a Pearl answer to the section it came from ("Freelance: Clinic booking
+    assistant"). 28 px tall, mist text, 1 px line-strong border.
+
+What the consumer provides
+The label (sentence case, under 32 characters), plus pressed for filters, onClick for
+starters, or href for sources.
+
+Tailwind recipe
+    Base: inline-flex min-h-9 items-center gap-2 whitespace-nowrap
+    rounded-pill border-[1.5px] border-line-strong px-4 text-sm
+    font-medium text-pearl hover:bg-shoal focus-visible:outline-none
+    focus-visible:shadow-focus
+    Pressed: aria-pressed:border-rose aria-pressed:bg-rose-soft aria-
+    pressed:text-rose
+    Source: min-h-7 border px-3 text-mist hover:text-pearl
+
+Do and don't
+    Chips are pills because they are pressable; read-only labels are Badges.
+    Never use chips as a list of skills or tags; use Badge tags or plain text links.
+    Keep a filter row to one line on desktop; let it scroll horizontally on phones rather than wrap
+    into three rows.
+
+
+
+
+Nacre design system for Kushwant KR's portfolio                                                       11 of 40
+Badge
+Status tones and stack tags
+
+
+
+
+Badges are read-only labels for live status and stack tags; they are rounded rectangles
+because nothing happens when you press them.
+
+Tones
+   available: seaglass on seaglass-soft with a filled dot. "Freelance: 1 slot open in
+   November".
+   limited: amber on amber-soft with a filled dot. "Freelance: limited until January".
+   booked: mist on reef with a hollow dot. "Freelance: booked until March".
+   neutral: mist on reef , no dot. Current employer in the hero: "ASE at Knowvation
+   Learnings".
+   tag: mist text with a 1 px line outline, no fill. Stack names on cards and timeline entries.
+
+What the consumer provides
+The words. Status tones always carry a word as well as colour, so they read the same in
+greyscale and to screen readers. The freelance status comes from one config value
+( availability.freelance ), never hand-typed copy.
+
+Tailwind recipe
+   Base: inline-flex min-h-7 items-center gap-1.5 whitespace-nowrap
+   rounded-sm px-2.5 text-sm font-medium
+   available: bg-seaglass-soft text-seaglass · limited: bg-amber-soft text-
+   amber · booked and neutral: bg-reef text-mist
+   tag: text-mist ring-1 ring-inset ring-line
+   Dot: size-2 rounded-full bg-current (booked: ring-[1.5px] ring-inset
+   ring-current bg-transparent )
+
+Do and don't
+   Never make a badge clickable; if it needs to act, it is a Chip.
+   Never show more than five tags on a card; the case study lists the full stack.
+   Status words are sentence case: "Available", never "AVAILABLE".
+
+
+
+
+Nacre design system for Kushwant KR's portfolio                                                   12 of 40
+NavBar
+Over the hero, and after scrolling
+
+
+
+
+The navigation bar is a sticky strip with the KR monogram, five section links, the résumé, and
+a way into Pearl.
+
+Anatomy
+ 1. Monogram: "KR" in Anek Latin 780 at wdth 112, followed by the pearl dot. It links to the top.
+    It is live type, not an image, so there is no logo file.
+ 2. Links: About, Experience, Freelance, Projects, Contact, in ui at weight 560, mist ; hover
+    and the section in view turn pearl . The section in view gets aria-
+    current="location" and a 2 px rose underline 10 px below the text.
+ 3. Actions: Résumé (secondary, sm, download icon) and "Ask Pearl" (quiet, with the pearl dot).
+
+Behaviour
+   Transparent over the hero. After 80 px of scroll it takes lagoon-veil , a 12 px backdrop
+   blur, and a line bottom border. The height never changes, so nothing shifts.
+   Sticky at top: env(safe-area-inset-top) , z-nav . Sections set scroll-
+   margin-top: var(--nav-height) .
+   Below 860 px: monogram, Résumé, and a menu button. The menu opens a full-height sheet
+   on reef (radius-lg top corners) with the links in h3 , then Résumé, Ask Pearl, and socials.
+   Focus is trapped in the sheet; Escape closes it and returns focus to the menu button.
+   The first focusable element on the page is a "Skip to content" link above the bar ( z-skip ),
+   visible only on focus.
+
+What the consumer provides
+items (label and hash), activeId from the section observer, resumeHref , and
+onAskPearl .
+
+Tailwind recipe
+sticky top-[env(safe-area-inset-top)] z-nav flex h-18 max-
+[860px]:h-16 items-center gap-8 px-8 max-[860px]:px-4 data-
+[scrolled=true]:bg-lagoon-veil data-[scrolled=true]:backdrop-
+blur-md data-[scrolled=true]:border-b data-
+[scrolled=true]:border-line
+
+Do and don't
+   Keep it to five links; Skills and Education are reached by scrolling.
+   Never hide the Résumé button on any screen size.
+
+
+
+
+Nacre design system for Kushwant KR's portfolio                                                     13 of 40
+Hero
+Text block with the pearl full stop
+
+
+
+
+The hero's text block states who Kushwant is and what he does, and ends its headline with
+the pearl instead of a full stop.
+
+Anatomy
+ 1. Name line: "Kushwant KR, software engineer for full-stack and AI", in lead size at weight
+    600, mist .
+ 2. Headline: display (wdth 114), pearl , balanced over two or three lines. The final full
+    stop is a .kr-pearl span (0.32em), marked aria-hidden ; the sentence keeps a real
+    full stop for screen readers in a visually hidden span.
+ 3. Sub-headline: lead , pearl , max 60ch.
+ 4. Actions: primary "View my work", secondary "Hire me for a project", quiet "Ask Pearl about
+    me".
+ 5. Status: a neutral badge for the day job and a status badge for freelance availability.
+Name line and headline sit inside one <h1> , so search engines and screen readers get both
+the name and the claim.
+
+Layout with 3D
+On desktop the text block spans columns 1 to 7 of the 12-column grid and the 3D pearl sits
+just past the end of the headline, around columns 8 to 12, so the eye travels from the words
+into the object. On phones the pearl sits above the text, cropped at the top-right, and never
+behind it. The block is in the HTML from the first byte: the headline is the LCP element, and
+the 3D scene never hides or delays it.
+
+The opening (one orchestrated moment)
+When the canvas is ready, the WebGL pearl appears exactly over the CSS full stop, at its size,
+then grows and travels to its hero position over 1,200 ms while the particles condense into
+their orbit. The CSS full stop stays in place: the big pearl grew out of it. This plays once per
+session and never under reduced motion. Nothing else on the page animates in.
+
+What the consumer provides
+ name , role , headline without its final full stop, subheadline , both CTAs,
+ onAskPearl , employment , availability , and a pearlAnchorRef on the full-
+stop span so the 3D layer can read its screen position.
+
+Do and don't
+   One display headline per site. Case-study pages start at h1 .
+   Never put a second accent colour, gradient text, or a typing effect in the headline.
+   Never size the hero to more than hero-min-height ; the Experience section should peek
+   on tall screens.
+
+
+
+
+Nacre design system for Kushwant KR's portfolio                                                    14 of 40
+SectionHeader
+Title, summary, optional aside
+
+
+
+
+Every home-page section opens with its title and a one-line summary of what the visitor will
+find, and nothing above the title.
+
+Anatomy
+   Title: <h2> in h2 (wdth 108), pearl , balanced. Written as a plain description:
+   "Experience", "Freelance and client work", "Projects", "Skills", "Education and achievements",
+   "Let's build something".
+   Summary: lead , mist , max 60ch. One sentence that carries the section's point, with a
+   number where there is one: "Four client projects since 2025, from clinics to cafés."
+   Aside (optional): one element aligned to the summary's baseline on desktop, such as the
+   availability badge in Freelance.
+The section element carries the id used by the navigation ( #freelance ) and
+ scroll-margin-top: var(--nav-height) . The gap to the content below is
+ space-7 .
+
+Tailwind recipe
+ grid max-w-[68ch] gap-3 with the title text-h2 font-bold tracking-
+tight [font-variation-settings:'wdth'_108] text-balance and the
+summary text-lead text-mist max-w-[60ch] .
+
+Do and don't
+   Never put an eyebrow label, a number ("01"), or an all-caps kicker above the title.
+   Never colour or italicise one word of a title.
+   Never centre a section header; everything aligns to the left edge of the grid.
+
+
+
+
+Nacre design system for Kushwant KR's portfolio                                                     15 of 40
+TimelineItem
+Current role with the pearl mark, then a past role
+
+
+
+
+A timeline item is one role in the Experience section, hung on a growth line like a layer of
+nacre, newest first.
+
+Anatomy
+   When (left column, 148 px): "Jul 2026 – present" in small at weight 560, mist , tabular
+   figures, inside <time dateTime> elements.
+   Mark: a 13 px dot on the 1 px line growth line. The current role's mark is the CSS pearl;
+   past roles are hollow line-strong rings.
+   Role: h4 ( <h3> in the outline), pearl .
+   Organisation: organisation name in pearl weight 600, then location in mist :
+   "Knowvation Learnings Pvt Ltd, Hyderabad".
+   Points: 3 to 5 outcome bullets in body , rose markers, each leading with a verb and a
+   number where one exists.
+   Stack: up to five tag badges.
+
+Entries are separated by space-7 of growth line. Below 640 px the date moves above the
+role, on the same line.
+
+What the consumer provides
+ role , org , location , ISO start and optional end (absent means present),
+ points , stack , and current for the pearl mark. Format dates as "Jul 2026", with an
+en dash between start and end.
+
+Tailwind recipe
+Row: grid grid-cols-[148px_minmax(0,1fr)] gap-x-6 max-sm:grid-
+cols-1 . Body: relative grid gap-3 border-l border-line pb-12 pl-8
+last:pb-0 . Mark: absolute -left-[7px] top-2 size-[13px] rounded-
+full ring-[1.5px] ring-inset ring-line-strong bg-lagoon .
+
+Do and don't
+   Only true sequences get a timeline; this is one, so the dates are the markers. No "01, 02"
+   numbering.
+   Never list duties ("Responsible for…"); write outcomes ("Cut quiz-page load time by 48%").
+   Internships and the current role share this component; freelance work never appears here, it
+   has its own section.
+
+
+
+
+Nacre design system for Kushwant KR's portfolio                                                   16 of 40
+CaseStudyCard
+Freelance case study row
+
+
+
+
+A case-study card is a wide row that sells one project by its result, used for both featured
+projects and freelance work.
+
+Anatomy
+   Media (7 of 12 columns): a 16:10 screenshot or muted looping video on shoal , radius-
+   sm , inside the card's reef mat. Video plays only on desktop and only while in view; phones
+   get the poster.
+   Context: small , mist , commas between parts: "Freelance, a Hyderabad clinic, 4 weeks"
+   or "Personal project, 2025".
+   Title: h3 ( <h3> ), linking to the case study. Its link stretches over the whole card with a
+   pseudo-element, so the card is one target.
+   Outcome: one sentence in lead , pearl , leading with the result and its number: "60% of
+   bookings now happen online, without a phone call."
+   Stack: up to five tag badges.
+   Links: quiet buttons such as "Live site", "Code", "Ask Pearl about this", raised above the
+   stretched link so they stay separately clickable.
+Rows alternate media side ( flip ) down a list on desktop; below 768 px the media always
+sits on top.
+
+States
+Hover lifts the mat from reef to shoal . Keyboard focus on the title link draws
+shadow-focus around the whole card. No scale, tilt, or shadow growth on hover.
+
+What the consumer provides
+ kind , context , title , href , outcome , media (with alt text that says what the
+screenshot shows), stack , optional links , flip , and onAskPearl .
+
+Tailwind recipe
+relative grid grid-cols-[minmax(0,7fr)_minmax(0,5fr)] items-
+center gap-8 rounded-md bg-reef p-6 shadow-lustre transition-
+colors hover:bg-shoal focus-within:shadow-focus max-md:grid-
+cols-1
+
+Do and don't
+   Freelance and personal projects use the same card, but the context line always says which it
+   is.
+   Never invent a metric. If there is no number yet, lead with the concrete result ("Doctors
+   confirm bookings from WhatsApp").
+   Never use device-frame mockups or stock images; real screenshots only.
+
+
+
+
+Nacre design system for Kushwant KR's portfolio                                                   17 of 40
+ServiceList
+Four services as hairline rows
+
+
+
+
+The service list tells a freelance client what Kushwant builds, how long it usually takes, and
+with what, as hairline rows instead of a grid of boxes.
+
+Anatomy
+Each service is a row topped by a 1 px line rule:
+
+   Name: h4 , pearl : "AI chatbots and automation".
+   Description: one sentence in body , max 46ch, from the client's side of the table: "A website
+   or WhatsApp assistant that answers customers and books appointments."
+   Meta: small , mist , as a sentence: "Usually 3–6 weeks. Next.js, Node.js, an LLM API."
+   When startingFrom is enabled in config, it follows: "From ₹40,000."
+Two columns on desktop, one below 768 px. Three or four services; never more.
+
+What the consumer provides
+services with name , description , timeline , stack , and optional
+startingFrom (hidden unless config.showPrices is true).
+
+Tailwind recipe
+List: grid grid-cols-2 gap-x-8 max-md:grid-cols-1 . Row: grid
+content-start gap-2 border-t border-line py-6 .
+
+Do and don't
+   Rupee amounts use Indian digit grouping: ₹1,50,000.
+   Never add icons or illustrations per service; the words carry it.
+   Never show a price that is not in config; Pearl quotes only published prices.
+
+
+
+
+Nacre design system for Kushwant KR's portfolio                                                    18 of 40
+ProcessSteps
+Four ordered steps
+
+
+
+
+Process steps show a client the four stages of working with Kushwant; it is numbered
+because the order is the information.
+
+Anatomy
+An ordered list ( <ol> ) of four steps, each topped by a 2 px line rule:
+   Number: generated by a CSS counter in small weight 640, rose , tabular figures.
+   Name: h4 : "Discovery call", "Proposal and quote", "Build with weekly demos", "Launch and
+   support".
+   Description: one sentence in small , mist : "A 30-minute call to understand the problem,
+   the users, and the deadline."
+Four columns on desktop, two below 860 px, one below 480 px.
+
+What the consumer provides
+steps with name and description , in order.
+
+Tailwind recipe
+List: grid grid-cols-4 gap-6 max-[860px]:grid-cols-2 max-
+[480px]:grid-cols-1 [counter-reset:step] . Step: grid content-start
+gap-2 border-t-2 border-line pt-4 [counter-increment:step]
+before:content-[counter(step)] before:text-sm before:font-
+semibold before:text-rose .
+
+Do and don't
+   Use numbers only here and in other true sequences. Services, projects, and skills are never
+   numbered.
+   Keep each description to one sentence; details belong in the proposal, not the page.
+
+
+
+
+Nacre design system for Kushwant KR's portfolio                                                  19 of 40
+SkillTiers
+Daily driver, comfortable, exploring
+
+
+
+
+Skill tiers sort technologies into three honest columns, each skill linking to the work that
+proves it, instead of percentage bars.
+
+Anatomy
+   Tier name: h4 : "Daily driver", "Comfortable", "Exploring".
+   Tier note: one line in small , mist , defining the tier: "Used every week at work or on
+   client projects." / "Shipped at least one real project with it." / "Learning now; ask Pearl what
+   I've built so far."
+   Skills: an inline list of text links in body , pearl , underlined in line-strong ; hover
+   turns them rose . Each link goes to the strongest evidence (a case study, a timeline entry, a
+   repo).
+Three columns on desktop, stacked below 768 px.
+
+What the consumer provides
+ tiers , each with name , note , and skills as { name, evidenceHref } .
+Every Daily-driver skill must have an evidence link; the content check fails the build
+otherwise. Pearl reads the same data for "Has he used X?" answers.
+
+Tailwind recipe
+Grid: grid grid-cols-3 gap-8 max-md:grid-cols-1 . Skill link: text-pearl
+underline decoration-line-strong decoration-1 underline-offset-4
+hover:text-rose hover:decoration-rose .
+
+Do and don't
+   Never show percentages, stars, or progress bars; they claim a precision nobody has.
+   Never pad the lists with every library ever touched; eight to twelve skills per tier at most.
+   Never use logos for skills; names are clearer and faster to scan.
+
+
+
+
+Nacre design system for Kushwant KR's portfolio                                                       20 of 40
+Testimonial
+Two quotes at the end of Freelance
+
+
+
+
+A testimonial is a client's or colleague's own words about working with Kushwant, set as a
+plain quotation with its source.
+
+Anatomy
+ <figure> with a <blockquote> in lead at weight 500, pearl , max 56ch, and a
+ <figcaption> in small , mist : the person's name in pearl weight 600 (when
+they allow it), then role and organisation: "Dr. A. Rao, clinic owner, Hyderabad".
+Place testimonials inside the case study they belong to, or two side by side at the end of the
+Freelance section. They sit directly on lagoon , with no card.
+
+What the consumer provides
+ quote (the person's exact words, lightly trimmed with an ellipsis where shortened),
+ role , and optionally name and org . A testimonial with placeholder: true never
+ships to production.
+
+Do and don't
+   Use only quotes the person approved in writing; keep the approval with the case-study file.
+   Never add star ratings, avatars generated from initials, or giant decorative quote marks.
+   Never rewrite a quote to sound better; shorten it instead.
+
+
+
+
+Nacre design system for Kushwant KR's portfolio                                                  21 of 40
+FormField
+Default, select, invalid, textarea
+
+
+
+
+A form field keeps a label, its control, an optional hint, and an error together, so the contact
+form reads and validates as one unit.
+
+Anatomy
+   Label: ui (16 px, 600), pearl , always visible above the control; optional fields add "
+   (optional)" in mist . Never a placeholder-only label.
+   Control: 48 px minimum height, 16 px text (no zoom on iOS), reef fill, 1.5 px line-
+   strong border, radius-sm . Textareas start at 140 px and grow. Selects draw a 20 px
+   chevron in mist .
+   Hint: small , mist , under the control: "We reply within 24 hours."
+   Error: small weight 520, coral , with an alert icon, replacing the hint: "Enter an email
+   address like name@example.com."
+
+States
+Hover darkens the border to mist ; focus turns it rose and adds shadow-focus ;
+invalid turns it coral and sets aria-invalid with aria-describedby pointing
+at the error. Errors appear after the field loses focus or on submit, never while the visitor is
+still typing.
+
+The contact form
+Fields in order: Name, Email, What's this about? (Job opportunity, Freelance project,
+Collaboration, Just saying hi), Message. Choosing Freelance project reveals Project type,
+Budget (₹ ranges plus "Not sure yet"), and Timeline. The same zod schema validates in the
+browser and in the server action, and the form posts without JavaScript.
+
+Tailwind recipe
+Control: min-h-12 w-full rounded-sm border-[1.5px] border-line-
+strong bg-reef px-3.5 py-2.5 text-base text-pearl
+placeholder:text-mist hover:border-mist focus-visible:border-
+rose focus-visible:outline-none focus-visible:shadow-focus aria-
+invalid:border-coral .
+
+Do and don't
+   Errors say what to do, not what went wrong in system terms: never "Invalid input" or "Error
+   422".
+   Never disable the submit button to signal errors; let the visitor submit and show every error
+   at once, with focus moved to the first.
+
+
+
+
+Nacre design system for Kushwant KR's portfolio                                                    22 of 40
+Toast
+Success and error
+
+
+
+
+A toast confirms that something the visitor did has happened, or says plainly that it failed
+and what to do next.
+
+Anatomy
+A shoal surface with radius-md , shadow-float , and shadow-lustre , max
+420 px wide: a 28 px round icon (check on seaglass-soft for success, alert on coral-
+soft for errors), a title in ui , and an optional line in small , mist .
+
+Placement and timing
+Bottom-left on desktop (the launcher owns bottom-right), bottom-centre above the safe
+area on phones, at z-toast . Success toasts leave after 5 s; error toasts stay until
+dismissed. Announced through an aria-live="polite" region (errors use
+ role="alert" ). Enter by fading and rising 8 px over 240 ms; reduced motion fades only.
+
+Copy
+The title repeats the action's own words in the past tense:
+   "Message sent" / "Kushwant replies within 24 hours."
+   "Email copied" / "kushwant@… is on your clipboard."
+   "Couldn't send your message" / "Check your connection and try again, or email directly."
+
+Do and don't
+   Never stack more than two toasts.
+   Never use a toast for something the visitor must read later; put it on the page.
+
+
+
+
+Nacre design system for Kushwant KR's portfolio                                                23 of 40
+PearlLauncher
+Idle with label, thinking, unread
+
+
+
+
+The pearl launcher is the floating button that opens Pearl; it is the same pearl as the hero's
+3D object and the headline's full stop.
+
+Placement
+Fixed bottom-right, 56 px ( launcher-size ), 48 px on phones. Offsets: right:
+max(24px, env(safe-area-inset-right) + 16px) and bottom:
+max(24px, env(safe-area-inset-bottom) + 16px) . Stacks at z-launcher .
+It appears once the hero has scrolled half out of view; on the hero itself, the hero's "Ask Pearl
+about me" link does the job.
+
+Two renderings, one button
+   With 3D on, the WebGL pearl flies from the hero into this corner (the handoff, P1) and is
+   drawn underneath a transparent button; pass webglPearl so the CSS pearl hides.
+   With 3D off, low tier, or before the canvas loads, the button paints the CSS pearl ( scene-
+   pearl body, scene-sheen-rose and scene-sheen-aqua edges, a white
+   highlight). The two must sit at the same size and position, so switching tiers never moves
+   the target.
+
+States
+   idle: hover scales to 1.06.
+   thinking: Pearl is answering while the panel is closed; a slow hue shimmer (1.6 s). Reduced
+   motion swaps it for a static seaglass ring.
+   open: scales to 0.92 while the panel is open (desktop). On phones the sheet covers it.
+   unread: a 12 px rose dot at the top-right when Pearl replied while closed.
+
+Accessibility
+ <button aria-label="Ask Pearl, Kushwant's AI guide" aria-
+expanded aria-controls="pearl-panel"> . A visible "Ask Pearl" label appears
+beside it on hover and keyboard focus after 400 ms. Escape closes the panel and returns
+focus here.
+
+Tailwind recipe
+ fixed z-launcher size-14 max-sm:size-12 rounded-full shadow-
+float focus-visible:outline-none focus-visible:shadow-focus plus
+the .kr-pearl background utility from the Implementation section.
+
+Do and don't
+   Never add an icon or text on the pearl itself; the pearl is the icon.
+   Never bounce, wiggle, or pulse it to get attention.
+
+
+
+
+Nacre design system for Kushwant KR's portfolio                                                     24 of 40
+ChatPanel
+Answer with sources and a card, then the confirm step
+
+
+
+
+The chat panel is where visitors talk to Pearl: a 400 px side panel on desktop and a 90svh
+bottom sheet on phones, with the page still usable behind it on desktop.
+
+Anatomy
+ 1. Header: a 28 px pearl, "Pearl" in ui 640, a subline in small mist ("Answers from
+    Kushwant's portfolio"), then New chat and Close icon buttons (40 px, labelled).
+ 2. Log ( role="log" , aria-live="polite" ): messages separated by space-5 . -
+    Visitor: a shoal bubble on the right, radius 16 16 4 16, max 85%. - Pearl: no bubble. A
+    meta line (14 px pearl and the word "Pearl" in mist ), then plain paragraphs in pearl ,
+    then parts.
+ 3. Parts inside Pearl's answers: source chips (links to the section the answer came from), a
+    project card, a résumé card, a job-description fit card, and the confirm card that shows
+    exactly what will be sent to Kushwant with Send and Edit buttons.
+ 4. Starters: up to four chips above the composer. At the start they come from the section in
+    view; after an answer, they become two follow-ups.
+ 5. Composer: an auto-growing textarea (48 to 140 px) on lagoon with radius-md , and a
+    48 px round rose send button. Enter sends, Shift+Enter adds a line.
+ 6. Footer: caption , mist : "AI can make mistakes. Answers come from Kushwant's
+    portfolio content." with a link to /privacy.
+
+States
+   streaming: three 8 px pearls bob in the meta line until the first token arrives; text then
+   streams in. The hero pearl shimmers at the same time when 3D is on.
+   error: an inline coral line under the last message: "Pearl couldn't answer that. Try again." with
+   a Retry quiet button.
+   rate-limited: an amber notice: "You've asked a lot of questions in a few minutes. Pearl can
+   answer again at 8:40 PM." plus Copy email.
+   offline: when the model is down or the daily budget is spent, the subline changes to "Quick
+   answers mode" and Pearl answers from the local FAQ, with contact options in every reply.
+
+
+
+
+Nacre design system for Kushwant KR's portfolio                                                        25 of 40
+Behaviour
+Opening moves focus to the composer; Escape or Close returns it to whatever opened the
+panel. On phones the sheet traps focus and the page behind it is inert. Conversations last for
+the browser session; New chat clears them. Opening spring: stiffness 380, damping 34, from
+24 px below with opacity 0; reduced motion uses a 120 ms fade.
+
+What the consumer provides
+id , messages (AI SDK UI messages mapped to PearlPart s), status , starters ,
+onSend , onClose , onNewChat .
+
+Do and don't
+   Never show model names, token counts, or "As an AI language model" copy.
+   Never send anything to Kushwant without the confirm card and a visitor click.
+   Never put Pearl's answers in coloured bubbles; plain text keeps long answers readable.
+
+
+
+
+Nacre design system for Kushwant KR's portfolio                                                  26 of 40
+CodeBlock
+Excerpt from the particle morph
+
+
+
+
+Code blocks show short, real excerpts in case studies and in Pearl's developer answers, in
+Martian Mono on a reef panel.
+
+Anatomy
+   Header: the file path in small , mist ("src/scene/Particles.tsx"), and a quiet sm "Copy"
+   button that becomes "Copied" for 2 s.
+   Body: code style (Martian Mono 15 px, wdth 87.5, line height 1.6), pearl , padded
+   space-4 by space-5 , scrolling horizontally inside its own container.
+   Highlighting maps to tokens: keywords rose , strings seaglass , numbers amber ,
+   comments mist . Everything else stays pearl . All four pass 5.8:1 on reef in both
+   themes.
+   Inline code in running text: code-inline on reef , radius-xs .
+
+What the consumer provides
+ code , language , and an optional filename . Highlight at build time (Shiki with a
+theme generated from these tokens), never in the browser.
+
+Do and don't
+   Keep excerpts under 25 lines; link to the repo for the rest.
+   Never use the mono face for labels, dates, or metadata.
+
+
+
+
+Nacre design system for Kushwant KR's portfolio                                               27 of 40
+Layout
+Every section is left-aligned on one 12-column grid, sits directly on lagoon , and leaves the
+3D layer room to breathe on the right.
+
+
+Grid and breakpoints
+ Breakpoint             Width                Columns        Column gap         Side gutter                            Section padding
+
+ Phone                  below 640 px         4              16 px              max(16px, env(safe-area-inset-left))   space-8 (64 px)
+
+ Tablet (sm, md)        640–1023 px          8              24 px              32 px                                  space-9 (96 px)
+
+ Desktop (lg, xl)       1024 px and up       12             24 px              48 px                                  space-10 (128 px)
+
+   Content never exceeds container-max (1200 px); the canvas and section backgrounds
+   run full width.
+   Running text stops at measure (68ch). Sections set scroll-margin-top: var(--
+   nav-height) .
+   Lay out siblings with gap . Never stack margins between sections.
+
+
+Home page, section by section
+Each wireframe shows desktop, then the phone change. Brackets are buttons or badges; the
+dot (•) is the pearl.
+
+Hero
+  KR•                                 About Experience Freelance Projects Contact               [Résumé] •Ask Pearl
+
+  Kushwant KR, software engineer for full-stack and AI
+  I build web products                              . · . · .
+  that think and move• ─ ─ ─ ─ ─ ─ ─ ─ ─ ▶     ·    ( PEARL )    ·     orbit of particles
+                                                    ' · ' · '
+  Associate Software Engineer at Knowvation Learnings and a freelance
+  developer in Hyderabad. Full-stack apps with a soft spot for AI and 3D.
+  (View my work) (Hire me for a project) •Ask Pearl about me
+  [ASE at Knowvation Learnings] [• Freelance: 1 slot open in November]
+
+  text: columns 1–7                                                 3D: columns 8–12, centred on the headline's end
+
+
+Phone: the pearl sits above the text, cropped at the top-right at about 60% of the screen
+width; the text never overlaps it. Height is hero-min-height .
+
+About
+  About
+  A 98-word bio in body, max 68ch.                 [portrait, duotone, 4:5, P1]
+  Based in Hyderabad B.Tech CSE, 2026 ASE at Knowvation 4 freelance projects
+  What I'm into: LLM apps and retrieval, real-time 3D on the web, developer tooling
+  Now: building Pearl, learning GLSL shaders
+
+
+The quick facts are a definition list laid out in a row that wraps; separate them with space,
+not with dots.
+
+Experience
+  Experience
+  Summary line in lead.
+
+  Jul 2026 – present         • Associate Software Engineer
+                             │ Knowvation Learnings Pvt Ltd, Hyderabad
+                             │ • Built a cohort dashboard used by 1,200 learners
+                             │ [Next.js] [TypeScript] [PostgreSQL]
+                             │
+  Jan – Jun 2026             ○   Software Engineering Intern
+
+
+Phone: the date moves above each role.
+
+
+
+
+Nacre design system for Kushwant KR's portfolio                                                                                         28 of 40
+Freelance
+  Freelance and client work                                                   [• Freelance: 1 slot open in November]
+  Four client projects since 2025, from clinics to cafés.
+
+  ──────────────────────────────                   ──────────────────────────────
+  Web apps and dashboards                               AI chatbots and automation
+  ──────────────────────────────                   ──────────────────────────────
+  Landing pages                                         3D and interactive experiences
+
+  ┌──────────────────────────────────────┬──────────────────────────┐
+  │ screenshot 16:10                           │ Freelance, a clinic, 4 wk │
+  │                                            │ Clinic booking assistant │
+  │                                            │ 60% of bookings online    │
+  └──────────────────────────────────────┴──────────────────────────┘
+  ┌──────────────────────────┬──────────────────────────────────────┐
+  │ next case study, flipped │ screenshot 16:10                                       │
+  └──────────────────────────┴──────────────────────────────────────┘
+
+
+  1 ──────────       2 ──────────       3 ──────────   4 ──────────
+  Discovery           Proposal             Weekly demos     Launch
+
+  "Quote…" Clinic owner                           "Quote…" Founder
+
+  (Start a project)         •Scope it with Pearl
+
+
+Phone: services stack, case-study media goes on top, the process becomes one column.
+
+Projects
+  Projects
+  Summary line.
+  (All) (AI and ML) (Full-stack) (3D and creative) (Tools)                          filter chips, one row
+
+  [featured case-study rows, alternating sides, same card as Freelance]
+
+  More projects (P1): a compact list
+  2025 CodeLens       VS Code extension that explains code                      TypeScript       Code Live
+  2024 …
+
+
+Phone: the filter row scrolls sideways; the archive list stacks into two lines per project.
+
+Skills, Education and achievements
+  Skills
+  Daily driver                   Comfortable                    Exploring
+  note                           note                           note
+  TypeScript React …             React Three Fiber …            GLSL shaders …
+
+  Education and achievements
+  B.Tech, Computer Science and Engineering                      Certifications and achievements
+  Institute, 2022–2026                                          2025 AWS Certified Cloud Practitioner
+  Final-year project: link                                      2025 Winner, CodeSprint hackathon
+
+
+Contact
+  Let's build something
+  Tell me about a role, a project, or an idea. I reply within 24 hours.
+
+  form, columns 1–7                                              Or reach me directly, columns 9–12
+  Name                 Email                                     kushwant@… (Copy email)
+  What's this about? ▾                                           LinkedIn GitHub
+  Message                                                        (Book a 20-minute call) P1
+  (Send message)                                                 It's 8:08 PM in Hyderabad
+
+
+Footer
+Mini navigation, socials, "How this site is built", "Last updated 22 Oct 2026", the Motion and
+3D toggles, and "© 2026 Kushwant KR". One row on desktop, stacked on phones, small in
+ mist .
+
+
+Pearl's panel
+   Desktop: fixed to the right at chat-panel-width , top: calc(var(--nav-
+   height) + 16px) , bottom and right 24 px plus safe-area insets, z-chat . The
+   page behind stays scrollable and clickable.
+   Phone: a bottom sheet of 90svh with radius-lg top corners, a 36 by 4 px line-
+   strong drag handle, a lagoon-veil backdrop, and the page made inert.
+
+
+
+
+Nacre design system for Kushwant KR's portfolio                                                                        29 of 40
+Case-study pages
+A single 8-column reading column (columns 3–10 on desktop): breadcrumb ("Work / Clinic
+booking assistant"), h1 , the outcome in lead , a facts row (role, timeline, team, stack), a
+full-width 16:10 hero image (columns 1–12), then sections in h2 : The problem, What I built,
+Key decisions, Results, What I'd do differently. Code blocks and diagrams may run columns 2–
+11. Previous and next links close the page.
+
+
+Stacking
+ z-canvas 0 for the fixed canvas, z-content 1, z-nav 40, z-launcher 50, z-
+chat 60, z-palette 70, z-toast 80, z-skip 100. Nothing uses a z-index outside
+this list.
+
+
+
+
+Nacre design system for Kushwant KR's portfolio                                                30 of 40
+Motion and 3D
+The scene is one pearl in a field of particles that rearranges itself as the visitor scrolls; every
+value below is a starting point to tune by eye, not a law.
+
+
+Motion tokens
+ Token                                             Value                                                   Use
+
+  --duration-press                                 100ms                                                   Press feedback (1 px down)
+
+  --duration-quick                                 160ms                                                   Hover colour changes, launcher scale
+
+  --duration-base                                  240ms                                                   Menus, toasts, chips, the nav background
+
+  --duration-panel                                 320ms                                                   Chat panel and sheet when springs are unavailable
+
+  --duration-scene                                 1200ms                                                  The hero opening move
+
+  --ease-out                                       cubic-bezier(0.22, 1, 0.36, 1)                          Entrances and hovers
+
+  --ease-in-out                                    cubic-bezier(0.65, 0, 0.35, 1)                          Morphs and the opening move
+
+ spring panel                                      stiffness 380, damping 34                               Chat panel and mobile sheet (Motion)
+
+ damp scroll                                       smoothTime 0.25 s                                       Formation progress ( maath easing.damp )
+
+ lerp pointer                                      0.08 per frame                                          Pointer influence on particles and the pearl's highlight
+
+
+Motion tokens live in CSS and in src/lib/motion.ts ; the design system has no motion
+token family, so this table is the source.
+
+
+What moves, and when
+   Unprompted: the hero opening (once per session) and the particle formations following
+   scroll. Nothing else.
+   In answer to a visitor: hovers, presses, the chat panel opening, Pearl's typing dots, the
+   launcher's shimmer while Pearl answers, toasts.
+   Never: section fade-ups on scroll, staggered card entrances, parallax text, cursor trails,
+   custom cursors, marquee text.
+
+
+The opening sequence
+ Moment                                 What happens
+
+ First paint                            The name, the headline with its CSS pearl full stop, and the buttons are already visible. Nothing waits for JavaScript.
+
+ Canvas ready (typically 0.3–0.9 s)     The canvas fades in over 400 ms; the WebGL pearl appears exactly over the full stop, at its size.
+
+ Next 1,200 ms                          The pearl grows to hero size and travels to its place on --ease-in-out . The particles condense from a wide scatter into the orbit ring over 1,400 ms.
+
+ After                                  Idle: the pearl turns once every 40 s, the particles drift slowly, the highlight follows the pointer.
+
+
+Skip the sequence when prefers-reduced-motion is set or sessionStorage
+holds kr-opened ; the scene then starts in its idle state.
+
+
+Formations
+Every particle stores a position in each of the five formations; the vertex shader blends
+between them with weights driven by scroll. Each section's first 35% of scroll blends from
+the previous formation with a smoothstep.
+
+ Formation       Sections                         Shape                                                  Parameters                                                                           Opacity
+
+ Orbit           Hero                             Tilted ring around the pearl                           Radius 2.6, tube spread σ 0.35, tilt 20°; 15% of particles in a halo at radius 4–6   100%
+
+ Layers          About, Experience                Concentric shells, like nacre in cross-section         Radii 1.3, 1.7, 2.1, 2.5, 2.9; jitter 0.03                                           80%
+
+ Clusters        Freelance                        One cluster per service                                Gaussian σ 0.45; centres on an arc from x −3 to 3                                    80%
+
+ Field           Projects, Skills, Education      Sparse dust behind the content                         Uniform box 14 × 8 × 6                                                               35%
+
+ Wave            Contact, footer                  A calm swell                                           Sheet 14 × 6 at y −1.6; amplitude 0.15, speed 0.4                                    60%
+
+
+
+
+Nacre design system for Kushwant KR's portfolio                                                                                                                                               31 of 40
+The pearl
+ Property                       High and Medium                                                 Low
+
+ Geometry                       Sphere, radius 1, 128 segments (64 on Medium)                   48 segments
+
+ Material                          MeshPhysicalMaterial                                         Matcap baked from the High pearl (128 px), or MeshStandardMaterial until it exists
+
+ Colour                            scene-pearl                                                   scene-pearl
+
+ Roughness / metalness          0.18 / 0                                                        0.22 / 0.05
+
+ Clearcoat                      1, roughness 0.08                                               none
+
+ Iridescence                    1, IOR 1.3, thickness 200–600 nm                                none
+
+ Sheen                          0.4, colour scene-sheen-rose , roughness 0.5                    none
+
+ Environment intensity          1.2                                                             1.0
+
+
+Placement: desktop x +1.9, y +0.2, scale 1; phones x +1.1, y +1.6, scale 0.75. During the handoff
+(P1) its target is the launcher's screen position unprojected onto the z = 0 plane, scaled to 56
+px.
+
+
+Light and colour management
+   No HDR download. A procedural environment ( Environment , resolution 256) holds three
+   light panels: a key panel top-left (intensity 2.2, 5 × 2, white), a rim ring behind-right (intensity
+   1.4, scene-sheen-aqua ), and a warm fill below-right (intensity 0.6, scene-sheen-
+   rose ).
+   AgX tone mapping at exposure 1.0, sRGB output. Fog scene-fog from 6 to 16 units.
+
+
+Particles
+   Count by tier: 40,000 High, 15,000 Medium, 5,000 Low. One Points draw call.
+   Size 1.5–3.5 px at pixel ratio 1, attenuated by depth and multiplied by the pixel ratio.
+   Colour scene-particle ; a random 15% use scene-particle-glow . A soft disc
+   alpha (smoothstep from 0.5 to 0.15 of the point radius).
+   Additive blending in the Lagoon theme, normal blending in the Pearl theme; depthWrite
+   off.
+   Pointer: particles within 0.18 (normalised screen units) of the pointer are pushed outward
+   with strength 0.35, eased with the pointer lerp. No pointer effect on touch devices.
+   Thinking pulse: while Pearl streams an answer, particles within radius 3 drift 4% toward the
+   pearl and scene-particle-glow rises 20%, easing back over 800 ms.
+
+
+Post-processing
+ Tier                    Effects
+
+ High                    Bloom (intensity 0.6, threshold 0.6, mipmap blur), film grain (opacity 0.035), vignette (offset 0.3, darkness 0.6)
+
+ Medium                  Film grain only
+
+ Low and Off             None
+
+
+
+Camera
+Perspective, field of view 35°, position (0, 0, 8), looking at the origin. The camera does not
+move with scroll; formations do. A slight pointer parallax (±0.15 units) applies on desktop
+High and Medium only.
+
+
+Reduced motion, Low, and Off
+   Reduced motion: render one frame of the Orbit formation with no pointer effect and no
+   post-processing, then stop the loop.
+   Off (no WebGL 2, Save-Data, or the footer toggle): the inline SVG poster of the same
+   composition, a pearl drawn from radial gradients with a ring of about 120 small circles in
+    scene-particle .
+   The poster and the first WebGL frame must match closely enough that the cross-fade reads
+   as the scene waking up, not as a swap.
+
+
+
+
+Nacre design system for Kushwant KR's portfolio                                                                                                                                      32 of 40
+Pearl chat
+Pearl looks like part of the site, not a third-party widget: same type, same lagoon, plain-text
+answers, and the pearl as its face.
+
+
+Voice
+Pearl is warm, concise, and a little witty, and always talks about Kushwant in the third
+person. Answers run 2 to 4 sentences, lists at most 5 items, and most end with one useful
+next step.
+
+ Situation                      Pearl says
+
+ Opening                        "Hi, I'm Pearl, Kushwant's AI guide. Ask about his work, check his fit for a role, or scope a project with him."
+
+ Known answer                   "Yes. His latest is a booking assistant for a Hyderabad clinic: patients book in the website chat, and the doctor confirms from WhatsApp."
+
+ Not in the knowledge base      "I don't have that in Kushwant's notes. Want me to pass the question to him?"
+
+ Salary or rates                "That's best discussed with Kushwant directly. I can send him your details, or you can book a call."
+
+ Off-topic request              "I'm only here to help with questions about Kushwant and his work. Try asking which projects use AI."
+
+ Pasted job description         "Here's how Kushwant lines up with this role." followed by the fit card
+
+ Rate limited                   "You've asked a lot of questions in a few minutes. I can answer again at 8:40 PM; meanwhile, his email is below."
+
+ Quick answers mode             "I'm in quick answers mode right now, so my replies are shorter. For anything detailed, message Kushwant."
+
+
+
+Parts and their look
+   Text: plain paragraphs in body at 16 px, pearl . Markdown allowed: bold, lists, links. No
+   headings inside answers.
+   Source chips: Chip kind source, one per section used, under the text.
+   Project card and résumé card: reef -inside- reef is not allowed, so chat cards sit on
+   lagoon with a 1 px line outline, radius-md , and one or two sm buttons.
+   Fit card (JD match, P1): two short lists, "Matches" (each item links to its evidence) and "Gaps"
+   (honest, in mist ), then actions: Download résumé, Book a call.
+   Confirm card: everything Pearl will send, word for word, then "Send message" (primary sm)
+   and "Edit" (secondary sm). After sending: "Sent. Kushwant usually replies within a day."
+
+
+Starters by context
+ Where the visitor is            Starters
+
+ Anywhere, first open            "Who is Kushwant?", "Show me his best project", "Is he available for freelance?", "Check his fit for my role"
+
+ Freelance                       "What has he built for clients?", "How does a project with him work?", "Help me scope my project"
+
+ Projects                        "What's the hardest problem he solved?", "Which projects use AI?"
+
+ A case-study page               "How was this built?", "What would he do differently?"
+
+
+
+Phone sheet
+90svh, radius-lg top corners, a 36 × 4 px line-strong drag handle (swipe down or
+tap the backdrop to close), composer padded by env(safe-area-inset-bottom) .
+The keyboard pushes the composer up; the log keeps the newest message in view.
+
+
+Keyboard
+Enter sends; Shift+Enter adds a line; Escape closes; Tab moves through messages' links and
+buttons in order. Ctrl or ⌘ K opens the command palette, which has an "Ask Pearl" entry
+that passes the typed text.
+
+
+Never
+   Model names, token counts, "As an AI language model", or system prompt details.
+   Emoji, exclamation-heavy enthusiasm, or first-person claims as Kushwant.
+   Sending anything to Kushwant before the visitor presses Send message on the confirm card.
+
+
+
+
+Nacre design system for Kushwant KR's portfolio                                                                                                                              33 of 40
+Writing
+Words are part of the interface: plain verbs, sentence case, the visitor's vocabulary, and one
+job per element.
+
+
+Rules
+   Name things by what visitors recognise: "Résumé", "Freelance", "Ask Pearl", never "CV
+   download module" or "AI agent".
+   A control says what happens, and the confirmation repeats it: "Send message" leads to
+   "Message sent".
+   Errors say how to fix the problem, in the interface's voice, without apologising.
+   Empty and offline states point to the next action.
+   No exclamation marks in interface copy. No emoji anywhere.
+   Avoid dashes as asides; use full stops or commas.
+
+
+Interface copy
+ Where                                Copy                                                                            Notes
+
+ Hero, primary                        View my work                                                                    Scrolls to Projects
+
+ Hero, secondary                      Hire me for a project                                                           Scrolls to Freelance
+
+ Hero, quiet                          Ask Pearl about me                                                              Opens Pearl with the "Who is Kushwant?" starter sent
+
+ Nav                                  Résumé                                                                          Downloads the PDF; the file is named Kushwant-KR-
+                                                                                                                      Resume.pdf
+
+ Freelance badge                      Freelance: 1 slot open in November                                              From availability.freelance in config
+
+ Freelance CTA                        Start a project                                                                 Opens Contact with "Freelance project" selected
+
+ Freelance CTA, quiet                 Scope it with Pearl                                                             Opens Pearl in scoping mode
+
+ Case-study card links                Live site, Code, Ask Pearl about this
+
+ Contact heading                      Let's build something
+
+ Contact summary                      Tell me about a role, a project, or an idea. I reply within 24 hours.
+
+ Contact submit                       Send message                                                                    Busy: "Sending message"
+
+ Contact success toast                Message sent / Kushwant replies within 24 hours.
+
+ Contact failure toast                Couldn't send your message / Check your connection and try again, or email      Stays until dismissed
+                                      directly.
+
+ Email field error                    Enter an email address like name@example.com.
+
+ Required field error                 Enter your name. / Tell me a little about what you need.                        One per field
+
+ Copy email                           Copy email, then "Email copied"
+
+ Local time                           It's 8:08 PM in Hyderabad                                                       Updates every minute
+
+ Footer                               How this site is built                                                          Links to /colophon
+
+ Footer toggles                       Motion: Auto, Reduced. 3D: Auto, Low, Off.                                      Segmented controls
+
+ 404 heading                          This page is lost at sea
+
+ 404 text                             The link may be old, or the page moved. Head back home, or ask Pearl where to   Buttons: "Go home", "Ask Pearl"
+                                      find it.
+
+ Chat placeholder                     Ask about Kushwant's work
+
+ Chat footer                          AI can make mistakes. Answers come from Kushwant's portfolio content.           Links "Privacy"
+
+ Chat retry                           Pearl couldn't answer that. Try again.                                          Button: "Retry"
+
+ Placeholder ribbon (preview builds   Sample content                                                                  On every entry with placeholder: true
+ only)
+
+
+
+Numbers, dates, and money
+   Dates: "Jul 2026", ranges with an en dash: "Jan – Jun 2026"; "present" in lowercase.
+   Time: "8:08 PM" with IST implied; say "in Hyderabad" when it matters.
+
+
+
+
+Nacre design system for Kushwant KR's portfolio                                                                                                                              34 of 40
+  Money: "₹40,000", "₹1,50,000"; ranges "₹40,000 – ₹1,00,000"; "Not sure yet" as the last
+  budget option.
+  Percentages and counts in digits: "60% of bookings", "1,200 learners".
+
+
+
+
+Nacre design system for Kushwant KR's portfolio                                             35 of 40
+Implementation
+In the codebase, tokens.json stays the single source: a small script turns it into Tailwind
+v4 theme CSS, and components use utilities named after the tokens ( bg-reef , text-
+mist , rounded-pill , shadow-focus ). Everything on this page was compiled
+against Tailwind CSS 4.3.3.
+
+
+Files
+ Path                                    What it is
+
+  design/tokens.json                     A copy of this system's tokens.json . Update it from the design system; never edit it by hand.
+
+  scripts/tokens.ts                      Generates src/styles/tokens.css . Run pnpm tokens after updating design/tokens.json .
+
+  src/styles/tokens.css                  Generated: theme variables, the Tailwind theme mapping, z-index utilities.
+
+  src/app/globals.css                    Hand-written: imports, font mapping, type utilities, the pearl utility, base styles.
+
+  src/app/fonts.ts                       next/font setup for Anek Latin, Anek Telugu, Martian Mono.
+
+  src/lib/motion.ts                      Motion presets for the motion package.
+
+  src/scene/colors.ts                    Reads the scene-* tokens for Three.js.
+
+
+
+The generator
+Add "tokens": "node scripts/tokens.ts" to package.json scripts; Node
+22.18 and later run TypeScript files directly.
+
+  // scripts/tokens.ts: turns design/tokens.json (exported from the Nacre design system) into src/styles/tokens.css.
+  // Run with `node scripts/tokens.ts` (Node 22.18+ runs TypeScript directly) or via `pnpm tokens`.
+  import { readFileSync, writeFileSync } from 'node:fs';
+
+  type Value = string | Record<string, string>;
+  interface Token { name: string; value: Value; usage?: string }
+  interface Family { tokens: Token[] }
+
+  const src = JSON.parse(readFileSync('design/tokens.json', 'utf8'));
+  const themes: { id: string }[] = src.color.themes;
+  const first = themes[0].id;
+
+  const pick = (t: Token, theme: string): string =>
+    typeof t.value === 'string' ? t.value : (t.value[theme] ?? t.value[first]);
+  // "{lagoon}" is an alias of another token
+  const css = (v: string): string => v.replace(/^\{([A-Za-z0-9_.-]+)\}$/, 'var(--$1)');
+  const fam = (key: string): Token[] => ((src[key] as Family | undefined)?.tokens ?? []);
+
+  const colors = fam('color');
+  const shadows = fam('shadow');
+  const themed = (theme: string, onlyChanged: boolean): string =>
+    [
+      ...colors.map((t) => [t.name, t] as const),
+      ...shadows.map((t) => [`nacre-${t.name}`, t] as const),
+    ]
+      .filter(([, t]) => !onlyChanged || (typeof t.value !== 'string' && pick(t, theme) !== pick(t, first)))
+      .map(([name, t]) => ` --${name}: ${css(pick(t, theme))};`)
+      .join('\n');
+
+  const plain = (keys: string[]): string =>
+    keys.flatMap(fam).map((t) => ` --${t.name}: ${pick(t, first)};`).join('\n');
+
+  const out = [
+    '/* Generated from design/tokens.json by scripts/tokens.ts. Edit the design system, not this file. */',
+    '',
+    `:root,\n[data-theme="${first}"] {\n color-scheme: ${first};\n${themed(first, false)}\n}`,
+    ...themes.slice(1).map((t) => `[data-theme="${t.id}"] {\n color-scheme: ${t.id};\n${themed(t.id, true)}\n}`),
+    '',
+    `:root {\n${plain(['spacing', 'size', 'zIndex'])}\n}`,
+    '',
+    '@theme {',
+    ' --radius-*: initial;',
+    fam('radius').map((t) => ` --${t.name}: ${pick(t, first)};`).join('\n'),
+    '}',
+    '',
+    '@theme inline {',
+    colors.map((t) => ` --color-${t.name}: var(--${t.name});`).join('\n'),
+    ...shadows.map((t) =>
+      t.name === 'shadow-lustre'
+        ? ' --inset-shadow-lustre: var(--nacre-shadow-lustre);'
+        : ` --${t.name}: var(--nacre-${t.name});`,
+    ),
+    '}',
+    '',
+    ...fam('zIndex').map((t) => `@utility ${t.name} {\n z-index: var(--${t.name});\n}`),
+    '',
+  ].join('\n');
+
+
+
+
+Nacre design system for Kushwant KR's portfolio                                                                                           36 of 40
+  writeFileSync('src/styles/tokens.css', out);
+  console.log(`src/styles/tokens.css: ${colors.length} colours, ${themes.length} themes`);
+
+
+What it writes (abridged):
+
+  /* Generated from design/tokens.json by scripts/tokens.ts. Edit the design system, not this file. */
+  :root,
+  [data-theme="dark"] {
+    color-scheme: dark;
+    --lagoon: #0d2627;
+    --reef: #123131;
+    --pearl: #f3eee6;
+    --rose: #f4a7b9;
+    /* … every colour token … */
+    --scene-fog: var(--lagoon);
+    --nacre-shadow-focus: 0 0 0 2px #0d2627, 0 0 0 4px #f4a7b9;
+  }
+  [data-theme="light"] {
+    color-scheme: light;
+    --lagoon: #f0f3f1;
+    --pearl: #0d2627;
+    --rose: #a83d5a;
+    /* … only the values that change … */
+  }
+  @theme {
+    --radius-*: initial;
+    --radius-xs: 4px;
+    --radius-sm: 8px;
+    --radius-md: 14px;
+    --radius-lg: 22px;
+    --radius-pill: 999px;
+  }
+  @theme inline {
+    --color-lagoon: var(--lagoon);
+    --color-rose: var(--rose);
+    /* … one --color-* per colour token … */
+    --inset-shadow-lustre: var(--nacre-shadow-lustre);
+    --shadow-float: var(--nacre-shadow-float);
+    --shadow-focus: var(--nacre-shadow-focus);
+  }
+  @utility z-nav {
+    z-index: var(--z-nav);
+  }
+
+
+Shadows get a nacre- prefix on their raw variables so Tailwind's --shadow-* names
+can point at them without referring to themselves. shadow-lustre becomes Tailwind's
+ inset-shadow-lustre , so it combines with shadow-float or shadow-focus
+on one element.
+
+
+globals.css
+  @import "tailwindcss";
+  @import "../styles/tokens.css";
+
+  @theme inline {
+    --font-sans: var(--font-anek), var(--font-anek-telugu), ui-sans-serif, system-ui, sans-serif;
+    --font-telugu: var(--font-anek-telugu), var(--font-anek), sans-serif;
+    --font-mono: var(--font-martian), ui-monospace, "SF Mono", Menlo, monospace;
+  }
+
+  @theme {
+    --ease-nacre-out: cubic-bezier(0.22, 1, 0.36, 1);
+    --ease-nacre-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+    --animate-shimmer: shimmer 1600ms ease-in-out infinite;
+    @keyframes shimmer {
+      0%, 100% { filter: hue-rotate(0deg) brightness(1); }
+      50% { filter: hue-rotate(-24deg) brightness(1.1); }
+    }
+  }
+
+  /* One class per type style: size, leading, weight, tracking and width together */
+  @utility type-display { font-size: clamp(3rem, 2.5rem + 2.222vw, 4.5rem); line-height: 1.02; font-weight: 760; letter-spacing: -0.015em;
+  font-variation-settings: "wdth" 114; text-wrap: balance; }
+  @utility type-h1 { font-size: clamp(3rem, 2.75rem + 1.111vw, 3.75rem); line-height: 1.05; font-weight: 720; letter-spacing: -0.01em;
+  font-variation-settings: "wdth" 110; text-wrap: balance; }
+  @utility type-h2 { font-size: clamp(2.25rem, 2rem + 1.111vw, 3rem); line-height: 1.08; font-weight: 700; letter-spacing: -0.01em; font-
+  variation-settings: "wdth" 108; text-wrap: balance; }
+  @utility type-h3 { font-size: clamp(1.5rem, 1.25rem + 1.111vw, 2.25rem); line-height: 1.15; font-weight: 660; letter-spacing: -0.005em;
+  font-variation-settings: "wdth" 104; text-wrap: balance; }
+  @utility type-h4 { font-size: clamp(1.3125rem, 1.25rem + 0.2778vw, 1.5rem); line-height: 1.25; font-weight: 620; }
+  @utility type-lead { font-size: clamp(1.125rem, 1.0625rem + 0.2778vw, 1.3125rem); line-height: 1.5; font-weight: 460; }
+  @utility type-body { font-size: clamp(1rem, 0.9583rem + 0.1852vw, 1.125rem); line-height: 1.6; font-weight: 460; }
+  @utility type-ui { font-size: 1rem; line-height: 1.25; font-weight: 600; }
+  @utility type-small { font-size: 0.875rem; line-height: 1.5; font-weight: 520; }
+  @utility type-caption { font-size: 0.75rem; line-height: 1.4; font-weight: 540; }
+  @utility type-code { font-family: var(--font-mono); font-size: 0.9375rem; line-height: 1.6; font-weight: 420; font-variation-settings:
+  "wdth" 87.5; }
+
+  /* The pearl: the only gradient in the system */
+
+
+
+
+Nacre design system for Kushwant KR's portfolio                                                                                     37 of 40
+  @utility pearl {
+    border-radius: 9999px;
+    background:
+      radial-gradient(circle at 34% 28%, #fff 0 9%, #fff0 32%),
+      radial-gradient(circle at 72% 78%, var(--scene-sheen-aqua) 0 6%, #9ee6e000 48%),
+      radial-gradient(circle at 22% 74%, var(--scene-sheen-rose) 0 5%, #f4a7b900 46%),
+      radial-gradient(circle at 50% 46%, var(--scene-pearl) 0 55%, #b7c2c6 100%);
+    box-shadow: inset -0.05em -0.07em 0.12em #0d262766;
+  }
+
+  @layer base {
+    html { background: var(--lagoon); }
+    body { background: var(--lagoon); color: var(--pearl); font-family: var(--font-sans); font-weight: 460; -webkit-font-smoothing:
+  antialiased; }
+    ::selection { background: var(--rose); color: var(--on-rose); }
+    :focus-visible { outline: 2px solid var(--rose); outline-offset: 2px; }
+    section[id] { scroll-margin-top: var(--nav-height); }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms
+  !important; scroll-behavior: auto !important; }
+    }
+  }
+
+
+Components that draw their own focus ring add focus-visible:outline-none
+focus-visible:shadow-focus ; everything else gets the base outline, so nothing is
+ever left without one.
+
+
+Fonts
+  // src/app/fonts.ts
+  import { Anek_Latin, Anek_Telugu, Martian_Mono } from 'next/font/google';
+
+  export const anek = Anek_Latin({ subsets: ['latin', 'latin-ext'], axes: ['wdth'], variable: '--font-anek', display: 'swap' });
+  export const anekTelugu = Anek_Telugu({ subsets: ['telugu'], axes: ['wdth'], variable: '--font-anek-telugu', display: 'swap', preload:
+  false });
+  export const martian = Martian_Mono({ subsets: ['latin'], axes: ['wdth'], variable: '--font-martian', display: 'swap', preload: false
+  });
+
+
+In src/app/layout.tsx : <html lang="en-IN" data-theme="dark"
+className={ ${anek.variable} ${anekTelugu.variable} ${martian.variable} }> . Only Anek
+Latin preloads; Telugu and mono load when a page first uses them. All three are under the
+SIL Open Font License.
+
+
+Which utility for which token
+ Token
+             Utilities
+ family
+
+ Colour       bg-lagoon , bg-reef , bg-shoal , text-pearl , text-mist , text-rose , bg-rose , text-on-rose , border-line , border-line-strong , ring-
+             line , bg-seaglass-soft text-seaglass , … one per colour token
+
+ Radius       rounded-xs , rounded-sm , rounded-md , rounded-lg , rounded-pill (Tailwind's default radii are cleared)
+
+ Shadow       inset-shadow-lustre , shadow-float , shadow-focus
+
+ Spacing     Tailwind's 4 px scale: space-1 = 1, space-2 = 2, space-3 = 3, space-4 = 4, space-5 = 6, space-6 = 8, space-7 = 12, space-8 = 16, space-9 = 24, space-
+             10 = 32 (as in p-6 , gap-12 )
+
+ Type         type-display … type-caption , type-code , font-telugu
+
+ Size         max-w-(--container-max) , max-w-(--measure) , h-(--nav-height) , size-(--launcher-size)
+
+ Z-index      z-canvas , z-content , z-nav , z-launcher , z-chat , z-palette , z-toast , z-skip
+
+ Motion       ease-nacre-out , ease-nacre-in-out , animate-shimmer
+
+ The pearl    pearl with a size, as in pearl size-[0.32em]
+
+
+
+
+Nacre design system for Kushwant KR's portfolio                                                                                                            38 of 40
+Three.js colours
+  // src/scene/colors.ts: read once on mount and again when data-theme changes
+  import { Color } from 'three';
+
+  const read = (name: string) =>
+    getComputedStyle(document.documentElement).getPropertyValue(`--${name}`).trim();
+
+  export function sceneColors() {
+    return {
+      particle: new Color(read('scene-particle')),
+      glow: new Color(read('scene-particle-glow')),
+      pearl: new Color(read('scene-pearl')),
+      sheenRose: new Color(read('scene-sheen-rose')),
+      sheenAqua: new Color(read('scene-sheen-aqua')),
+      fog: new Color(read('scene-fog')),
+    };
+  }
+
+
+three converts these sRGB hex values into its linear working space, so the canvas
+matches the CSS.
+
+
+Motion presets
+  // src/lib/motion.ts
+  export const ease = { out: [0.22, 1, 0.36, 1], inOut: [0.65, 0, 0.35, 1] } as const;
+  export const duration = { press: 0.1, quick: 0.16, base: 0.24, panel: 0.32, scene: 1.2 } as const;
+  export const spring = { panel: { type: 'spring', stiffness: 380, damping: 34 } } as const;
+
+
+Wrap the app in <MotionConfig reducedMotion="user"> so every Motion
+animation honours the visitor's setting.
+
+
+Guardrails for people and coding agents
+   Tailwind's default palette still compiles ( text-rose-400 builds without a warning), so CI
+   fails on it: grep -rEn
+   "\b(bg|text|border|ring|fill|stroke|outline|decoration)-
+   ((slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|f
+   [0-9]{2,3}|black|white)\b" src/ must find nothing.
+   No hex colours in components: only src/styles/tokens.css , the pearl utility, and
+   src/scene/ may contain them.
+   No arbitrary font sizes ( text-[17px] ); use a type-* utility.
+
+
+If you add shadcn/ui
+Point its variables at Nacre tokens instead of keeping its defaults:
+
+  :root {
+    --background: var(--lagoon); --foreground: var(--pearl);
+    --card: var(--reef); --card-foreground: var(--pearl);
+    --popover: var(--shoal); --popover-foreground: var(--pearl);
+    --primary: var(--rose); --primary-foreground: var(--on-rose);
+    --secondary: var(--shoal); --secondary-foreground: var(--pearl);
+    --muted: var(--reef); --muted-foreground: var(--mist);
+    --accent: var(--rose-soft); --accent-foreground: var(--rose);
+    --destructive: var(--coral);
+    --border: var(--line); --input: var(--line-strong); --ring: var(--rose);
+  }
+
+
+
+
+Nacre design system for Kushwant KR's portfolio                                                                39 of 40
+Fonts and licences
+The three typefaces ship as variable WOFF2 files in fonts/ , each under the SIL Open Font
+License 1.1 (licence texts in fonts/licenses/ ).
+
+ Family                             File                                          Axes                                   Role
+
+ Anek Latin (Ek Type)                AnekLatin-Variable.woff2                     Weight 100 to 800, width 75 to 125     Every heading and all running text
+
+ Anek Telugu (Ek Type)               AnekTelugu-Variable.woff2                    Weight 100 to 800, width 75 to 125     Telugu text, through the font stack
+
+ Martian Mono (Evil Martians)        MartianMono-Variable.woff2                   Weight 100 to 800, width 75 to 112.5   Code only
+
+
+
+
+Nacre design system for Kushwant KR's portfolio                                                                                                                40 of 40
+

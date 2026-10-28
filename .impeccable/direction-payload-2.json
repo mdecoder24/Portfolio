@@ -1,0 +1,37 @@
+{
+  "title": "Choose the visual world (bolder hand)",
+  "question": "Bolder re-roll. The deal leads with Living Skin. Keep it, take the alternate, go standard, or re-roll again.",
+  "options": [
+    {"id": "assigned-skin", "kind": "assigned", "label": "Living Skin", "kicker": "THE ROLL",
+     "catalogId": "reefs-bioluminescent-nocturnal-chromatophore-skin-language",
+     "lineage": "cuttlefish chromatophore displays",
+     "thesis": "The page as a living skin: pale mantle ground, red-brown pigment cells that expand under the pointer, one blue-green flash for the active signal.",
+     "palette": ["#f3eee8", "#ecdcd0", "#8a3b2a", "#3a2420", "#2fa79a"],
+     "materials": ["pale mantle skin", "red-brown pigment cells", "one iridophore blue-green flash"],
+     "viewport": "A huge brown headline at left, and a field of pigment cells at right that expand and travel as waves under the pointer: the one 3D/shader moment.",
+     "risk": "Abstract: recruiters may not read 'cuttlefish', and cream grounds sit near the AI default unless the pigment work is genuinely alive.",
+     "raised": [
+       {"from": "challenger-toy-catalogue", "raise": "Every project and role carries a ruled code line beneath it (year, kind, stack), like a catalogue stock code."},
+       {"from": "challenger-single-hue", "raise": "The one blue-green is owned outright: links, active nav, focus and the primary action, nothing else."}
+     ],
+     "html": ".impeccable/mocks/decision/r1-skin.html"},
+    {"id": "challenger-ebru", "kind": "challenger", "catalogId": "medium-native-ebru-floated-pigment", "label": "Marbled sheets", "verdict": "competitive",
+     "lineage": "ebru and Indian paper marbling",
+     "thesis": "Each section is one lifted sheet of marbled paper: light, quiet ground, and a pigment pattern combed by the pointer in the hero only.",
+     "palette": ["#f6f4ef", "#fbfaf7", "#2f5f8a", "#c8714e", "#1d2a3a"],
+     "materials": ["sized paper sheets", "floated indigo and rust pigment", "hairline sheet edges"],
+     "viewport": "A framed paper sheet with the headline at left and a live marbling field at right that you comb with the cursor; 'Sheet 01 of 08' at its foot.",
+     "case": "Fuses cleanly: sections become separate sheets, which is exactly the division you asked for. It loses narrowly on audience identification.",
+     "risk": "Two pigments must stay subtle, or it turns into a craft-fair look.",
+     "html": ".impeccable/mocks/decision/r1-ebru.html"},
+    {"id": "challenger-toy-catalogue", "kind": "challenger", "catalogId": "pop-culture-shelf-primary-toy-catalogue-spread", "label": "Toy catalogue", "verdict": "declined", "lineage": "1980s toy catalogues", "thesis": "Packed primaries.", "palette": ["#e2231a", "#ffd200", "#0057b8"], "materials": ["flat sweeps", "burst flashes"], "viewport": "A packed grid of projects.", "risk": "Loud: the opposite of subtle.", "case": "Conflicts with 'subtle colour'.", "kept": "A ruled code line under each item."},
+    {"id": "challenger-single-hue", "kind": "challenger", "catalogId": "brand-identity-canon-single-hue-doll-program", "label": "Single-hue program", "verdict": "declined", "lineage": "one-colour brand programs", "thesis": "One hue at full strength.", "palette": ["#e0218a", "#ffffff"], "materials": ["gloss"], "viewport": "The hue floods the page.", "risk": "Not subtle.", "case": "Conflicts with 'subtle colour'.", "kept": "Own one accent outright."},
+    {"id": "challenger-gravity-rain", "kind": "challenger", "catalogId": "dream-surreal-impossible-worlds-gravity-rain-garden", "label": "Gravity-rain garden", "verdict": "declined", "lineage": "surreal gardens", "thesis": "Rain with its own gravity.", "palette": ["#4a5a52", "#2f6fd0", "#d0442f"], "materials": ["dusk garden"], "viewport": "A dusk garden.", "risk": "Dark dusk ground.", "case": "Conflicts with the light theme.", "kept": "Nothing beyond the raises above."},
+    {"id": "challenger-terminal", "kind": "challenger", "catalogId": "signals-instruments-phosphor-terminal-midnight", "label": "Phosphor terminal", "verdict": "declined", "lineage": "green-screen terminals", "thesis": "A transcript.", "palette": ["#0a0f0a", "#33ff66"], "materials": ["phosphor glass"], "viewport": "A terminal.", "risk": "Dark, and the most common developer-portfolio trope.", "case": "Conflicts with the light theme.", "kept": "Nothing beyond the raises above."}
+  ],
+  "reroll": {"registers": ["safer", "bolder"]},
+  "buildPath": {"value": "code", "toggle": false},
+  "canon": true,
+  "canonCard": {"kind": "canon", "label": "The category standard", "thesis": "A clean white developer portfolio, executed carefully.", "palette": ["#ffffff", "#111827", "#2563eb"], "materials": ["clean grid", "rounded cards"], "viewport": "Headline left, image block right, blue button.", "risk": "Indistinguishable from thousands of portfolios.", "html": ".impeccable/mocks/decision/canon.html"},
+  "steer": true
+}

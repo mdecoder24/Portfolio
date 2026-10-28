@@ -1,0 +1,42 @@
+{
+  "title": "Choose the visual world",
+  "question": "The roll assigned the Inland Letter. Keep it, take the pick, go standard, or re-roll.",
+  "options": [
+    {
+      "id": "assigned", "kind": "assigned", "label": "Inland Letter", "kicker": "THE ROLL",
+      "lineage": "India Post inland letter cards and franked envelopes",
+      "thesis": "The portfolio as a letter from Hyderabad: one pale-blue sheet, sections folded along perforated seams.",
+      "palette": ["#e8eef4", "#f4f7fa", "#1c2f55", "#9fb0c6", "#b8432b"],
+      "materials": ["inland-letter blue paper", "navy printing ink", "perforated fold lines", "one franking-red postmark"],
+      "viewport": "Sender line, a huge navy headline, a red Hyderabad postmark beside a printed indicia box holding role and availability, and a ruled To: block with the two actions.",
+      "risk": "Tips into costume if postal props multiply; it holds only with one postmark and real fold lines doing the dividing.",
+      "raised": [
+        {"from": "challenger-split-flap", "raise": "Experience, projects and education read as ruled tabular rows in fixed columns (date, item, status), like a register, not cards."},
+        {"from": "challenger-manga", "raise": "Surface hierarchy comes from tint levels of the one blue (screened 6%, 12%, solid), never from shadows."},
+        {"from": "challenger-shareware", "raise": "A fixed left rail carries the section index and number on every fold, so wayfinding never leaves the sheet."}
+      ],
+      "html": ".impeccable/mocks/decision/assigned.html"
+    },
+    {
+      "id": "model-pick", "kind": "pick", "label": "Ruled Notebook", "kicker": "IMPECCABLE’S PICK",
+      "lineage": "Classmate ruled notebooks with an index page",
+      "thesis": "Every Indian engineer's ruled notebook: blue rules, a red margin, and an index page that is the navigation.",
+      "palette": ["#fbfcfd", "#cdd9e3", "#d26a6a", "#2a5d8f", "#1f2933"],
+      "materials": ["ruled paper", "red margin line", "ballpoint blue"],
+      "viewport": "A headline sitting on the ruling with the margin at left, and the index table top-right listing sections with page numbers.",
+      "risk": "Familiar: notebook and graph-paper portfolios are where many runs in this category land.",
+      "html": ".impeccable/mocks/decision/model-pick.html"
+    },
+    {"id": "challenger-split-flap", "kind": "challenger", "catalogId": "signals-instruments-split-flap-concourse", "label": "Split-flap concourse", "verdict": "declined", "lineage": "rail departure boards", "thesis": "Rows as live departures.", "palette": ["#111111", "#f2f2f2", "#f0a020"], "materials": ["flap faces", "brushed steel"], "viewport": "A departure board of projects.", "risk": "Dark board conflicts with the light theme you asked for.", "case": "Fuses poorly with a light, subtle site.", "kept": "Ruled rows in fixed columns for experience and projects."},
+    {"id": "challenger-manga", "kind": "challenger", "catalogId": "pop-culture-shelf-manga-screentone-page", "label": "Manga screentone page", "verdict": "declined", "lineage": "weekly manga anthologies", "thesis": "Panels and tone as hierarchy.", "palette": ["#111111", "#f5f5f0"], "materials": ["screentone", "newsprint"], "viewport": "Panels with speed lines.", "risk": "Too loud for recruiters scanning in 60 seconds.", "case": "Loses on clarity for recruiters.", "kept": "Tint levels instead of shadows for surface hierarchy."},
+    {"id": "challenger-shareware", "kind": "challenger", "catalogId": "digital-design-canon-shareware-installer-screens", "label": "Shareware installer", "verdict": "declined", "lineage": "1990s install wizards", "thesis": "A linear wizard.", "palette": ["#c0c0c0", "#000080"], "materials": ["bevels", "dithered banner"], "viewport": "A gray wizard dialog.", "risk": "Gates content a recruiter needs instantly.", "case": "Blocks the 60-second scan.", "kept": "A fixed side rail carrying the section index."},
+    {"id": "challenger-neon", "kind": "challenger", "catalogId": "magnetism-electricity-plasma-hand-bent-neon-circuit", "label": "Hand-bent neon", "verdict": "declined", "lineage": "neon sign shops", "thesis": "One glowing circuit.", "palette": ["#0b0b10", "#3a5bff"], "materials": ["glass tube", "gas glow"], "viewport": "A neon script in a dark room.", "risk": "Dark and glowing: the look you called AI-generated.", "case": "Conflicts with the light theme.", "kept": "Nothing beyond the raises above."},
+    {"id": "challenger-city-fold", "kind": "challenger", "catalogId": "dream-surreal-impossible-worlds-sleeping-city-fold", "label": "Sleeping city fold", "verdict": "declined", "lineage": "surreal maps", "thesis": "A city folding like a quilt.", "palette": ["#14213d", "#f2c14e"], "materials": ["quilt seams"], "viewport": "A night city map.", "risk": "Night palette; reads whimsical.", "case": "Conflicts with the light theme.", "kept": "Folds as real structural seams."},
+    {"id": "challenger-algorave", "kind": "challenger", "catalogId": "medium-native-algorave-source-floor", "label": "Algorave floor", "verdict": "declined", "lineage": "live-coding raves", "thesis": "Code as stage.", "palette": ["#000000", "#39ff14", "#ff00ff"], "materials": ["projector glow"], "viewport": "A code buffer at stage scale.", "risk": "Neon on black.", "case": "Conflicts with the light theme.", "kept": "Nothing beyond the raises above."}
+  ],
+  "reroll": {"registers": ["safer", "bolder"]},
+  "buildPath": {"value": "code", "toggle": false},
+  "canon": true,
+  "canonCard": {"kind": "canon", "label": "The category standard", "thesis": "A clean white developer portfolio, executed carefully.", "palette": ["#ffffff", "#111827", "#2563eb"], "materials": ["clean grid", "rounded cards"], "viewport": "Headline left, image block right, blue button.", "risk": "Indistinguishable from thousands of portfolios.", "html": ".impeccable/mocks/decision/canon.html"},
+  "steer": true
+}

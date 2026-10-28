@@ -1,0 +1,250 @@
+@import 'tailwindcss';
+@import '../styles/tokens.css';
+
+/* Reduced motion: the OS setting, unless the visitor chose Full; or the visitor's own Reduced choice */
+@custom-variant calm {
+  @media (prefers-reduced-motion: reduce) {
+    :root:not([data-motion='full']) & {
+      @slot;
+    }
+  }
+  :root[data-motion='reduced'] & {
+    @slot;
+  }
+}
+
+@theme inline {
+  --font-sans: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+}
+
+@theme {
+  --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out-quint: cubic-bezier(0.65, 0, 0.35, 1);
+  @keyframes rise {
+    from {
+      opacity: 0;
+      translate: 0 0.5em;
+    }
+  }
+}
+
+/*
+ * Type scale. One family, so hierarchy comes from size, weight and tracking: big type is set tight and semibold,
+ * small type opens up. Every step is sentence case; mono is only for dates, numbers and metadata.
+ */
+@utility type-display {
+  font-size: clamp(3.5rem, 0.5rem + 13.4vw, 14rem);
+  line-height: 0.86;
+  font-weight: 600;
+  letter-spacing: -0.06em;
+}
+@utility type-h1 {
+  font-size: clamp(2.5rem, 1.5rem + 4vw, 5rem);
+  line-height: 0.98;
+  font-weight: 600;
+  letter-spacing: -0.045em;
+  text-wrap: balance;
+}
+@utility type-h2 {
+  font-size: clamp(2rem, 1.35rem + 2.8vw, 3.75rem);
+  line-height: 1.02;
+  font-weight: 600;
+  letter-spacing: -0.04em;
+  text-wrap: balance;
+}
+@utility type-h3 {
+  font-size: clamp(1.5rem, 1.2rem + 1.3vw, 2.25rem);
+  line-height: 1.1;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+@utility type-h4 {
+  font-size: clamp(1.125rem, 1.05rem + 0.3vw, 1.3125rem);
+  line-height: 1.3;
+  font-weight: 560;
+  letter-spacing: -0.015em;
+}
+@utility type-lead {
+  font-size: clamp(1.125rem, 1.02rem + 0.5vw, 1.4375rem);
+  line-height: 1.5;
+  font-weight: 400;
+  letter-spacing: -0.015em;
+  text-wrap: pretty;
+}
+@utility type-body {
+  font-size: clamp(1rem, 0.97rem + 0.15vw, 1.0625rem);
+  line-height: 1.65;
+  font-weight: 400;
+  letter-spacing: -0.006em;
+  text-wrap: pretty;
+}
+@utility type-ui {
+  font-size: 0.9375rem;
+  line-height: 1.2;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+@utility type-small {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  font-weight: 400;
+}
+@utility type-caption {
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  font-weight: 500;
+}
+@utility type-code {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Brushed-metal lettering, kept for the one display moment (the name in the hero) */
+@utility metal {
+  color: var(--metal-2);
+  background-image: linear-gradient(180deg, var(--metal-1) 0%, var(--metal-2) 52%, var(--metal-3) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* A hint of extrusion under metal type: a single edge line, no cast shadow (it reads as a box behind the word) */
+@utility depth {
+  filter: drop-shadow(0 1px 0 var(--depth-2));
+}
+
+@utility container-kit {
+  width: 100%;
+  max-width: calc(var(--container-max) + 2 * var(--gutter));
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* Scroll reveal: content is visible by default; JavaScript opts in by marking the root, then lifts each block in */
+@utility reveal {
+  :root[data-reveal] & {
+    opacity: 0;
+    translate: 0 16px;
+    transition:
+      opacity 700ms var(--ease-out-quint),
+      translate 700ms var(--ease-out-quint);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+  :root[data-reveal] &[data-shown] {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+/*
+ * Load entrance for the first viewport: pure CSS, so it needs no JavaScript, never hides content from a crawler, and
+ * cannot disagree with hydration. The global reduced-motion rule shortens it to nothing.
+ */
+@utility rise {
+  animation: rise 800ms var(--ease-out-quint) both;
+  animation-delay: var(--rise-delay, 0ms);
+}
+.rise-words .w {
+  animation: rise 900ms var(--ease-out-quint) both;
+  animation-delay: calc(var(--rise-delay, 0ms) + var(--i, 0) * 70ms);
+}
+
+@layer base {
+  :root {
+    --depth-2: #4a4e57;
+    --gutter: max(16px, env(safe-area-inset-left));
+    --section-pad: var(--space-8);
+  }
+  :root[data-theme='light'] {
+    --depth-2: #9a9ea6;
+  }
+  @media (min-width: 640px) {
+    :root {
+      --gutter: 32px;
+      --section-pad: var(--space-9);
+    }
+  }
+  @media (min-width: 1024px) {
+    :root {
+      --gutter: 48px;
+      --section-pad: var(--space-10);
+    }
+  }
+  html {
+    background: var(--paper);
+    scrollbar-color: var(--rule-strong) var(--paper);
+  }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-weight: 400;
+    text-rendering: optimizeLegibility;
+    caret-color: var(--accent);
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+  }
+  ::selection {
+    background: var(--accent);
+    color: var(--on-accent);
+  }
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+  a {
+    text-underline-offset: 0.2em;
+    text-decoration-thickness: 1px;
+  }
+  section[id] {
+    scroll-margin-top: var(--nav-height);
+  }
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    :root:not([data-motion='full']) *,
+    :root:not([data-motion='full']) *::before,
+    :root:not([data-motion='full']) *::after {
+      animation-duration: 0.01ms !important;
+      animation-delay: 0ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+  html[data-motion='reduced'] *,
+  html[data-motion='reduced'] *::before,
+  html[data-motion='reduced'] *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* The contact form reveals project details for freelance enquiries, without JavaScript */
+form:has(option[value='freelance']:checked) .freelance-fields {
+  display: grid;
+}
+
+/* Word-by-word title reveal: visible by default; with JavaScript and motion, each word rises in turn */
+:root[data-reveal] .reveal-words .w {
+  opacity: 0;
+  translate: 0 0.3em;
+  transition:
+    opacity 800ms var(--ease-out-quint),
+    translate 900ms var(--ease-out-quint);
+  transition-delay: calc(var(--i, 0) * 60ms);
+}
+:root[data-reveal] .reveal-words[data-shown] .w {
+  opacity: 1;
+  translate: 0 0;
+}
