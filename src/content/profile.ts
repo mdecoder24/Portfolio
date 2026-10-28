@@ -18,8 +18,6 @@ export const profile = Profile.parse({
   ],
   interests: ['LLM apps and retrieval', 'Real-time 3D on the web', 'Developer tooling'],
   now: 'Building Pearl, learning GLSL shaders',
-  // Placeholder until Kushwant's own photo: "Camera" by Jennifer Trovato (unsplash.com/photos/baRYCsjO6z4, Unsplash
-  // licence), via picsum.photos id 91. Not a photo of Kushwant. Replace the file, keep a 4:5 crop.
-  portrait: '/media/portrait-placeholder.jpg',
+  portrait: '/media/portrait.png',
   placeholder: true,
 });

@@ -12,26 +12,27 @@ import type { Config, Profile } from '@/content/schema';
  * is off.
  */
 function Portrait({ src }: { src?: string }) {
-  const frame =
-    'group/portrait relative block aspect-[4/5] w-[min(60vw,16rem)] overflow-hidden rounded-lg bg-plate/40 lg:w-[clamp(13rem,19vw,18rem)]' +
-    // The outline fades out toward the bottom, so no hard edge runs through the letters laid over it
-    ' after:pointer-events-none after:absolute after:inset-0 after:rounded-lg after:border after:border-rule after:[mask-image:linear-gradient(black_45%,transparent_85%)]';
-  const fade = 'transition-opacity duration-700 group-data-[mosaic=on]/portrait:opacity-0';
-  // The name crosses the lower part of the frame; fading the photo (and the mosaic drawn under it) into the page
-  // there keeps the metal letters readable against bright pixels
-  const veil = <span aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 h-3/5 bg-linear-to-t from-paper to-transparent" />;
+  const frame = 'group/portrait relative block aspect-[4/5] w-[min(65vw,17rem)] lg:w-[clamp(14rem,20vw,19rem)]';
+  const fade =
+    'transition-opacity duration-500 group-data-[mosaic=on]/portrait:opacity-0 group-data-[joined=on]/portrait:opacity-100';
   if (src)
     return (
       <span id="hero-portrait" data-src={src} className={frame}>
         {/* Inside the h1, behind the name, so the photo needs no alt text of its own */}
-        <Image src={src} alt="" fill priority sizes="(min-width: 1024px) 19vw, 60vw" className={`object-cover grayscale ${fade}`} />
-        {veil}
+        <Image
+          src={src}
+          alt=""
+          fill
+          priority
+          unoptimized
+          sizes="(min-width: 1024px) 20vw, 65vw"
+          className={`object-contain grayscale ${fade}`}
+        />
       </span>
     );
   return (
     <span id="hero-portrait" aria-hidden="true" className={`${frame} grid place-items-center`}>
       <span className={`type-h1 text-rule-strong ${fade}`}>KR</span>
-      {veil}
     </span>
   );
 }
@@ -67,7 +68,7 @@ export function Hero({ profile, config }: { profile: Profile; config: Config }) 
             {/* Portrait and name share one grid cell; the name sits on the frame's lower edge and overhangs it. The
                 wrapper carries the name's size so its bottom padding reserves exactly that overhang */}
             <span className={`grid place-items-center pb-[0.32em] ${word}`}>
-              <span className="rise [grid-area:1/1] [--rise-delay:40ms]">
+              <span className="[grid-area:1/1]">
                 <Portrait src={profile.portrait} />
               </span>
               <span className="relative flex translate-y-[0.32em] flex-wrap items-baseline justify-center self-end gap-x-[0.18em] [grid-area:1/1]">

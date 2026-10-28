@@ -25,23 +25,27 @@ export function maskToCells(alpha: ArrayLike<number>, width: number, height: num
 }
 
 /**
- * Turns an RGBA image already scaled to `cols × rows` (one pixel per cell) into mosaic cells: every pixel becomes a
- * cell, centred on the origin, one unit wide. `tones` holds each cell's luminance in linear light (0–1), since the
- * shader's colour-space step expects linear values.
+ * Turns an RGBA image already scaled to `cols × rows` (one pixel per cell) into mosaic cells: each opaque pixel becomes
+ * a cell, centred on the origin, one unit wide. `tones` holds each cell's luminance in linear light (0–1), since the
+ * shader's colour-space step expects linear values. Transparent background pixels (alpha <= 128) are skipped.
  */
 export function imageToCells(rgba: ArrayLike<number>, cols: number, rows: number) {
-  const count = cols * rows;
-  const positions = new Float32Array(count * 3);
-  const tones = new Float32Array(count);
+  const pos: number[] = [];
+  const toneList: number[] = [];
   for (let y = 0; y < rows; y++)
     for (let x = 0; x < cols; x++) {
       const i = y * cols + x;
-      positions[i * 3] = (x + 0.5) / cols - 0.5;
-      positions[i * 3 + 1] = ((rows / 2 - y - 0.5) / rows) * (rows / cols);
+      if ((rgba[i * 4 + 3] ?? 255) <= 128) continue;
+      pos.push((x + 0.5) / cols - 0.5, ((rows / 2 - y - 0.5) / rows) * (rows / cols), 0);
       const luma = (0.2126 * rgba[i * 4] + 0.7152 * rgba[i * 4 + 1] + 0.0722 * rgba[i * 4 + 2]) / 255;
-      tones[i] = Math.pow(luma, 2.2);
+      toneList.push(Math.pow(luma, 2.2));
     }
-  return { positions, tones, count, cell: 1 / cols };
+  return {
+    positions: new Float32Array(pos),
+    tones: new Float32Array(toneList),
+    count: toneList.length,
+    cell: 1 / cols,
+  };
 }
 
 /** Where each mosaic cell starts before it assembles: scattered on a shell (in monogram widths), seeded. */
