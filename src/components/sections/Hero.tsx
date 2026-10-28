@@ -7,39 +7,46 @@ import { MetalTitle } from '@/components/ui/MetalTitle';
 import type { Config, Profile } from '@/content/schema';
 
 /**
- * The photograph's frame, centred between the two halves of the name. The 3D scene measures this element and redraws
+ * The photograph's frame, centred behind the name. The 3D scene measures this element and redraws
  * its contents as a pixel mosaic that assembles on load: the photo named in data-src, or the KR monogram when there is
  * no photo yet. The flat image (or a flat KR) shows until the mosaic is ready (data-mosaic="on"), and stays when 3D
  * is off.
  */
 function Portrait({ src }: { src?: string }) {
   const frame =
-    'group/portrait relative block aspect-[4/5] w-[min(52vw,14rem)] overflow-hidden rounded-lg border border-rule bg-plate/40 lg:w-[clamp(12rem,19vw,18rem)]';
+    'group/portrait relative block aspect-[4/5] w-[min(60vw,16rem)] overflow-hidden rounded-lg bg-plate/40 lg:w-[clamp(13rem,19vw,18rem)]' +
+    // The outline fades out toward the bottom, so no hard edge runs through the letters laid over it
+    ' after:pointer-events-none after:absolute after:inset-0 after:rounded-lg after:border after:border-rule after:[mask-image:linear-gradient(black_45%,transparent_85%)]';
   const fade = 'transition-opacity duration-700 group-data-[mosaic=on]/portrait:opacity-0';
+  // The name crosses the lower part of the frame; fading the photo (and the mosaic drawn under it) into the page
+  // there keeps the metal letters readable against bright pixels
+  const veil = <span aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 h-3/5 bg-linear-to-t from-paper to-transparent" />;
   if (src)
     return (
       <span id="hero-portrait" data-src={src} className={frame}>
-        {/* Inside the h1, beside the name, so the photo needs no alt text of its own */}
-        <Image src={src} alt="" fill priority sizes="(min-width: 1024px) 19vw, 52vw" className={`object-cover grayscale ${fade}`} />
+        {/* Inside the h1, behind the name, so the photo needs no alt text of its own */}
+        <Image src={src} alt="" fill priority sizes="(min-width: 1024px) 19vw, 60vw" className={`object-cover grayscale ${fade}`} />
+        {veil}
       </span>
     );
   return (
     <span id="hero-portrait" aria-hidden="true" className={`${frame} grid place-items-center`}>
       <span className={`type-h1 text-rule-strong ${fade}`}>KR</span>
+      {veil}
     </span>
   );
 }
 
 /**
- * The first viewport answers a recruiter's questions in order: who (the name around the portrait), what (the role),
+ * The first viewport answers a recruiter's questions in order: who (the name over the portrait), what (the role),
  * where and for whom (employer, city), and whether I'm free (the availability badge), then four facts in a ruled strip.
  */
 export function Hero({ profile, config }: { profile: Profile; config: Config }) {
   const [first, ...rest] = profile.name.split(' ');
   const last = rest.join(' ');
-  // On wide screens the name shares its line with the portrait, so it steps down a size. Name and portrait centre as
-  // one group: pinning the frame to the page centre left the short surname with a wide empty margin
-  const word = 'type-display lg:text-[length:min(7.6vw,8.5rem)]';
+  // The name is one line laid over the portrait, so it stays a single lockup instead of two halves around the frame.
+  // On wide screens it steps down from the full display size so the whole name fits the container
+  const word = 'type-display lg:text-[length:min(10.5vw,11rem)]';
 
   return (
     <section
@@ -61,16 +68,20 @@ export function Hero({ profile, config }: { profile: Profile; config: Config }) 
             <Badge tone={config.availability.freelance}>{config.availability.freelanceLabel}</Badge>
           </div>
           <h1 id="hero-title" className="grid justify-items-center gap-5 sm:gap-6">
-            <span className="flex flex-wrap items-center justify-center gap-x-4 gap-y-6 lg:grid lg:w-full lg:grid-cols-[auto_auto_auto] lg:justify-center lg:gap-x-[2.5vw]">
-              <span className="rise order-first flex basis-full justify-center [--rise-delay:40ms] lg:col-start-2 lg:row-start-1">
+            {/* Portrait and name share one grid cell; the name sits on the frame's lower edge and overhangs it. The
+                wrapper carries the name's size so its bottom padding reserves exactly that overhang */}
+            <span className={`grid place-items-center pb-[0.32em] ${word}`}>
+              <span className="rise [grid-area:1/1] [--rise-delay:40ms]">
                 <Portrait src={profile.portrait} />
               </span>
-              <MetalTitle as="span" text={first} entrance="load" className={`${word} lg:col-start-1 lg:row-start-1 lg:justify-self-end [--rise-delay:120ms]`} />
-              <span className="sr-only"> </span>
-              {last && <MetalTitle as="span" text={last} entrance="load" className={`${word} lg:col-start-3 lg:row-start-1 lg:justify-self-start [--rise-delay:200ms]`} />}
+              <span className="relative flex translate-y-[0.32em] flex-wrap items-baseline justify-center self-end gap-x-[0.18em] [grid-area:1/1]">
+                <MetalTitle as="span" text={first} entrance="load" className={`${word} [--rise-delay:120ms]`} />
+                <span className="sr-only"> </span>
+                {last && <MetalTitle as="span" text={last} entrance="load" className={`${word} [--rise-delay:200ms]`} />}
+              </span>
             </span>
             <span className="sr-only">, </span>
-            <span className="rise type-h3 font-medium text-ink-2 [--rise-delay:280ms]">Full-stack &amp; AI engineer</span>
+            <span className="rise type-h3 font-medium text-ink [--rise-delay:280ms]">Full-stack &amp; AI engineer</span>
           </h1>
         </div>
 

@@ -1,5 +1,4 @@
 import { ArrowUpRight, Plus } from 'lucide-react';
-import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { Section } from '@/components/ui/SectionHeader';
 import type { Config, Service } from '@/content/schema';
@@ -24,7 +23,6 @@ export function Services({
       label="Freelance"
       title="What I can build"
       intro={<>For clinics, cafés, agencies and startups. I reply {config.availability.replyTime}.</>}
-      aside={<Badge tone={config.availability.freelance}>{config.availability.freelanceLabel}</Badge>}
     >
       <ol className="border-t border-rule">
         {services.map((s, i) => (
