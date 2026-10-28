@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from 'react';
 import { cn } from '@/lib/cn';
 import { useUi } from '@/stores/ui';
 import { NAV_ITEMS, RESUME_HREF } from './navItems';
+import { Monogram } from './Monogram';
 import { ThemeToggle } from './ThemeToggle';
 
 export function NavBar({ socials, onHome }: { socials: { label: string; href: string }[]; onHome: boolean }) {
@@ -41,12 +42,10 @@ export function NavBar({ socials, onHome }: { socials: { label: string; href: st
       <nav aria-label="Main" className="container-kit flex h-full items-center gap-6">
         <Link
           href="/#top"
-          className="inline-flex min-h-11 items-center gap-2.5 rounded-xs type-ui font-semibold text-ink focus-visible:outline-none focus-visible:shadow-focus"
+          aria-label="Kushwant KR"
+          className="inline-flex min-h-11 items-center rounded-xs text-ink focus-visible:outline-none focus-visible:shadow-focus"
         >
-          <span aria-hidden="true" className="grid size-7 place-items-center rounded-xs bg-ink type-code font-medium text-paper">
-            KR
-          </span>
-          <span className="max-[400px]:sr-only">Kushwant KR</span>
+          <Monogram />
         </Link>
         <ul className="ml-auto hidden items-center gap-7 min-[900px]:flex">
           {NAV_ITEMS.map((item) => {
@@ -104,7 +103,7 @@ export function NavBar({ socials, onHome }: { socials: { label: string; href: st
         onClick={(e) => e.target === e.currentTarget && close()}
       >
         <div className="container-kit flex h-(--nav-height) items-center justify-between">
-          <span className="type-ui font-semibold">Kushwant KR</span>
+          <Monogram />
           <button
             type="button"
             aria-label="Close menu"

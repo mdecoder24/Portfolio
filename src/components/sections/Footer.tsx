@@ -1,3 +1,4 @@
+import { Monogram } from '@/components/layout/Monogram';
 import { NAV_ITEMS } from '@/components/layout/navItems';
 import { PreferenceToggles } from '@/components/layout/PreferenceToggles';
 import type { Config } from '@/content/schema';
@@ -53,9 +54,12 @@ export function Footer({ config, name }: { config: Config; name: string }) {
         </div>
         <div className="flex flex-wrap items-center justify-between gap-6">
           <PreferenceToggles threeD={config.flags.threeD} />
-          <p className="tabular">
-            Last updated <time dateTime={config.site.lastUpdated}>{updated}</time> · © {config.site.lastUpdated.slice(0, 4)}{' '}
-            {name}
+          <p className="inline-flex items-center gap-3 tabular">
+            <Monogram className="text-[1.125rem]" />
+            <span>
+              Last updated <time dateTime={config.site.lastUpdated}>{updated}</time> · © {config.site.lastUpdated.slice(0, 4)}{' '}
+              {name}
+            </span>
           </p>
         </div>
         <p aria-hidden="true" className="-mb-[0.14em] select-none whitespace-nowrap text-center text-[clamp(3rem,14.6vw,17.5rem)] leading-[0.86] font-semibold tracking-[-0.065em] text-rule">

@@ -9,7 +9,8 @@ describe('content', () => {
   });
 
   it('gives every Daily-driver skill an evidence link', () => {
-    for (const s of content.skills.filter((s) => s.tier === 'daily')) expect(s.evidence.length).toBeGreaterThan(0);
+    for (const s of content.skills.filter((s) => s.tier === 'daily'))
+      expect(s.evidence.length).toBeGreaterThan(0);
   });
 
   it('uses unique, permanent slugs', () => {
@@ -24,5 +25,15 @@ describe('content', () => {
   it('rejects alt text shorter than 10 characters', () => {
     const study = content.projects[0];
     expect(CaseStudy.safeParse({ ...study, media: { ...study.media, alt: 'shot' } }).success).toBe(false);
+  });
+
+  it('keeps decision pins on the cover', () => {
+    const study = content.projects[0];
+    const [first, ...rest] = study.body.decisions;
+    const off = {
+      ...study,
+      body: { ...study.body, decisions: [{ ...first, at: { x: 120, y: 40 } }, ...rest] },
+    };
+    expect(CaseStudy.safeParse(off).success).toBe(false);
   });
 });

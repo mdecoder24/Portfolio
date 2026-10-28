@@ -36,7 +36,7 @@ test('section numbers run in reading order', async ({ page }) => {
   const numbers = await page.locator('main section[id]:not(#hero)').evaluateAll((sections) =>
     sections.map((s) => s.querySelector('.type-code > .text-ink')?.textContent),
   );
-  expect(numbers).toEqual(['01', '02', '03', '04', '05', '06']);
+  expect(numbers).toEqual(['01', '02', '03', '04', '05', '06', '07']);
 });
 
 test('case-study pages render with previous and next links', async ({ page }) => {

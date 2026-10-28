@@ -1363,6 +1363,29 @@ Projects
 
 Phone: the filter row scrolls sideways; the archive list stacks into two lines per project.
 
+How I build (decisions, directly after Projects)
+  How I build
+  Every screen is a stack of trade-offs
+  Three to five calls behind each project, pinned where they show up on screen.
+  (CodeLens) (DocuMind) (Orbit) (Pulse)                     project switcher: radio pills, one row
+
+  ┌──────────────────────────────────────┐        ① Send context, not the file
+  │ cover 16:10, flat (no 3D device)     │          Only the selection and the symbols it uses…
+  │        ①─                            │        ② Bring your own key
+  │                    ②─                │        ③ Plain words first
+  │   ③─                                 │
+  └──────────────────────────────────────┘        (Read the case study)
+  cover, columns 1–7                              decisions, columns 8–12
+
+  Pins are 28 px circles in code type on paper with a 1.5 px ink-2 ring and a short
+  tick toward their label. Hovering or focusing a pin or its decision makes that pair active:
+  the pin fills accent, the other pins drop to 50% opacity, and the decision gains an accent
+  rule on its left. 150 ms, ease-out-quint, opacity and transform only. Without JavaScript
+  the switcher still works (radios and :has) and each pin links to its decision.
+  Only projects whose every decision has a pin position appear.
+
+Phone: the cover sits above the list; the switcher scrolls sideways.
+
 Skills, Education and achievements
   Skills
   Daily driver                   Comfortable                    Exploring

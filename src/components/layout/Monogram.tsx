@@ -1,14 +1,19 @@
-import Link from 'next/link';
+import { cn } from '@/lib/cn';
 
-export function Monogram() {
+/**
+ * The "Prompt" logo mark: lowercase `kkr` in Geist Mono with a blinking accent underscore cursor.
+ */
+export function Monogram({ className }: { className?: string }) {
   return (
-    <Link
-      href="/#top"
-      aria-label="Kushwant KR, back to top"
-      className="inline-flex min-h-11 items-center gap-2 rounded-xs text-ink focus-visible:outline-none focus-visible:shadow-focus"
+    <span
+      aria-hidden="true"
+      className={cn(
+        'inline-flex items-end gap-[0.06em] font-mono text-[1.375rem] leading-[0.8] font-semibold tracking-[-0.04em] text-ink select-none',
+        className,
+      )}
     >
-      <span className="grid h-8 place-items-center bg-ink px-2 type-code text-paper">KR</span>
-      <span className="type-code max-sm:hidden">Kushwant KR, build kit 2026</span>
-    </Link>
+      <span>kkr</span>
+      <span className="kr-caret inline-block h-[0.12em] w-[0.5em] bg-accent calm:animate-none" />
+    </span>
   );
 }

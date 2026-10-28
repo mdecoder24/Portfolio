@@ -3,7 +3,9 @@ import { z } from 'zod';
 const month = z.string().regex(/^\d{4}-\d{2}$/); // "2026-07"
 const slug = z.string().regex(/^[a-z0-9-]+$/);
 // Site-relative paths ("/projects/pulse", "#freelance") or absolute URLs
-const href = z.string().refine((v) => v.startsWith('/') || v.startsWith('#') || URL.canParse(v), 'Invalid href');
+const href = z
+  .string()
+  .refine((v) => v.startsWith('/') || v.startsWith('#') || URL.canParse(v), 'Invalid href');
 
 export const CaseStudy = z.object({
   slug,
@@ -33,7 +35,17 @@ export const CaseStudy = z.object({
   body: z.object({
     problem: z.string(),
     built: z.string(),
-    decisions: z.array(z.object({ title: z.string(), detail: z.string() })).min(3).max(5),
+    decisions: z
+      .array(
+        z.object({
+          title: z.string(),
+          detail: z.string(),
+          // Where the decision shows up on the cover, as percentages of its width and height; drives the home-page pins
+          at: z.object({ x: z.number().min(0).max(100), y: z.number().min(0).max(100) }).optional(),
+        }),
+      )
+      .min(3)
+      .max(5),
     results: z.array(z.string()).min(1),
     differently: z.string(),
   }),
@@ -71,12 +83,17 @@ export const Profile = z.object({
   name: z.string(),
   role: z.string(),
   nameLine: z.string(),
-  headline: z.string().refine((h) => !h.endsWith('.'), 'Headline omits its final full stop; the pearl draws it'),
+  headline: z
+    .string()
+    .refine((h) => !h.endsWith('.'), 'Headline omits its final full stop; the pearl draws it'),
   subheadline: z.string().max(180),
   employment: z.string(),
   location: z.object({ city: z.string(), region: z.string(), country: z.string(), timeZone: z.string() }),
   bio: z.string(),
-  facts: z.array(z.object({ term: z.string(), detail: z.string() })).min(2).max(5),
+  facts: z
+    .array(z.object({ term: z.string(), detail: z.string() }))
+    .min(2)
+    .max(5),
   interests: z.array(z.string()).min(1).max(5),
   now: z.string(),
   /**
