@@ -1,11 +1,11 @@
 'use client';
 
 import { useFrame, useThree } from '@react-three/fiber';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { AdditiveBlending, BufferAttribute, BufferGeometry, NormalBlending, ShaderMaterial, Vector2 } from 'three';
 import { useScroll } from '@/stores/scroll';
 import type { SceneColors } from './colors';
-import { diffusionTarget, imageToCells, maskToCells, mulberry32, scatter, starfield } from './mosaic';
+import { breath, diffusionTarget, imageToCells, maskToCells, mulberry32, scatter, starfield } from './mosaic';
 
 export const FOV = 35;
 export const CAMERA_Z = 10;
@@ -270,6 +270,8 @@ export function HeroField({
   const invalidate = useThree((s) => s.invalidate);
   const anchor = useFrameAnchor();
   const mosaic = useMosaic(anchor ? anchor.src : undefined, anchor?.frame ?? null, step);
+  // Seconds since the mosaic finished assembling: the clock for its idle breath
+  const settled = useRef(0);
 
   const field = useMemo(() => {
     const g = new BufferGeometry();
@@ -352,7 +354,11 @@ export function HeroField({
     m.uTime.value += delta;
     materials.stars.uniforms.uTime.value += delta;
     const { y: scrollY, viewportH } = useScroll.getState();
-    const toward = anchor ? diffusionTarget(scrollY, viewportH, anchor.pageCentre, anchor.pageHeight) : 0;
+    const scrolled = anchor ? diffusionTarget(scrollY, viewportH, anchor.pageCentre, anchor.pageHeight) : 0;
+    // Left alone, the portrait still breathes in and out of dust so the landing never sits static; scrolling away
+    // takes over whenever it diffuses further
+    if (m.uProgress.value >= 1) settled.current += delta;
+    const toward = Math.max(scrolled, breath(settled.current));
     m.uDiffuse.value += (toward - m.uDiffuse.value) * (1 - Math.exp(-delta / DIFFUSE_SMOOTH));
     if (m.uTime.value > delay) {
       m.uProgress.value = Math.min(1, m.uProgress.value + delta / ASSEMBLE_SECONDS);

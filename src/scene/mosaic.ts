@@ -105,6 +105,21 @@ export function diffusionTarget(scrollY: number, viewportH: number, frameCentre:
   return Math.min(1, Math.max(0, (scrollY - start) / (frameHeight * 0.8)));
 }
 
+/**
+ * The portrait's idle breath while it sits on screen, in seconds since it first assembled: whole for 5 s, dissolving
+ * into dust over 1.6 s, drifting as dust for 0.8 s, then reassembling over 1.8 s, and round again. 0 is whole, 1 dust.
+ */
+export const BREATH = { hold: 5, out: 1.6, dust: 0.8, back: 1.8 } as const;
+export function breath(t: number): number {
+  const period = BREATH.hold + BREATH.out + BREATH.dust + BREATH.back;
+  let c = (((t % period) + period) % period) - BREATH.hold;
+  if (c < 0) return 0;
+  if (c < BREATH.out) return c / BREATH.out;
+  c -= BREATH.out;
+  if (c < BREATH.dust) return 1;
+  return 1 - (c - BREATH.dust) / BREATH.back;
+}
+
 /** Ease-out quint, the curve the mosaic assembles on. */
 export function easeOut(t: number): number {
   const x = Math.min(1, Math.max(0, t));
