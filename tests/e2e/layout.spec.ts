@@ -16,10 +16,17 @@ test('the hero leads with the name, role and key facts', async ({ page }) => {
   await expect(hero.getByRole('term')).toHaveText(['Based in', 'Degree', 'Day job', 'Freelance']);
 });
 
-test('on wide screens the hero uses a split layout with the name on the left and a large portrait on the right', async ({ page, isMobile }) => {
+test('on wide screens the hero uses a split layout with the name on the left and a large portrait on the right', async ({
+  page,
+  isMobile,
+}) => {
   test.skip(isMobile, 'the hero stacks on phones');
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto('/?3d=off');
+  // The words rise in one after another; measure their resting places, not a frame mid-rise
+  await page
+    .locator('#hero-title')
+    .evaluate((el) => Promise.all(el.getAnimations({ subtree: true }).map((anim) => anim.finished)));
   const words = page.locator('#hero-title .w');
   const [a, b] = await Promise.all([words.first().boundingBox(), words.last().boundingBox()]);
   const frame = await page.locator('#hero-portrait').boundingBox();
@@ -33,9 +40,9 @@ test('on wide screens the hero uses a split layout with the name on the left and
 
 test('section numbers run in reading order', async ({ page }) => {
   await page.goto('/?3d=off');
-  const numbers = await page.locator('main section[id]:not(#hero)').evaluateAll((sections) =>
-    sections.map((s) => s.querySelector('.type-code > .text-ink')?.textContent),
-  );
+  const numbers = await page
+    .locator('main section[id]:not(#hero)')
+    .evaluateAll((sections) => sections.map((s) => s.querySelector('.type-code > .text-ink')?.textContent));
   expect(numbers).toEqual(['01', '02', '03', '04', '05', '06', '07']);
 });
 
