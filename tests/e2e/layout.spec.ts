@@ -116,3 +116,18 @@ test('the nav links to Education, and marks it current once scrolled there', asy
   await page.locator('#education').scrollIntoViewIfNeeded();
   await expect(link).toHaveAttribute('aria-current', 'location');
 });
+
+test('choices saved under the retired keys are cleared, so the footer starts at Motion Auto and 3D Auto', async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    localStorage.setItem('kr-3d', 'off');
+    localStorage.setItem('kr-motion', 'reduced');
+  });
+  await page.goto('/');
+  const footer = page.locator('footer');
+  await expect(footer.getByRole('radio', { name: 'Auto' })).toHaveCount(2);
+  for (const radio of await footer.getByRole('radio', { name: 'Auto' }).all()) await expect(radio).toBeChecked();
+  await expect(page.locator('html')).not.toHaveAttribute('data-motion', 'reduced');
+  expect(await page.evaluate(() => [localStorage.getItem('kr-3d'), localStorage.getItem('kr-motion')])).toEqual([null, null]);
+});

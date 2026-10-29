@@ -31,7 +31,7 @@ export const viewport: Viewport = {
 
 // Applies saved theme and motion preferences before first paint, so neither flashes, and skips the home intro when it
 // has already played this session or the visitor followed a link straight to a section
-const prefScript = `try{var d=document.documentElement,t=localStorage.getItem('kr-theme');if(t==='dark'||t==='light')d.dataset.theme=t;var m=localStorage.getItem('kr-motion');if(m)d.dataset.motion=m;if(location.hash||sessionStorage.getItem('kr-intro'))d.dataset.introSeen=''}catch(e){}`;
+const prefScript = `try{var d=document.documentElement,t=localStorage.getItem('kr-theme');if(t==='dark'||t==='light')d.dataset.theme=t;var m=localStorage.getItem('kr-motion-v2');if(m)d.dataset.motion=m;if(location.hash||sessionStorage.getItem('kr-intro'))d.dataset.introSeen=''}catch(e){}`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

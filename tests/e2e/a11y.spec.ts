@@ -3,7 +3,7 @@ import { expect, test } from './fixtures';
 
 // Scan the settled page: with reduced motion nothing is mid-fade, so contrast is measured on final colours
 test.beforeEach(async ({ page }) => {
-  await page.addInitScript(() => localStorage.setItem('kr-motion', 'reduced'));
+  await page.addInitScript(() => localStorage.setItem('kr-motion-v2', 'reduced'));
 });
 
 for (const path of ['/?3d=off', '/projects/sensai?3d=off', '/privacy', '/no-such-page']) {

@@ -15,7 +15,10 @@ type UiState = {
   setQualityPref: (p: QualityPref) => void;
 };
 
-const KEY = { motion: 'kr-motion', quality: 'kr-3d' } as const;
+// Versioned so a reset can start everyone fresh: v2 dropped choices saved before 30 Oct 2026, which left some browsers
+// stuck on 3D off without anyone remembering choosing it
+const KEY = { motion: 'kr-motion-v2', quality: 'kr-3d-v2' } as const;
+const RETIRED_KEYS = ['kr-motion', 'kr-3d'];
 
 function read<T extends string>(key: string, allowed: readonly T[], fallback: T): T {
   try {
@@ -54,6 +57,11 @@ export const useUi = create<UiState>((set) => ({
 export function hydratePrefs() {
   const params = new URLSearchParams(location.search);
   const forced = params.get('3d') === 'off' || params.get('tier') === 'off' ? 'off' : null;
+  try {
+    RETIRED_KEYS.forEach((k) => localStorage.removeItem(k));
+  } catch {
+    // Storage unavailable: nothing saved to clear.
+  }
   useUi.setState({
     motionPref: read(KEY.motion, ['auto', 'reduced', 'full'] as const, 'auto'),
     qualityPref: forced ?? read(KEY.quality, ['auto', 'low', 'off'] as const, 'auto'),
