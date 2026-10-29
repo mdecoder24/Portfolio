@@ -277,6 +277,50 @@
   }
 }
 
+/*
+ * The hero's patrol robot. The track is a size container so the run can end exactly at its right edge (100cqw less
+ * the robot's width). One lap is a run out and a run back; ease-in-out on each leg slows it into every turn, and the
+ * flip happens at the far end, mid-lap. The legs swap pose and the body bobs a pixel on the same short beat.
+ */
+.patrol {
+  container-type: inline-size;
+}
+.patrol-run {
+  animation: patrol-run 16s var(--ease-in-out-quint) infinite;
+}
+.patrol-face {
+  animation: patrol-face 16s step-end infinite;
+}
+.patrol-bob {
+  animation: patrol-bob 320ms step-end infinite;
+}
+.patrol-legs {
+  animation: patrol-legs 320ms step-end infinite;
+}
+.patrol-legs-alt {
+  animation-delay: -160ms;
+}
+@keyframes patrol-run {
+  50% {
+    translate: calc(100cqw - 33px) 0;
+  }
+}
+@keyframes patrol-face {
+  50% {
+    scale: -1 1;
+  }
+}
+@keyframes patrol-bob {
+  50% {
+    translate: 0 -1px;
+  }
+}
+@keyframes patrol-legs {
+  50% {
+    opacity: 0;
+  }
+}
+
 /* The contact form reveals project details for freelance enquiries, without JavaScript */
 form:has(option[value='freelance']:checked) .freelance-fields {
   display: grid;

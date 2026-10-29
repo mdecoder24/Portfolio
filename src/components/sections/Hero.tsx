@@ -4,6 +4,7 @@ import { SceneMount } from '@/components/layout/SceneMount';
 import { Button } from '@/components/ui/Button';
 import { CountUp } from '@/components/ui/CountUp';
 import { MetalTitle } from '@/components/ui/MetalTitle';
+import { PatrolBot } from '@/components/ui/PatrolBot';
 import type { Config, Profile } from '@/content/schema';
 
 /**
@@ -93,20 +94,23 @@ export function Hero({ profile, config }: { profile: Profile; config: Config }) 
           </div>
         </div>
 
-        <dl className="rise grid grid-cols-2 border-t border-rule lg:grid-cols-4 [--rise-delay:460ms]">
-          {profile.facts.map((f) => (
-            <div
-              key={f.term}
-              className="grid content-start gap-1 border-rule py-5 max-lg:odd:pr-4 max-lg:even:border-l max-lg:even:pl-4 max-lg:[&:nth-child(n+3)]:border-t lg:px-5 lg:first:pl-0 lg:[&+&]:border-l"
-            >
-              <dt className="type-code text-ink-2">{f.term}</dt>
-              <dd className="type-ui text-ink">
-                {/* Starts once the strip has risen in */}
-                <CountUp text={f.detail} delay={500} />
-              </dd>
-            </div>
-          ))}
-        </dl>
+        <div className="rise relative [--rise-delay:460ms]">
+          <PatrolBot />
+          <dl className="grid grid-cols-2 border-t border-rule lg:grid-cols-4">
+            {profile.facts.map((f) => (
+              <div
+                key={f.term}
+                className="grid content-start gap-1 border-rule py-5 max-lg:odd:pr-4 max-lg:even:border-l max-lg:even:pl-4 max-lg:[&:nth-child(n+3)]:border-t lg:px-5 lg:first:pl-0 lg:[&+&]:border-l"
+              >
+                <dt className="type-code text-ink-2">{f.term}</dt>
+                <dd className="type-ui text-ink">
+                  {/* Starts once the strip has risen in */}
+                  <CountUp text={f.detail} delay={500} />
+                </dd>
+              </div>
+            ))}
+          </dl>
+        </div>
       </div>
     </section>
   );

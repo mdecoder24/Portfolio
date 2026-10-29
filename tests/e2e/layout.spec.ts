@@ -69,3 +69,22 @@ test('the nav underline slides to the section in view, and counts land on their 
   await page.evaluate(() => scrollTo(0, 0));
   await expect(page.locator('#hero dd').last()).toHaveText(/14\+ projects shipped/);
 });
+
+test('the pixel robot patrols the fact strip, and stands still under reduced motion', async ({ page }) => {
+  await page.goto('/?3d=off');
+  const track = page.locator('#hero .patrol');
+  await expect(track).toHaveAttribute('aria-hidden', 'true');
+  const bot = track.locator('.patrol-run');
+  const x = async () => (await bot.boundingBox())?.x ?? 0;
+  const first = await x();
+  await expect.poll(async () => Math.abs((await x()) - first), { timeout: 5000 }).toBeGreaterThan(10);
+  const t = await track.boundingBox();
+  const b = await bot.boundingBox();
+  expect(t && b && b.x >= t.x - 1 && b.x + b.width <= t.x + t.width + 1).toBe(true);
+
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.reload();
+  const still = await x();
+  await page.waitForTimeout(1000);
+  expect(await x()).toBeCloseTo(still, 0);
+});
