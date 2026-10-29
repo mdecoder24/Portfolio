@@ -75,6 +75,24 @@ export function starfield(count: number, seed = 11): Float32Array {
   return out;
 }
 
+/**
+ * The page backdrop's dust, as orbits rather than positions: per particle a radius (0–1, square-root spread so the
+ * disc fills evenly), a start angle, a height (-1–1) and a seed. The shader scales and spins them, so the buffer is
+ * built once and never rebuilt on resize.
+ */
+export function dust(count: number, seed = 23): { orbits: Float32Array; seeds: Float32Array } {
+  const rand = mulberry32(seed);
+  const orbits = new Float32Array(count * 3);
+  const seeds = new Float32Array(count);
+  for (let i = 0; i < count; i++) {
+    orbits[i * 3] = Math.sqrt(rand());
+    orbits[i * 3 + 1] = rand() * Math.PI * 2;
+    orbits[i * 3 + 2] = rand() * 2 - 1;
+    seeds[i] = rand();
+  }
+  return { orbits, seeds };
+}
+
 /** Ease-out quint, the curve the mosaic assembles on. */
 export function easeOut(t: number): number {
   const x = Math.min(1, Math.max(0, t));
