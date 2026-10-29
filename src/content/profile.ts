@@ -18,6 +18,6 @@ export const profile = Profile.parse({
   ],
   interests: ['LLM apps and retrieval', 'Real-time 3D on the web', 'Developer tooling'],
   now: 'Building Pearl, learning GLSL shaders',
-  portrait: '/media/portrait.png',
+  portrait: '/media/portrait-placeholder.jpg',
   placeholder: true,
 });
