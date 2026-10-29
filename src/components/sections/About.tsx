@@ -38,7 +38,7 @@ function SkillItem({ skill }: { skill: Skill }) {
 
 export function About({ profile, skills }: { profile: Profile; skills: Skill[] }) {
   return (
-    <Section id="about" index={1} label="About" title="I write the front end, the back end, and the prompt in between.">
+    <Section id="about" index={1} label="About" title="I turn fuzzy ideas into products people actually use.">
       <div className="grid gap-12 lg:grid-cols-12 lg:gap-8">
         <div className="reveal grid content-start gap-6 lg:col-span-9 lg:col-start-4">
           <SampleRibbon placeholder={profile.placeholder} />
