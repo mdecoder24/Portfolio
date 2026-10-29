@@ -16,26 +16,45 @@ test('the hero leads with the name, role and key facts', async ({ page }) => {
   await expect(hero.getByRole('term')).toHaveText(['Based in', 'Degree', 'Day job', 'Freelance']);
 });
 
-test('on wide screens the hero uses a split layout with the name on the left and a large portrait on the right', async ({
-  page,
-  isMobile,
-}) => {
-  test.skip(isMobile, 'the hero stacks on phones');
-  await page.setViewportSize({ width: 1440, height: 900 });
+test('the hero centres a large portrait with the name and role in front of its lower half', async ({ page }) => {
   await page.goto('/?3d=off');
   // The words rise in one after another; measure their resting places, not a frame mid-rise
   await page
     .locator('#hero-title')
     .evaluate((el) => Promise.all(el.getAnimations({ subtree: true }).map((anim) => anim.finished)));
+  const width = page.viewportSize()?.width ?? 0;
+  const [frame, title] = await Promise.all([
+    page.locator('#hero-portrait').boundingBox(),
+    page.locator('#hero-title').boundingBox(),
+  ]);
+  if (!frame || !title) throw new Error('hero lockup not rendered');
+  // Portrait and heading share the page's centre line
+  expect(Math.abs(frame.x + frame.width / 2 - width / 2)).toBeLessThan(2);
+  expect(Math.abs(title.x + title.width / 2 - width / 2)).toBeLessThan(2);
+  // The heading overlaps the portrait's lower half, and the portrait fills most of a phone's width
+  expect(title.y).toBeGreaterThan(frame.y + frame.height / 2);
+  expect(title.y).toBeLessThan(frame.y + frame.height);
+  expect(frame.width).toBeGreaterThan(Math.min(width * 0.8, 280));
+  // The name stays on one line
   const words = page.locator('#hero-title .w');
   const [a, b] = await Promise.all([words.first().boundingBox(), words.last().boundingBox()]);
-  const frame = await page.locator('#hero-portrait').boundingBox();
-  if (!a || !b || !frame) throw new Error('hero lockup not rendered');
-  // One line: both halves share a baseline row on the left side
-  expect(Math.abs(a.y - b.y)).toBeLessThan(4);
-  // The large portrait sits to the right of the heading without overlapping it
-  expect(frame.width).toBeGreaterThan(340);
-  expect(frame.x).toBeGreaterThan(b.x + b.width);
+  expect(a && b && Math.abs(a.y - b.y) < 4).toBe(true);
+});
+
+test('on wide screens the actions flank the name, with the local time above the first', async ({ page }) => {
+  test.skip((page.viewportSize()?.width ?? 0) < 1024, 'phones stack the actions under the name without the caption');
+  await page.goto('/?3d=off');
+  const hero = page.locator('#hero');
+  const [work, touch, title] = await Promise.all([
+    hero.getByRole('link', { name: 'View my work' }).boundingBox(),
+    hero.getByRole('link', { name: 'Get in touch' }).boundingBox(),
+    page.locator('#hero-title').boundingBox(),
+  ]);
+  if (!work || !touch || !title) throw new Error('hero actions not rendered');
+  expect(work.x + work.width).toBeLessThan(title.x);
+  expect(touch.x).toBeGreaterThan(title.x + title.width);
+  await expect(hero.getByText(/\d{1,2}:\d{2} [AP]M in Hyderabad/)).toBeVisible();
+  await expect(hero.getByText('Available for work')).toHaveCount(0);
 });
 
 test('section numbers run in reading order', async ({ page }) => {

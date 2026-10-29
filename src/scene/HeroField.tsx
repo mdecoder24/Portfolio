@@ -73,6 +73,7 @@ varying float vShade;
 varying float vAccent;
 varying float vTone;
 varying float vLift;
+varying float vFade;
 void main() {
   float t = clamp(uProgress * 1.35 - aSeed * 0.35, 0.0, 1.0);
   float e = 1.0 - pow(1.0 - t, 5.0);
@@ -93,6 +94,9 @@ void main() {
   vAccent = step(0.988, aSeed);
   vTone = aTone;
   vLift = near;
+  // Matches the flat photo's mask, which fades from 40% down to clear at 90%; cells run from y 0.625 at the top to
+  // -0.625 at the base
+  vFade = smoothstep(-0.5, 0.125, position.y);
 }
 `;
 
@@ -105,6 +109,7 @@ varying float vShade;
 varying float vAccent;
 varying float vTone;
 varying float vLift;
+varying float vFade;
 void main() {
   vec3 monogram = uInk * clamp(vShade, 0.15, 1.0);
   // A gentle S-curve lifts the photo's contrast so it still reads through the gaps between cells. The lower exponent
@@ -117,7 +122,7 @@ void main() {
   // Photo cells are opaque so the page colour never washes them out; uReveal drops to 0 only for the reduced-motion
   // still, which shows the flat photo instead
   // uSolid fades the cells out once they have assembled, handing over to the sharp flat photo beneath
-  float alpha = mix(uOpacity, uReveal, uPhoto) * uSolid;
+  float alpha = mix(uOpacity, uReveal * vFade, uPhoto) * uSolid;
   if (alpha < 0.01) discard;
   gl_FragColor = vec4(colour, alpha);
   #include <colorspace_fragment>
