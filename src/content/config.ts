@@ -8,7 +8,7 @@ export const config = Config.parse({
   },
   flags: { showFreelance: true, showPrices: false, pearl: false, threeD: true, showCgpa: false },
   links: {
-    email: 'hello@kushwantkr.dev',
+    email: 'krkushwant@gmail.com',
     linkedin: 'https://www.linkedin.com/in/kushwantkr',
     github: 'https://github.com/mdecoder24',
   },
