@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { BREATH, breath, diffusionTarget, dust, easeOut, imageToCells, maskToCells, scatter, starfield } from '@/scene/mosaic';
+import { BREATH, breath, diffusionTarget, dust, isRestful, easeOut, imageToCells, maskToCells, scatter, starfield } from '@/scene/mosaic';
 
 describe('mosaic', () => {
   it('turns solid mask pixels into centred cells on the step grid', () => {
@@ -80,5 +80,15 @@ describe('mosaic', () => {
     expect(breath(hold + out + drift + back / 2)).toBeCloseTo(0.5);
     expect(breath(hold + out + drift + back)).toBe(0);
     expect(breath(hold + out + drift + back + hold + out / 2)).toBeCloseTo(0.5);
+  });
+});
+
+describe('isRestful', () => {
+  it('rests only when assembled, settled, not breathing, and not pointed at', () => {
+    expect(isRestful(1, 0, 0, false)).toBe(true);
+    expect(isRestful(0.9, 0, 0, false)).toBe(false);
+    expect(isRestful(1, 0.2, 0, false)).toBe(false);
+    expect(isRestful(1, 0, 0.05, false)).toBe(false);
+    expect(isRestful(1, 0, 0, true)).toBe(false);
   });
 });

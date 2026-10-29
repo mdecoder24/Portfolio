@@ -120,6 +120,14 @@ export function breath(t: number): number {
   return 1 - (c - BREATH.dust) / BREATH.back;
 }
 
+/**
+ * Whether the portrait is at rest: fully assembled, with nothing (the idle breath or the scroll) asking it to diffuse,
+ * the cells back in place, and no cursor over it. At rest the sharp photo replaces the pixels.
+ */
+export function isRestful(progress: number, toward: number, diffuse: number, pointed: boolean): boolean {
+  return progress >= 1 && toward <= 0 && diffuse < 0.01 && !pointed;
+}
+
 /** Ease-out quint, the curve the mosaic assembles on. */
 export function easeOut(t: number): number {
   const x = Math.min(1, Math.max(0, t));

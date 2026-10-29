@@ -5,7 +5,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { AdditiveBlending, BufferAttribute, BufferGeometry, NormalBlending, ShaderMaterial, Vector2 } from 'three';
 import { useScroll } from '@/stores/scroll';
 import type { SceneColors } from './colors';
-import { breath, diffusionTarget, imageToCells, maskToCells, mulberry32, scatter, starfield } from './mosaic';
+import { breath, diffusionTarget, isRestful, imageToCells, maskToCells, mulberry32, scatter, starfield } from './mosaic';
 
 export const FOV = 35;
 export const CAMERA_Z = 10;
@@ -13,6 +13,8 @@ const HALF_H = CAMERA_Z * Math.tan((FOV * Math.PI) / 360);
 const ASSEMBLE_SECONDS = 2.0;
 // The design system's scroll damping (smoothTime 0.25 s): the portrait follows the scrollbar without snapping to it
 const DIFFUSE_SMOOTH = 0.25;
+// Matches the flat photo's 500 ms CSS fade, so the pixels and the sharp photo cross over in step
+const CLEAR_SMOOTH = 0.15;
 // The KR glyphs span about two thirds of the sampled mask's width; the monogram fills this share of the frame's width
 const GLYPH_SHARE = 0.66;
 const MONOGRAM_FILL = 0.74;
@@ -115,7 +117,7 @@ void main() {
 // Both keep the scattering of accent cells.
 const mosaicFrag = /* glsl */ `
 uniform vec3 uInk, uAccent;
-uniform float uOpacity, uPhoto, uReveal;
+uniform float uOpacity, uPhoto, uReveal, uSolid;
 varying float vShade;
 varying float vAccent;
 varying float vTone;
@@ -132,7 +134,8 @@ void main() {
   colour = mix(colour, uInk, vLift * 0.45);
   // Photo cells are opaque so the page colour never washes them out; uReveal drops to 0 only for the reduced-motion
   // still, which shows the flat photo instead
-  float alpha = mix(uOpacity, uReveal, uPhoto) * (1.0 - 0.6 * vDiffuse);
+  // uSolid fades the cells out while the portrait rests, handing over to the sharp flat photo beneath
+  float alpha = mix(uOpacity, uReveal, uPhoto) * (1.0 - 0.6 * vDiffuse) * uSolid;
   if (alpha < 0.01) discard;
   gl_FragColor = vec4(colour, alpha);
   #include <colorspace_fragment>
@@ -298,6 +301,7 @@ export function HeroField({
           uCell: { value: 1 },
           uPhoto: { value: 0 },
           uReveal: { value: 1 },
+          uSolid: { value: 1 },
           uInk: { value: colors.ink },
           uAccent: { value: colors.accent },
           uOpacity: { value: colors.light ? 0.9 : 0.95 },
@@ -322,6 +326,7 @@ export function HeroField({
     m.uPhoto.value = mosaic.photo ? 1 : 0;
     m.uProgress.value = still ? 1 : 0;
     m.uReveal.value = still && mosaic.photo ? 0 : 1;
+    m.uSolid.value = 1;
     if (still && anchor?.frame) anchor.frame.dataset.mosaic = 'on';
     invalidate();
   }, [mosaic, materials, still, anchor, invalidate]);
@@ -360,20 +365,20 @@ export function HeroField({
     if (m.uProgress.value >= 1) settled.current += delta;
     const toward = Math.max(scrolled, breath(settled.current));
     m.uDiffuse.value += (toward - m.uDiffuse.value) * (1 - Math.exp(-delta / DIFFUSE_SMOOTH));
-    if (m.uTime.value > delay) {
-      m.uProgress.value = Math.min(1, m.uProgress.value + delta / ASSEMBLE_SECONDS);
-      if (m.uProgress.value >= 1) {
-        // The mosaic stays as pixels for good; the flat photo or KR beneath stays hidden, or it would show through
-        // whenever the cells breathe out into dust
-        if (anchor?.frame && anchor.frame.dataset.mosaic !== 'pixel') anchor.frame.dataset.mosaic = 'pixel';
-      }
-    }
+    if (m.uTime.value > delay) m.uProgress.value = Math.min(1, m.uProgress.value + delta / ASSEMBLE_SECONDS);
     // Pointer in the mosaic's local space: world units at z = 0, then undo its position and scale
     const target = 1 - Math.exp(-delta / 0.12);
     m.uPointer.value.x += ((state.pointer.x * halfAspect - x) / width - m.uPointer.value.x) * target;
     m.uPointer.value.y += ((state.pointer.y * HALF_H - y) / width - m.uPointer.value.y) * target;
     const fine = state.pointer.x !== 0 || state.pointer.y !== 0;
     m.uPush.value += ((fine ? 1 : 0) - m.uPush.value) * target;
+    // At rest the sharp photo shows; the pixels take over to breathe, to blow away on scroll, and to part under the
+    // cursor. The monogram has no sharp version, so it stays as pixels
+    const pointed = fine && Math.abs(m.uPointer.value.x) < 0.5 && Math.abs(m.uPointer.value.y) < PORTRAIT_ASPECT / 2;
+    const clear = mosaic.photo && isRestful(m.uProgress.value, toward, m.uDiffuse.value, pointed);
+    m.uSolid.value += ((clear ? 0 : 1) - m.uSolid.value) * (1 - Math.exp(-delta / CLEAR_SMOOTH));
+    const look = clear ? 'clear' : m.uProgress.value >= 1 ? 'pixel' : 'diffusing';
+    if (anchor?.frame && anchor.frame.dataset.mosaic !== look) anchor.frame.dataset.mosaic = look;
   });
 
   return (
