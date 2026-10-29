@@ -1,5 +1,6 @@
 import { BackdropMount } from '@/components/layout/BackdropMount';
 import { SiteChrome } from '@/components/layout/SiteChrome';
+import { StickyIntro } from '@/components/layout/StickyIntro';
 import { About } from '@/components/sections/About';
 import { Contact } from '@/components/sections/Contact';
 import { Decisions } from '@/components/sections/Decisions';
@@ -20,6 +21,7 @@ export default function Home() {
   const next = () => ++count;
   return (
     <>
+      <StickyIntro profile={profile} />
       <BackdropMount />
       <SiteChrome onHome>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(personLd()) }} />

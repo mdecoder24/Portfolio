@@ -1,5 +1,5 @@
 import AxeBuilder from '@axe-core/playwright';
-import { expect, test } from '@playwright/test';
+import { expect, test } from './fixtures';
 
 // Scan the settled page: with reduced motion nothing is mid-fade, so contrast is measured on final colours
 test.beforeEach(async ({ page }) => {

@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './fixtures';
 
 test('the canvas mounts at ?tier=low with a clean console', async ({ page }) => {
   const errors: string[] = [];

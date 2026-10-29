@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './fixtures';
 
 test('the project switcher changes the pinned cover from the keyboard', async ({ page }) => {
   await page.goto('/?3d=off');

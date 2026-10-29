@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './fixtures';
 
 test('no horizontal scroll, and the hero headline is visible in the first viewport', async ({ page }) => {
   await page.goto('/?3d=off');

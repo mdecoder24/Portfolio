@@ -162,11 +162,73 @@
  */
 @utility rise {
   animation: rise 800ms var(--ease-out-quint) both;
-  animation-delay: var(--rise-delay, 0ms);
+  animation-delay: calc(var(--intro-wait, 0ms) + var(--rise-delay, 0ms));
 }
 .rise-words .w {
   animation: rise 900ms var(--ease-out-quint) both;
-  animation-delay: calc(var(--rise-delay, 0ms) + var(--i, 0) * 70ms);
+  animation-delay: calc(var(--intro-wait, 0ms) + var(--rise-delay, 0ms) + var(--i, 0) * 70ms);
+}
+
+/*
+ * The home intro (StickyIntro). Blank for 300 ms, then a note slaps on every 400 ms: it drops in slightly large and
+ * turned, lands at its own tilt, and its words write in from the left just after. At 2.7 s the sheet lifts up and away
+ * over 600 ms. The hero's entrance waits for it (--intro-wait). A skip fades it out in 240 ms; once seen this session,
+ * or under reduced motion, it never shows.
+ */
+:root:not([data-intro-seen]):has(#intro) {
+  --intro-wait: 2.9s;
+}
+.intro {
+  animation: intro-lift 600ms var(--ease-in-out-quint) 2.7s forwards;
+}
+.intro[data-skip] {
+  animation: intro-skip 240ms var(--ease-out-quint) forwards;
+}
+:root[data-intro-seen] .intro:not([data-skip]) {
+  display: none;
+}
+.intro-note {
+  rotate: var(--tilt);
+  animation: intro-slap 360ms var(--ease-out-quint) both;
+  animation-delay: calc(300ms + var(--i) * 400ms);
+}
+.intro-write {
+  clip-path: inset(0 100% 0 0);
+  animation: intro-write 450ms linear forwards;
+  animation-delay: calc(500ms + var(--i) * 400ms);
+}
+@keyframes intro-slap {
+  from {
+    opacity: 0;
+    scale: 1.25;
+    rotate: calc(var(--tilt) + 8deg);
+    translate: 0 -12px;
+  }
+}
+@keyframes intro-write {
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+@keyframes intro-lift {
+  to {
+    translate: 0 -100%;
+    visibility: hidden;
+  }
+}
+@keyframes intro-skip {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  :root:not([data-motion='full']) .intro {
+    display: none;
+  }
+}
+:root[data-motion='reduced'] .intro {
+  display: none;
 }
 
 /*

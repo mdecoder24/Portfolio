@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './fixtures';
 
 test('invalid fields show their errors and focus the first one', async ({ page }) => {
   await page.goto('/?3d=off#contact');
