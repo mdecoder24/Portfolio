@@ -1,7 +1,7 @@
 'use client';
 
 import { useFrame, useThree } from '@react-three/fiber';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { AdditiveBlending, BufferAttribute, BufferGeometry, NormalBlending, ShaderMaterial, Vector2 } from 'three';
 import type { SceneColors } from './colors';
 import { imageToCells, maskToCells, mulberry32, scatter, starfield } from './mosaic';
@@ -13,8 +13,8 @@ const ASSEMBLE_SECONDS = 2.0;
 // The KR glyphs span about two thirds of the sampled mask's width; the monogram fills this share of the frame's width
 const GLYPH_SHARE = 0.66;
 const MONOGRAM_FILL = 0.74;
-// Photo cells per row for a given tier step (5, 6, 8 → 96, 80, 60 columns)
-const PHOTO_COLS_PER_STEP = 480;
+// Photo cells per row for a given tier step (5, 6, 8 → 72, 60, 45 columns)
+const PHOTO_COLS_PER_STEP = 360;
 const PORTRAIT_ASPECT = 5 / 4;
 
 type Anchor = { x: number; y: number; width: number; src: string | null; frame: HTMLElement | null };
@@ -56,7 +56,7 @@ function useFrameAnchor(): Anchor | null {
 }
 
 const mosaicVert = /* glsl */ `
-uniform float uProgress, uTime, uPush, uProjScale, uCell, uPhoto;
+uniform float uProgress, uTime, uPush, uProjScale, uCell;
 uniform vec2 uPointer;
 attribute vec3 aStart;
 attribute float aSeed;
@@ -65,31 +65,31 @@ varying float vShade;
 varying float vAccent;
 varying float vTone;
 varying float vLift;
-varying float vJoined;
 void main() {
   float t = clamp(uProgress * 1.35 - aSeed * 0.35, 0.0, 1.0);
   float e = 1.0 - pow(1.0 - t, 5.0);
   vec3 p = mix(aStart, position, e);
-  // The cursor parts the monogram cells like a hand through sand; photo cells stay in place so the portrait stays clear
+  // The cursor parts the cells like a hand through sand: near cells are pushed out and lifted toward the camera,
+  // each by a slightly different amount so the edge of the hole stays ragged rather than a clean circle
   vec2 d = p.xy - uPointer;
   float r = length(d);
-  float near = (1.0 - smoothstep(0.0, 0.26, r)) * uPush * e * (1.0 - uPhoto);
+  float near = (1.0 - smoothstep(0.0, 0.26, r)) * uPush * e;
   float jitter = 0.7 + 0.6 * fract(aSeed * 53.1);
   p.xy += normalize(d + 1e-5) * near * near * 0.16 * jitter;
-  p.z += near * 0.35 * jitter + sin(uTime * 0.6 + aSeed * 40.0) * 0.006 * (1.0 - uPhoto * e);
+  p.z += near * 0.35 * jitter + sin(uTime * 0.6 + aSeed * 40.0) * 0.006;
   vec4 mv = modelViewMatrix * vec4(p, 1.0);
   gl_Position = projectionMatrix * mv;
-  gl_PointSize = clamp(uCell * uProjScale / -mv.z * mix(0.86, 1.04, uPhoto * e), 1.0, 64.0);
+  // Cells drawn a little under their pitch leave the dark seams that make the portrait read as pixels
+  gl_PointSize = clamp(uCell * uProjScale / -mv.z * 0.86, 1.0, 64.0);
   vShade = 0.35 + 0.65 * fract(aSeed * 91.7) + 0.12 * sin(uTime * 2.4 + aSeed * 210.0);
-  vAccent = step(0.988, aSeed) * (1.0 - uPhoto);
+  vAccent = step(0.988, aSeed);
   vTone = aTone;
   vLift = near;
-  vJoined = e;
 }
 `;
 
-// The monogram shades each cell from the ink colour; the photo uses each cell's own black-and-white luminance,
-// settling cleanly as the diffused pixels join together.
+// The monogram shades each cell from the ink colour; the photo uses each cell's own luminance with a slight flicker.
+// Both keep the scattering of accent cells.
 const mosaicFrag = /* glsl */ `
 uniform vec3 uInk, uAccent;
 uniform float uOpacity, uPhoto, uReveal;
@@ -97,16 +97,17 @@ varying float vShade;
 varying float vAccent;
 varying float vTone;
 varying float vLift;
-varying float vJoined;
 void main() {
   vec3 monogram = uInk * clamp(vShade, 0.15, 1.0);
-  // vTone is already in linear light; colorspace_fragment converts it back to sRGB. A slight floor keeps dark hair
-  // visible against the dark background while the pixels diffuse in
-  float tone = mix(0.03, 1.0, vTone);
-  float grain = mix(0.85 + 0.3 * fract(vShade * 7.0), 1.0, vJoined);
-  vec3 photo = vec3(tone * grain);
+  // A gentle S-curve lifts the photo's contrast so it still reads through the gaps between cells. The lower exponent
+  // opens up the shadows, which the gaps otherwise crush to black
+  float tone = smoothstep(0.0, 1.0, pow(vTone, 0.78));
+  vec3 photo = vec3(tone) * (0.9 + 0.2 * fract(vShade * 7.0));
   vec3 colour = mix(mix(monogram, photo, uPhoto), uAccent, vAccent);
+  // Cells lifted by the cursor catch the light
   colour = mix(colour, uInk, vLift * 0.45);
+  // Photo cells are opaque so the page colour never washes them out; uReveal drops to 0 only for the reduced-motion
+  // still, which shows the flat photo instead
   float alpha = mix(uOpacity, uReveal, uPhoto);
   if (alpha < 0.01) discard;
   gl_FragColor = vec4(colour, alpha);
@@ -298,22 +299,6 @@ export function HeroField({
     invalidate();
   }, [mosaic, materials, still, anchor, invalidate]);
 
-  // Hover on a fine pointer only: a tap would fire enter without a matching leave and strand the sharp photo
-  const hover = useRef(false);
-  useEffect(() => {
-    const frame = anchor?.frame;
-    if (!frame || still || !matchMedia('(hover: hover) and (pointer: fine)').matches) return;
-    const enter = () => (hover.current = true);
-    const leave = () => (hover.current = false);
-    frame.addEventListener('pointerenter', enter);
-    frame.addEventListener('pointerleave', leave);
-    return () => {
-      frame.removeEventListener('pointerenter', enter);
-      frame.removeEventListener('pointerleave', leave);
-      hover.current = false;
-    };
-  }, [anchor?.frame, still]);
-
   useEffect(
     () => () => {
       field.dispose();
@@ -344,14 +329,9 @@ export function HeroField({
     if (m.uTime.value > delay) {
       m.uProgress.value = Math.min(1, m.uProgress.value + delta / ASSEMBLE_SECONDS);
       if (m.uProgress.value >= 1) {
-        // The photo holds as pixels; hovering the frame crossfades to the sharp image beneath, at the pace of its CSS fade
-        const reveal = mosaic.photo && hover.current;
-        const state = mosaic.photo && !reveal ? 'pixel' : 'on';
+        // The photo stays as pixels for good; the flat image beneath stays hidden
+        const state = mosaic.photo ? 'pixel' : 'on';
         if (anchor?.frame && anchor.frame.dataset.mosaic !== state) anchor.frame.dataset.mosaic = state;
-        if (mosaic.photo) {
-          const step = delta * 2.2;
-          m.uReveal.value = reveal ? Math.max(0, m.uReveal.value - step) : Math.min(1, m.uReveal.value + step);
-        }
       }
     }
     // Pointer in the mosaic's local space: world units at z = 0, then undo its position and scale

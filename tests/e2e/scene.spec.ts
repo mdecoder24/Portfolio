@@ -21,16 +21,16 @@ test('?3d=off renders the poster and no canvas', async ({ page }) => {
   await expect(page.locator('#hero-portrait')).not.toHaveAttribute('data-mosaic', 'on');
 });
 
-test('the portrait diffuses as a pixel mosaic, stays pixelated, and shows sharp on hover', async ({ page }) => {
+test('the portrait diffuses as a pixel mosaic and stays pixelated', async ({ page }) => {
   await page.goto('/?tier=low');
   const frame = page.locator('#hero-portrait');
   await expect(frame).toHaveAttribute('data-mosaic', 'pixel', { timeout: 15_000 });
   await expect(frame.locator('img')).toHaveCSS('opacity', '0');
+  // Hovering parts the pixels; it never swaps in the flat photo
   await frame.hover();
-  await expect(frame).toHaveAttribute('data-mosaic', 'on');
-  await expect(frame.locator('img')).toHaveCSS('opacity', '1');
-  await page.mouse.move(0, 0);
+  await page.waitForTimeout(600);
   await expect(frame).toHaveAttribute('data-mosaic', 'pixel');
+  await expect(frame.locator('img')).toHaveCSS('opacity', '0');
 });
 
 test('the footer 3D toggle removes the canvas', async ({ page }) => {
