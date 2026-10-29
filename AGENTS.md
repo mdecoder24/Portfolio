@@ -52,7 +52,9 @@ HTML, and an AI guide called Pearl. Read this whole file before your first chang
 6. Content changes happen only in src/content. Anything you invent carries
    placeholder: true. Never present an invented fact about Kushwant as real.
 7. Native scrolling only: no Lenis, GSAP, ScrollControls, or scroll hijacking.
-   No full-screen preloader.
+   No full-screen preloader. Exception, approved by the owner on 29 Oct 2026: the home page's
+   sticky-note intro (src/components/layout/StickyIntro.tsx), which is CSS-timed, about 3 s,
+   once per session, skippable, and never shown under reduced motion or on links to a section.
 8. Everything works without 3D and without JavaScript: content is server-rendered
    HTML and the contact form posts without JavaScript.
 9. Accessibility is a release gate: WCAG 2.2 AA, visible focus, labels on icon-only
