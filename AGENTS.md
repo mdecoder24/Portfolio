@@ -109,9 +109,10 @@ HTML, and an AI guide called Pearl. Read this whole file before your first chang
 - You would have to invent a fact about Kushwant, a client, or a metric.
 
 ## Git
-- One branch per task: feat/..., fix/..., chore/..., content/..., docs/...
+- Work directly on main: no feature branches or pull requests (the owner's choice, 29 Oct 2026).
 - Conventional Commits: feat:, fix:, chore:, content:, docs:, test:
-- One logical change per pull request; aim for diffs under about 400 lines.
+- One logical change per commit; aim for diffs under about 400 lines.
+- CI runs on every push to main, so run the checks in "Before you say done" before pushing.
 
 <!-- BEGIN:nextjs-agent-rules -->
 
