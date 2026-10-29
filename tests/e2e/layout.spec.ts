@@ -11,7 +11,7 @@ test('no horizontal scroll, and the hero headline is visible in the first viewpo
 test('the hero leads with the name, role and key facts', async ({ page }) => {
   await page.goto('/?3d=off');
   const h1 = page.getByRole('heading', { level: 1 });
-  await expect(h1).toHaveAccessibleName(/^Kushwant KR\s*,\s*Full-stack & AI engineer$/);
+  await expect(h1).toHaveAccessibleName(/^Kushwant Kumar Reddy\s*,\s*Full-stack & AI engineer$/);
   const hero = page.locator('#hero');
   await expect(hero.getByRole('term')).toHaveText(['Based in', 'Degree', 'Day job', 'Freelance']);
 });
