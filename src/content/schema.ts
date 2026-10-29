@@ -123,7 +123,7 @@ export const Experience = z.object({
 export const Skill = z.object({
   name: z.string(),
   // The résumé's groups, in its order
-  group: z.enum(['languages', 'frontend', 'backend', 'ai-ml', 'cloud']),
+  group: z.enum(['languages', 'frontend', 'backend', 'ai-ml', 'ml-libraries', 'cloud']),
   evidence: z.array(href).default([]),
   placeholder: z.boolean().default(false),
 });

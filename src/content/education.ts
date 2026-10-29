@@ -14,7 +14,11 @@ export const achievements = Achievement.array().parse([
   { title: 'Co-author, "Deep Learning-Driven Skin Disease Detection"', issuer: 'IEEE', date: '2026-05' },
   { title: 'Lead, Google Developer Groups on Campus', issuer: 'MLRIT, a 35-person team and 600+ members' },
   { title: 'Hackathon finalist 9 times, with national-level wins' },
-  { title: 'Organising team, Agentathon', issuer: 'a Guinness World Record hackathon by GDG Hyderabad' },
+  {
+    title: 'Volunteer, GDG Hyderabad',
+    issuer:
+      '2 DevFest Hyderabad events, and the organising team of Agentathon, a Guinness World Record hackathon',
+  },
   { title: 'Technical Head, Club Literati', issuer: 'MLRIT, 4 event websites' },
   { title: 'Indian Air Force U-19 basketball team' },
   { title: 'AWS Cloud Solutions Architect', issuer: 'Coursera' },

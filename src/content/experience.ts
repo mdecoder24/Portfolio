@@ -7,13 +7,13 @@ export const experience = Experience.array().parse([
     org: 'Knowvation Learnings Pvt Ltd',
     start: '2026-02',
     points: [
-      'Build and maintain client websites and full-stack platforms, from the database up to the UI',
+      'Run the Knowvation Learnings website and its client-facing platforms end to end, from the database up to the UI',
       'Cut API latency by 40% by indexing the database and restructuring the APIs',
-      'Built reusable React components in TypeScript that brought UI consistency across client projects to 78%',
-      'Added AI and LLM features to client products, which lifted engagement and retention by 30%',
+      'Own the UI and UX design, and built reusable React and TypeScript components that brought UI consistency to 78%',
+      'Double as a product researcher: user research and competitive analysis that shape the product roadmap',
       'Review code and mentor junior developers on clean code and Git. Named Best Intern',
     ],
-    stack: ['React', 'TypeScript', 'JavaScript', 'SQL', 'LLM integration'],
+    stack: ['React', 'TypeScript', 'SQL', 'UI/UX design'],
     current: true,
   },
   {
@@ -24,8 +24,8 @@ export const experience = Experience.array().parse([
     end: '2026-02',
     points: [
       'Rebuilt the company website in Next.js (App Router), React 19 and TypeScript, and shipped it to production',
-      'Connected it to Supabase, with React Hook Form and Zod on the forms and Resend for email',
-      'Kept it fast with image optimisation, lazy loading and code splitting, and watched Core Web Vitals in Vercel Analytics',
+      'Connected it to Supabase across a 3-tier client, server and database setup, with React Hook Form and Zod on the forms and Resend for email',
+      'Kept it fast with image optimisation, lazy loading and code splitting, and tracked all 3 Core Web Vitals (LCP, INP, CLS) in Vercel Analytics',
     ],
     stack: ['Next.js', 'React', 'TypeScript', 'Supabase', 'Zod'],
   },

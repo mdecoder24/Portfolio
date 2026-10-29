@@ -12,6 +12,7 @@ const GROUPS: { group: Skill['group']; label: string }[] = [
   { group: 'frontend', label: 'Frontend' },
   { group: 'backend', label: 'Backend and databases' },
   { group: 'ai-ml', label: 'AI and ML' },
+  { group: 'ml-libraries', label: 'ML frameworks and libraries' },
   { group: 'cloud', label: 'Cloud and DevOps' },
 ];
 
@@ -56,7 +57,7 @@ export function About({ profile, skills }: { profile: Profile; skills: Skill[] }
 
         <div className="grid gap-6 lg:col-span-9 lg:col-start-4">
           <h3 className="reveal type-h4 text-ink">The stack</h3>
-          {/* One row per group, as the résumé lists them: five groups never split evenly into columns */}
+          {/* One row per group, as the résumé lists them: six groups of very different lengths read better as rows */}
           <div className="border-t border-rule">
             {GROUPS.map(({ group, label }, i) => (
               <div
