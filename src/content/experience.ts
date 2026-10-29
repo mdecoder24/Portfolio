@@ -1,5 +1,6 @@
 import { Experience } from './schema.ts';
 
+// Follows the résumé point for point (Oct 2026 version in public/resume)
 export const experience = Experience.array().parse([
   {
     id: 'knowvation',
@@ -7,13 +8,13 @@ export const experience = Experience.array().parse([
     org: 'Knowvation Learnings Pvt Ltd',
     start: '2026-02',
     points: [
-      'Run the Knowvation Learnings website and its client-facing platforms end to end, from the database up to the UI',
-      'Cut API latency by 40% by indexing the database and restructuring the APIs',
-      'Own the UI and UX design, and built reusable React and TypeScript components that brought UI consistency to 78%',
-      'Double as a product researcher: user research and competitive analysis that shape the product roadmap',
-      'Review code and mentor junior developers on clean code and Git. Named Best Intern',
+      'Managed the Knowvation Learnings website and its client-facing web platforms end to end as a full-stack developer',
+      'Cut API latency by 40% through relational database indexing and better-structured APIs',
+      'Owned UI/UX design and built reusable React and TypeScript components, reaching 78% UI consistency',
+      'Served as Product Researcher, using user research and competitive analysis to shape the product roadmap',
+      'Worked in Agile sprints with cross-functional product and engineering teams, reviewed code, and mentored junior developers on clean code and Git workflows. Recognised as Best Intern',
     ],
-    stack: ['React', 'TypeScript', 'SQL', 'UI/UX design'],
+    stack: ['React', 'TypeScript', 'SQL', 'UI/UX design', 'Agile'],
     current: true,
   },
   {
@@ -23,10 +24,11 @@ export const experience = Experience.array().parse([
     start: '2025-09',
     end: '2026-02',
     points: [
-      'Rebuilt the company website in Next.js (App Router), React 19 and TypeScript, and shipped it to production',
-      'Connected it to Supabase across a 3-tier client, server and database setup, with React Hook Form and Zod on the forms and Resend for email',
-      'Kept it fast with image optimisation, lazy loading and code splitting, and tracked all 3 Core Web Vitals (LCP, INP, CLS) in Vercel Analytics',
+      'Rebuilt and shipped the production website end to end in Next.js (App Router), React 19 and TypeScript, with a responsive UI across devices and browsers',
+      'Integrated a Supabase (PostgreSQL) backend across a 3-tier client, server and database architecture, with React Hook Form and Zod validation and transactional email through Resend',
+      'Improved front-end performance with image optimisation, lazy loading and code splitting',
+      'Tracked all 3 Core Web Vitals (LCP, INP, CLS) in Vercel Analytics, and fixed production defects through root-cause analysis',
     ],
-    stack: ['Next.js', 'React', 'TypeScript', 'Supabase', 'Zod'],
+    stack: ['Next.js', 'React 19', 'TypeScript', 'Supabase', 'Vercel'],
   },
 ]);
