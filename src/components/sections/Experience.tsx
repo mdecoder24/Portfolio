@@ -20,7 +20,8 @@ export function Experience({ entries }: { entries: ExperienceEntry[] }) {
                 <span className="grid gap-1 lg:col-span-8">
                   <span className="type-h3 text-ink">{e.role}</span>
                   <span className="type-body text-ink-2">
-                    {e.org}, {e.location}
+                    {e.org}
+                    {e.location && `, ${e.location}`}
                   </span>
                 </span>
                 <span className="grid size-10 place-items-center self-center rounded-full border border-rule text-ink-2 transition-[rotate,border-color,color] duration-200 ease-out group-hover:border-rule-strong group-hover:text-ink group-open:rotate-45 lg:col-span-1 lg:justify-self-end">

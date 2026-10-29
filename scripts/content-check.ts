@@ -18,8 +18,9 @@ for (const s of caseStudies) {
 if (!c.projects.some((p) => p.featured)) errors.push('No featured project');
 if (c.freelance.length === 0) errors.push('No freelance case study');
 
+for (const g of new Set(c.skills.map((s) => s.group)))
+  if (!c.skills.some((s) => s.group === g && s.evidence.length > 0)) errors.push(`Skill group "${g}" has no evidence link`);
 for (const s of c.skills) {
-  if (s.tier === 'daily' && s.evidence.length === 0) errors.push(`Daily-driver skill "${s.name}" has no evidence link`);
   for (const e of s.evidence)
     if (e.startsWith('/') && !known.has(e)) errors.push(`Skill "${s.name}" links to unknown page ${e}`);
 }

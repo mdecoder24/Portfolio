@@ -16,8 +16,8 @@ export function CaseStudyPage({ study, list }: { study: CaseStudy; list: CaseStu
   const quote = testimonials.find((t) => t.id === study.testimonialId);
   const facts = [
     ['Role', study.role],
-    ['Timeline', formatRange(study.start, study.end)],
-    ['Team', study.team],
+    ...(study.start ? [['Timeline', formatRange(study.start, study.end)] as const] : []),
+    ...(study.team ? [['Team', study.team] as const] : []),
     ['Stack', study.stack.join(', ')],
   ] as const;
   const h2 = 'type-h3 text-ink';
@@ -115,10 +115,12 @@ export function CaseStudyPage({ study, list }: { study: CaseStudy; list: CaseStu
               </figcaption>
             </figure>
           )}
-          <section className="grid gap-4">
-            <h2 className={h2}>What I&apos;d do differently</h2>
-            <p className="type-body">{study.body.differently}</p>
-          </section>
+          {study.body.differently && (
+            <section className="grid gap-4">
+              <h2 className={h2}>What I&apos;d do differently</h2>
+              <p className="type-body">{study.body.differently}</p>
+            </section>
+          )}
 
           <nav aria-label="More case studies" className="grid gap-4 border-t border-rule pt-8 sm:grid-cols-2">
             <Link href={caseStudyHref(prev)} className="group grid gap-1 rounded-sm p-4 -m-4 hover:bg-plate focus-visible:outline-none focus-visible:shadow-focus">

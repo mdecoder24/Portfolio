@@ -25,7 +25,7 @@ test('without JavaScript every decision is in the page and the switcher still wo
   const page = await context.newPage();
   await page.goto('/?3d=off');
   const section = page.locator('#decisions');
-  await expect(section.locator('li[id^="decision-"]')).toHaveCount(12);
+  await expect(section.locator('li[id^="decision-"]')).toHaveCount(9);
   await section.locator('.decision-pick').nth(2).click();
   await expect(section.locator('.decision-panel').nth(2)).toBeVisible();
   await context.close();

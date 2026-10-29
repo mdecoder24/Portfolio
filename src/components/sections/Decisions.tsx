@@ -20,8 +20,8 @@ export function Decisions({ index, studies }: { index: number; studies: CaseStud
       id="decisions"
       index={index}
       label="How I build"
-      title="Every screen is a stack of trade-offs"
-      intro="Three to five calls behind each project, pinned where they show up on screen."
+      title="The calls behind each project"
+      intro="Pinned to the part of the screen where each one shows."
     >
       <div className="decision-deck reveal grid gap-10">
         <fieldset className="-mx-(--gutter) min-w-0 overflow-x-auto px-(--gutter) lg:mx-0 lg:px-0">

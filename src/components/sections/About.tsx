@@ -5,12 +5,14 @@ import type { Profile, Skill } from '@/content/schema';
 import { highlight } from '@/lib/highlight';
 
 // Three stresses at most: the paragraph is a lead, and when every other phrase is bright none of them stand out
-const STRESS = ['Associate Software Engineer', 'freelance projects', 'B.Tech in Computer Science'];
+const STRESS = ['the whole stack', 'Knowvation Learnings', 'computer vision'];
 
-const TIERS: { tier: Skill['tier']; label: string }[] = [
-  { tier: 'daily', label: 'Daily drivers' },
-  { tier: 'comfortable', label: 'Shipped with' },
-  { tier: 'exploring', label: 'Learning now' },
+const GROUPS: { group: Skill['group']; label: string }[] = [
+  { group: 'languages', label: 'Languages' },
+  { group: 'frontend', label: 'Frontend' },
+  { group: 'backend', label: 'Backend and databases' },
+  { group: 'ai-ml', label: 'AI and ML' },
+  { group: 'cloud', label: 'Cloud and DevOps' },
 ];
 
 function SkillItem({ skill }: { skill: Skill }) {
@@ -35,7 +37,7 @@ function SkillItem({ skill }: { skill: Skill }) {
 
 export function About({ profile, skills }: { profile: Profile; skills: Skill[] }) {
   return (
-    <Section id="about" index={1} label="About" title="I turn fuzzy ideas into products people actually use.">
+    <Section id="about" index={1} label="About" title="I write the front end, the back end, and the prompt in between.">
       <div className="grid gap-12 lg:grid-cols-12 lg:gap-8">
         <div className="reveal grid content-start gap-6 lg:col-span-9 lg:col-start-4">
           <SampleRibbon placeholder={profile.placeholder} />
@@ -54,17 +56,18 @@ export function About({ profile, skills }: { profile: Profile; skills: Skill[] }
 
         <div className="grid gap-6 lg:col-span-9 lg:col-start-4">
           <h3 className="reveal type-h4 text-ink">The stack</h3>
-          <div className="grid gap-px overflow-hidden rounded-md border border-rule bg-rule md:grid-cols-3">
-            {TIERS.map(({ tier, label }, i) => (
+          {/* One row per group, as the résumé lists them: five groups never split evenly into columns */}
+          <div className="border-t border-rule">
+            {GROUPS.map(({ group, label }, i) => (
               <div
-                key={tier}
-                className="reveal grid content-start gap-4 bg-paper p-6"
+                key={group}
+                className="reveal grid gap-3 border-b border-rule py-5 sm:grid-cols-[12rem_minmax(0,1fr)] sm:gap-6"
                 style={{ '--reveal-delay': `${i * 60}ms` } as React.CSSProperties}
               >
-                <p className="type-code text-ink-2">{label}</p>
-                <ul className="grid gap-2 type-body" aria-label={label}>
+                <p className="type-code text-ink-2 sm:pt-0.5">{label}</p>
+                <ul className="flex flex-wrap gap-x-5 gap-y-2 type-body" aria-label={label}>
                   {skills
-                    .filter((s) => s.tier === tier)
+                    .filter((s) => s.group === group)
                     .map((s) => (
                       <li key={s.name}>
                         <SkillItem skill={s} />

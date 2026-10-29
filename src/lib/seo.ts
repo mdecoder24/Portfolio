@@ -22,7 +22,7 @@ export function personLd() {
       email: `mailto:${config.links.email}`,
       url,
       sameAs: [config.links.linkedin, config.links.github],
-      knowsAbout: skills.filter((s) => s.tier === 'daily').map((s) => s.name),
+      knowsAbout: skills.map((s) => s.name),
     },
   };
 }

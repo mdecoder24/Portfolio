@@ -1,7 +1,6 @@
 import { ArrowDown, ArrowUpRight } from 'lucide-react';
 import Image from 'next/image';
 import { SceneMount } from '@/components/layout/SceneMount';
-import { LocalTime } from '@/components/sections/ContactAside';
 import { Button } from '@/components/ui/Button';
 import { CountUp } from '@/components/ui/CountUp';
 import { MetalTitle } from '@/components/ui/MetalTitle';
@@ -82,23 +81,24 @@ export function Hero({ profile, config }: { profile: Profile; config: Config }) 
               <span className="rise type-h3 font-medium text-ink [--rise-delay:240ms]">Full-stack &amp; AI engineer</span>
             </h1>
 
-            {/* On wide screens the local time captions the first action */}
             <div className="flex justify-center gap-3 lg:contents">
-              <div className="rise grid justify-items-start gap-4 [--rise-delay:320ms] lg:col-start-1 lg:row-start-1 lg:justify-self-start">
-                <span className="hidden type-code text-ink-2 lg:inline">
-                  <LocalTime city={profile.location.city} timeZone={profile.location.timeZone} />
-                </span>
-                <Button href="#work" size="sm">
-                  View my work
-                  <ArrowDown className="nudge-down size-4" strokeWidth={1.75} aria-hidden="true" />
-                </Button>
-              </div>
-              <div className="rise grid justify-items-end gap-4 [--rise-delay:380ms] lg:col-start-3 lg:row-start-1 lg:justify-self-end">
-                <Button href="#contact" variant="secondary" size="sm">
-                  Get in touch
-                  <ArrowUpRight className="size-4" strokeWidth={1.75} aria-hidden="true" />
-                </Button>
-              </div>
+              <Button
+                href="#work"
+                size="sm"
+                className="rise [--rise-delay:320ms] lg:col-start-1 lg:row-start-1 lg:justify-self-start"
+              >
+                View my work
+                <ArrowDown className="nudge-down size-4" strokeWidth={1.75} aria-hidden="true" />
+              </Button>
+              <Button
+                href="#contact"
+                variant="secondary"
+                size="sm"
+                className="rise [--rise-delay:380ms] lg:col-start-3 lg:row-start-1 lg:justify-self-end"
+              >
+                Get in touch
+                <ArrowUpRight className="size-4" strokeWidth={1.75} aria-hidden="true" />
+              </Button>
             </div>
           </div>
         </div>

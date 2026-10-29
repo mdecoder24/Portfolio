@@ -41,21 +41,19 @@ const covers = {
     `<ellipse cx="1080" cy="850" rx="260" ry="40" fill="none" stroke="${INK}" stroke-width="3"/>` +
     rect(980, 320, 200, 520) + rect(1020, 230, 120, 90) + rect(1005, 500, 150, 160) + line(1080, 180, 1080, 900, 2, '10 10') +
     callout(1180, 420, 1400, 420, 'A') + text(1435, 428, 26, 'Niacinamide 10%'),
-  documind:
-    win(120, 100, 1360, 800) + rect(160, 180, 560, 680) + rules(200, 230, 15, 470, 40) + rect(192, 432, 490, 70, `fill="none" stroke-dasharray="8 6"`) +
-    rect(780, 180, 640, 70) + rules(800, 300, 6, 560, 44) + rect(800, 590, 230, 50) + text(820, 623, 22, 'Page 12, table 3') +
-    callout(682, 467, 760, 720, 'A'),
-  pulse:
-    win(120, 100, 1360, 800) + ['To do', 'Doing', 'Done'].map((h, i) => text(170 + i * 440, 200, 30, h, 700) + Array.from({ length: 4 - i }, (_, j) => rect(160 + i * 440, 225 + j * 150, 400, 125) + rules(185 + i * 440, 265 + j * 150, 3, 320, 26)).join('')).join('') +
-    `<path d="M985 470 l0 40 l12 -12 l16 26" fill="${INK}" stroke="${INK}" stroke-width="3"/>` + callout(990, 470, 1250, 760, 'A'),
-  orbit:
-    `<circle cx="800" cy="500" r="70" fill="${FILL}" stroke="${INK}" stroke-width="3"/>` +
-    [170, 260, 360, 470].map((r, i) => `<ellipse cx="800" cy="500" rx="${r * 1.55}" ry="${r * 0.68}" fill="none" stroke="${INK}" stroke-width="2" stroke-dasharray="${i % 2 ? '10 8' : '0'}"/><circle cx="${800 + r * 1.55 * Math.cos(i * 1.7)}" cy="${500 + r * 0.68 * Math.sin(i * 1.7)}" r="${16 + i * 7}" fill="${FILL}" stroke="${INK}" stroke-width="3"/>`).join('') +
-    callout(800 + 260 * 1.55 * Math.cos(1.7), 500 + 260 * 0.68 * Math.sin(1.7), 1350, 140, 'A'),
-  codelens:
-    win(120, 100, 1360, 800) + Array.from({ length: 17 }, (_, i) => text(160, 195 + i * 38, 20, String(i + 1), 500) + line(210 + ((i * 3) % 4) * 26, 189 + i * 38, 400 + ((i * 53) % 360), 189 + i * 38, i > 4 && i < 11 ? 4 : 2)).join('') +
-    rect(195, 340, 640, 250, `fill="none" stroke-dasharray="8 6"`) + rect(920, 180, 520, 680) + text(950, 240, 30, 'What this does', 700) + rules(950, 290, 10, 440, 42) +
-    callout(835, 465, 920, 920, 'A'),
+  'sign-language-recognition':
+    win(120, 100, 1360, 800) + rect(170, 190, 820, 650) +
+    `<path d="M520 760 L520 520 L470 360 M520 520 L560 330 M540 520 L620 340 M560 520 L670 380 M580 560 L720 480" fill="none" stroke="${INK}" stroke-width="4"/>` +
+    [[470, 360], [560, 330], [620, 340], [670, 380], [720, 480], [520, 520], [520, 760]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="9" fill="${ACCENT}"/>`).join('') +
+    rect(1040, 190, 400, 650) + text(1075, 250, 26, 'Detected sign', 700) + rect(1075, 290, 330, 110) + rules(1075, 460, 8, 300, 44),
+  sensai:
+    win(120, 100, 1360, 800) + rect(160, 180, 560, 680) + text(200, 240, 30, 'Résumé', 700) + rules(200, 290, 13, 470, 42) +
+    rect(780, 180, 660, 680) + text(820, 240, 30, 'Interview feedback', 700) + rules(820, 300, 5, 560, 44) +
+    rect(820, 540, 270, 120) + text(850, 620, 56, '35%', 700) + rect(1120, 540, 280, 120) + rules(1150, 590, 2, 220, 34) + rect(820, 720, 200, 56, `fill="${ACCENT}" stroke="${ACCENT}"`),
+  'tedx-mlrit':
+    win(120, 100, 1360, 800) + text(180, 330, 110, 'TEDx MLRIT', 700) + rules(180, 400, 3, 560, 40) +
+    rect(180, 520, 220, 64, `fill="${ACCENT}" stroke="${ACCENT}"`) +
+    [0, 1, 2, 3].map((i) => rect(180 + i * 310, 640, 280, 200) + `<circle cx="${320 + i * 310}" cy="710" r="40" fill="none" stroke="${INK}" stroke-width="3"/>` + line(230 + i * 310, 790, 410 + i * 310, 790, 2)).join(''),
 };
 
 // Portrait phone screens (390 × 844) for projects shown on a 3D phone

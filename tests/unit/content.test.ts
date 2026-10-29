@@ -8,9 +8,9 @@ describe('content', () => {
     expect(content.freelance.length).toBeGreaterThan(0);
   });
 
-  it('gives every Daily-driver skill an evidence link', () => {
-    for (const s of content.skills.filter((s) => s.tier === 'daily'))
-      expect(s.evidence.length).toBeGreaterThan(0);
+  it('links at least one skill in every group to evidence', () => {
+    for (const g of new Set(content.skills.map((s) => s.group)))
+      expect(content.skills.some((s) => s.group === g && s.evidence.length > 0)).toBe(true);
   });
 
   it('uses unique, permanent slugs', () => {

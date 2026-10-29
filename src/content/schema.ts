@@ -15,8 +15,10 @@ export const CaseStudy = z.object({
   outcome: z.string().max(140), // leads with the result and its number
   client: z.object({ label: z.string(), named: z.boolean(), permission: z.boolean() }).optional(),
   role: z.string(),
-  team: z.string().default('Solo'),
-  start: month,
+  // Left out when unknown; the page then skips the row rather than guess "Solo"
+  team: z.string().optional(),
+  // Optional: leave it out rather than guess when the work started
+  start: month.optional(),
   end: month.optional(),
   stack: z.array(z.string()).min(1).max(12),
   categories: z.array(z.enum(['ai-ml', 'full-stack', '3d-creative', 'tools'])).min(1),
@@ -47,7 +49,8 @@ export const CaseStudy = z.object({
       .min(3)
       .max(5),
     results: z.array(z.string()).min(1),
-    differently: z.string(),
+    // Only Kushwant can write this; the section is hidden until he does
+    differently: z.string().optional(),
   }),
   pearlNotes: z.string().optional(), // facts Pearl may use that the page doesn't show
   confidential: z.array(z.string()).default([]), // facts Pearl must never reveal
@@ -108,7 +111,7 @@ export const Experience = z.object({
   id: slug,
   role: z.string(),
   org: z.string(),
-  location: z.string(),
+  location: z.string().optional(),
   start: month,
   end: month.optional(),
   points: z.array(z.string()).min(2).max(5),
@@ -119,7 +122,8 @@ export const Experience = z.object({
 
 export const Skill = z.object({
   name: z.string(),
-  tier: z.enum(['daily', 'comfortable', 'exploring']),
+  // The résumé's groups, in its order
+  group: z.enum(['languages', 'frontend', 'backend', 'ai-ml', 'cloud']),
   evidence: z.array(href).default([]),
   placeholder: z.boolean().default(false),
 });
@@ -158,7 +162,8 @@ export const EducationItem = z.object({
 export const Achievement = z.object({
   title: z.string(),
   issuer: z.string().optional(),
-  date: month,
+  // Optional: certifications and ongoing roles often carry no month worth showing
+  date: month.optional(),
   href: z.url().optional(),
   placeholder: z.boolean().default(false),
 });

@@ -121,12 +121,12 @@ export function Work({ index, freelance, projects }: { index: number; freelance:
       id="work"
       index={index}
       label="Selected work"
-      title="Things I've shipped"
-      intro="Client projects first, then the personal and academic work where I try new ideas. Each one has a write-up of the problem, the decisions and the results."
+      title="Things I've built"
+      intro="Client work first, then my own projects. Each one opens into a short write-up."
     >
       <div className="grid gap-24 lg:gap-32">
         <Group title="Client work" studies={freelance} offset={0} />
-        <Group title="Personal and academic" studies={projects} offset={freelance.length} compact />
+        <Group title="My projects" studies={projects} offset={freelance.length} compact />
       </div>
     </Section>
   );
