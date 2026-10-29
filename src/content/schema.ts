@@ -2,14 +2,14 @@ import { z } from 'zod';
 
 const month = z.string().regex(/^\d{4}-\d{2}$/); // "2026-07"
 const slug = z.string().regex(/^[a-z0-9-]+$/);
-// Site-relative paths ("/projects/pulse", "#freelance") or absolute URLs
+// Site-relative paths ("/projects/sensai", "#experience") or absolute URLs
 const href = z
   .string()
   .refine((v) => v.startsWith('/') || v.startsWith('#') || URL.canParse(v), 'Invalid href');
 
 export const CaseStudy = z.object({
   slug,
-  kind: z.enum(['work', 'freelance', 'personal', 'academic']),
+  kind: z.enum(['work', 'personal', 'academic']),
   title: z.string().max(60),
   context: z.string(), // "Freelance, a Hyderabad clinic, 4 weeks"
   outcome: z.string().max(140), // leads with the result and its number
@@ -32,7 +32,6 @@ export const CaseStudy = z.object({
     poster: z.string().optional(),
   }),
   links: z.array(z.object({ label: z.string(), href: z.url() })).default([]),
-  testimonialId: z.string().optional(),
   // Case-study body, following the PRD's template
   body: z.object({
     problem: z.string(),
@@ -42,8 +41,6 @@ export const CaseStudy = z.object({
         z.object({
           title: z.string(),
           detail: z.string(),
-          // Where the decision shows up on the cover, as percentages of its width and height; drives the home-page pins
-          at: z.object({ x: z.number().min(0).max(100), y: z.number().min(0).max(100) }).optional(),
         }),
       )
       .min(3)
@@ -65,8 +62,6 @@ export const Config = z.object({
     replyTime: z.string(),
   }),
   flags: z.object({
-    showFreelance: z.boolean(),
-    showPrices: z.boolean(),
     pearl: z.boolean(),
     threeD: z.boolean(),
     showCgpa: z.boolean(),
@@ -128,26 +123,6 @@ export const Skill = z.object({
   placeholder: z.boolean().default(false),
 });
 
-export const Service = z.object({
-  id: slug,
-  name: z.string(),
-  description: z.string(),
-  timeline: z.string(),
-  stack: z.string(),
-  startingFrom: z.number().int().positive().optional(),
-  placeholder: z.boolean().default(false),
-});
-
-export const Testimonial = z.object({
-  id: slug,
-  quote: z.string(),
-  role: z.string(),
-  name: z.string().optional(),
-  org: z.string().optional(),
-  permissionDate: z.string().optional(),
-  placeholder: z.boolean().default(false),
-});
-
 export const EducationItem = z.object({
   degree: z.string(),
   institution: z.string(),
@@ -173,7 +148,5 @@ export type Config = z.infer<typeof Config>;
 export type Profile = z.infer<typeof Profile>;
 export type Experience = z.infer<typeof Experience>;
 export type Skill = z.infer<typeof Skill>;
-export type Service = z.infer<typeof Service>;
-export type Testimonial = z.infer<typeof Testimonial>;
 export type EducationItem = z.infer<typeof EducationItem>;
 export type Achievement = z.infer<typeof Achievement>;

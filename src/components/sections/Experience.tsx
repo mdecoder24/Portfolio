@@ -1,4 +1,4 @@
-import { Plus } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 import { SampleRibbon } from '@/components/ui/SampleRibbon';
 import { Section } from '@/components/ui/SectionHeader';
 import type { Experience as ExperienceEntry } from '@/content/schema';
@@ -24,8 +24,8 @@ export function Experience({ entries }: { entries: ExperienceEntry[] }) {
                     {e.location && `, ${e.location}`}
                   </span>
                 </span>
-                <span className="grid size-10 place-items-center self-center rounded-full border border-rule text-ink-2 transition-[rotate,border-color,color] duration-200 ease-out group-hover:border-rule-strong group-hover:text-ink group-open:rotate-45 lg:col-span-1 lg:justify-self-end">
-                  <Plus aria-hidden="true" strokeWidth={1.75} className="size-4" />
+                <span className="grid size-10 place-items-center self-center rounded-full border border-rule text-ink-2 transition-[rotate,border-color,color] duration-200 ease-out group-hover:border-rule-strong group-hover:text-ink group-open:rotate-180 lg:col-span-1 lg:justify-self-end">
+                  <ChevronDown aria-hidden="true" strokeWidth={1.75} className="size-4" />
                 </span>
               </summary>
               <div className="grid gap-4 pb-8 lg:grid-cols-12 lg:gap-x-8">

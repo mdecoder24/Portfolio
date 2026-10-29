@@ -93,6 +93,26 @@ export function dust(count: number, seed = 23): { orbits: Float32Array; seeds: F
   return { orbits, seeds };
 }
 
+/**
+ * How far the hero portrait has diffused for a scroll position (page pixels): whole until its centre rises past the
+ * middle of the viewport, or from the top of the page when it starts above that, then fully dust once it has moved
+ * up another 80% of its height, before it leaves the screen. Scrolling back reverses it. On phones the portrait
+ * sits below the fold, so it stays whole while the visitor scrolls down to it.
+ */
+export function diffusionTarget(scrollY: number, viewportH: number, frameCentre: number, frameHeight: number): number {
+  if (frameHeight <= 0) return 0;
+  const start = Math.max(0, frameCentre - viewportH / 2);
+  return Math.min(1, Math.max(0, (scrollY - start) / (frameHeight * 0.8)));
+}
+
+/**
+ * Whether the portrait is at rest: fully assembled, with the scroll not asking it to diffuse, the cells back in place,
+ * and no cursor over it. At rest the sharp photo replaces the pixels.
+ */
+export function isRestful(progress: number, toward: number, diffuse: number, pointed: boolean): boolean {
+  return progress >= 1 && toward <= 0 && diffuse < 0.01 && !pointed;
+}
+
 /** Ease-out quint, the curve the mosaic assembles on. */
 export function easeOut(t: number): number {
   const x = Math.min(1, Math.max(0, t));

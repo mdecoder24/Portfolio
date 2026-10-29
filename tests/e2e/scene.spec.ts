@@ -21,18 +21,28 @@ test('?3d=off renders the poster and no canvas', async ({ page }) => {
   await expect(page.locator('#hero-portrait')).not.toHaveAttribute('data-mosaic', 'on');
 });
 
-test('the portrait assembles as a pixel mosaic on load, then stays the sharp photo', async ({ page }) => {
+test('the portrait assembles as pixels on load, rests sharp, and turns to pixels on hover and scroll', async ({
+  page,
+}) => {
   await page.goto('/?tier=low');
   const frame = page.locator('#hero-portrait');
   const flat = frame.locator('img');
+  // Assembling: the flat photo hides while the cells fly in
+  await expect(frame).toHaveAttribute('data-mosaic', 'diffusing', { timeout: 15_000 });
+  await expect(flat).toHaveCSS('opacity', '0');
+  // Settled: the sharp photo fades back in
   await expect(frame).toHaveAttribute('data-mosaic', 'clear', { timeout: 15_000 });
   await expect(flat).toHaveCSS('opacity', '1');
-  // The effect does not come back: not under the cursor, not on scroll, not after waiting
+  // Hovering hands back to the pixels so they can part around the cursor; moving off settles it sharp again
   await frame.hover();
-  await page.mouse.wheel(0, 400);
-  await page.waitForTimeout(8000);
-  await expect(frame).toHaveAttribute('data-mosaic', 'clear');
-  await expect(flat).toHaveCSS('opacity', '1');
+  await expect(frame).toHaveAttribute('data-mosaic', 'pixel');
+  await page.locator('#hero-title').hover();
+  await expect(frame).toHaveAttribute('data-mosaic', 'clear', { timeout: 5000 });
+  // Scrolling away diffuses it; scrolling back reassembles it and it rests sharp
+  await page.evaluate(() => scrollTo(0, 300));
+  await expect(frame).toHaveAttribute('data-mosaic', 'pixel');
+  await page.evaluate(() => scrollTo(0, 0));
+  await expect(frame).toHaveAttribute('data-mosaic', 'clear', { timeout: 5000 });
 });
 
 test('the footer 3D toggle removes the canvas', async ({ page }) => {
@@ -47,6 +57,6 @@ test('the headline is in the HTML before any script runs', async ({ browser }) =
   const page = await context.newPage();
   await page.goto('/');
   await expect(page.getByRole('heading', { level: 1 })).toContainText('Full-stack & AI engineer');
-  await expect(page.getByRole('heading', { name: /can build/i })).toBeVisible();
+  await expect(page.getByRole('heading', { name: /where i've worked/i })).toBeVisible();
   await context.close();
 });

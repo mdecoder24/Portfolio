@@ -24,17 +24,14 @@ export const sensai = CaseStudy.parse({
       {
         title: 'Prompts do the heavy lifting',
         detail: 'The résumé analysis and interview feedback come from prompt engineering on the Gemini API.',
-        at: { x: 60, y: 60 },
       },
       {
         title: 'Next.js and Node.js',
         detail: 'Next.js for the app, with a Node.js back end.',
-        at: { x: 12, y: 15 },
       },
       {
         title: 'Prisma for the data',
         detail: 'Everything the app stores goes through Prisma.',
-        at: { x: 27, y: 50 },
       },
     ],
     results: ['Evaluations 35% more precise'],

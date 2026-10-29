@@ -4,14 +4,13 @@ import { Button } from '@/components/ui/Button';
 import { CountUp } from '@/components/ui/CountUp';
 import { SampleRibbon } from '@/components/ui/SampleRibbon';
 import { Section } from '@/components/ui/SectionHeader';
-import { caseStudyHref, testimonials } from '@/content';
+import { caseStudyHref } from '@/content';
 import type { CaseStudy } from '@/content/schema';
 import { cn } from '@/lib/cn';
 import { DeviceStage } from './DeviceStage';
 
 /** Everything about a project except its picture: shared by the large client rows and the compact personal cards */
 function Details({ study, n, compact = false }: { study: CaseStudy; n: number; compact?: boolean }) {
-  const quote = testimonials.find((t) => t.id === study.testimonialId);
   return (
     <>
       <div className="flex flex-wrap items-center gap-x-3 gap-y-2 type-code text-ink-2">
@@ -26,12 +25,6 @@ function Details({ study, n, compact = false }: { study: CaseStudy; n: number; c
           <CountUp text={study.outcome} />
         </span> {!compact && study.body.built}
       </p>
-      {quote && (
-        <figure className="grid max-w-[48ch] gap-1 border-l border-rule-strong pl-4 type-small">
-          <blockquote className="text-ink">&ldquo;{quote.quote}&rdquo;</blockquote>
-          <figcaption className="text-ink-2">{quote.role}</figcaption>
-        </figure>
-      )}
       <p className="type-code text-ink-2">{study.stack.join(', ')}</p>
       <div className="flex flex-wrap gap-3 pt-1">
         <Button href={caseStudyHref(study)}>
@@ -115,18 +108,17 @@ function Group({
   );
 }
 
-export function Work({ index, freelance, projects }: { index: number; freelance: CaseStudy[]; projects: CaseStudy[] }) {
+export function Work({ index, projects }: { index: number; projects: CaseStudy[] }) {
   return (
     <Section
       id="work"
       index={index}
       label="Selected work"
       title="Things I've built"
-      intro="Client work first, then my own projects. Each one opens into a short write-up."
+      intro="Each one opens into a short write-up."
     >
       <div className="grid gap-24 lg:gap-32">
-        <Group title="Client work" studies={freelance} offset={0} />
-        <Group title="My projects" studies={projects} offset={freelance.length} compact />
+        <Group title="My projects" studies={projects} offset={0} compact />
       </div>
     </Section>
   );

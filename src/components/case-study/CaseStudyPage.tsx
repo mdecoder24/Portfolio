@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { SiteChrome } from '@/components/layout/SiteChrome';
 import { buttonClasses } from '@/components/ui/Button';
 import { SampleRibbon } from '@/components/ui/SampleRibbon';
-import { caseStudyHref, testimonials } from '@/content';
+import { caseStudyHref } from '@/content';
 import type { CaseStudy } from '@/content/schema';
 import { formatRange } from '@/lib/format';
 import { caseStudyLd, jsonLd } from '@/lib/seo';
@@ -12,8 +12,7 @@ export function CaseStudyPage({ study, list }: { study: CaseStudy; list: CaseStu
   const i = list.findIndex((s) => s.slug === study.slug);
   const prev = list[(i - 1 + list.length) % list.length];
   const next = list[(i + 1) % list.length];
-  const section = study.kind === 'freelance' ? { label: 'Freelance', hash: 'freelance' } : { label: 'Projects', hash: 'projects' };
-  const quote = testimonials.find((t) => t.id === study.testimonialId);
+  const section = { label: 'Projects', hash: 'work' };
   const facts = [
     ['Role', study.role],
     ...(study.start ? [['Timeline', formatRange(study.start, study.end)] as const] : []),
@@ -104,17 +103,6 @@ export function CaseStudyPage({ study, list }: { study: CaseStudy; list: CaseStu
               ))}
             </ul>
           </section>
-          {quote && (
-            <figure className="grid gap-3">
-              <blockquote className="type-lead max-w-[56ch] font-medium text-ink">
-                <p>&ldquo;{quote.quote}&rdquo;</p>
-              </blockquote>
-              <figcaption className="type-small text-ink-2">
-                {quote.name && <span className="font-semibold text-ink">{quote.name}, </span>}
-                {quote.role}
-              </figcaption>
-            </figure>
-          )}
           {study.body.differently && (
             <section className="grid gap-4">
               <h2 className={h2}>What I&apos;d do differently</h2>

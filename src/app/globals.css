@@ -231,23 +231,6 @@
   display: none;
 }
 
-/*
- * Decisions switcher: the checked radio shows its panel. Browsers without :has show every panel stacked, which still
- * reads in order. Five rules cover the schema's limit of projects shown here.
- */
-@supports selector(:has(*)) {
-  .decision-deck .decision-panel {
-    display: none;
-  }
-  .decision-deck:has(.decision-pick:nth-child(1) :checked) .decision-panel:nth-child(1),
-  .decision-deck:has(.decision-pick:nth-child(2) :checked) .decision-panel:nth-child(2),
-  .decision-deck:has(.decision-pick:nth-child(3) :checked) .decision-panel:nth-child(3),
-  .decision-deck:has(.decision-pick:nth-child(4) :checked) .decision-panel:nth-child(4),
-  .decision-deck:has(.decision-pick:nth-child(5) :checked) .decision-panel:nth-child(5) {
-    display: grid;
-  }
-}
-
 @layer base {
   :root {
     --depth-2: #4a4e57;

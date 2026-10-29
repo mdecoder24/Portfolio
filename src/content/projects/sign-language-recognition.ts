@@ -23,17 +23,14 @@ export const signLanguageRecognition = CaseStudy.parse({
       {
         title: 'My own training pipeline',
         detail: 'The ML training pipelines behind the model are my own.',
-        at: { x: 77, y: 34 },
       },
       {
         title: 'A deep learning model',
         detail: 'Recognition runs on a TensorFlow deep learning model with MediaPipe, inside a React app.',
-        at: { x: 36, y: 40 },
       },
       {
         title: 'Served from Firebase',
         detail: 'Hosted on Firebase to keep inference fast.',
-        at: { x: 12, y: 15 },
       },
     ],
     results: ['Detects signs in real time', 'Low-latency inference on Firebase'],

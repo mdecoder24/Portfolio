@@ -29,7 +29,7 @@ export function personLd() {
 
 export function caseStudyLd(study: CaseStudy) {
   const url = `${config.site.url}${caseStudyHref(study)}`;
-  const section = study.kind === 'freelance' ? 'Freelance' : 'Projects';
+  const section = 'Projects';
   return [
     {
       '@context': 'https://schema.org',
@@ -46,7 +46,7 @@ export function caseStudyLd(study: CaseStudy) {
       '@type': 'BreadcrumbList',
       itemListElement: [
         { '@type': 'ListItem', position: 1, name: 'Home', item: config.site.url },
-        { '@type': 'ListItem', position: 2, name: section, item: `${config.site.url}/#${section.toLowerCase()}` },
+        { '@type': 'ListItem', position: 2, name: section, item: `${config.site.url}/#work` },
         { '@type': 'ListItem', position: 3, name: study.title, item: url },
       ],
     },

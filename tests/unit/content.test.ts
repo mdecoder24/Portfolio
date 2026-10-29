@@ -3,9 +3,8 @@ import * as content from '@/content';
 import { CaseStudy, Profile } from '@/content/schema';
 
 describe('content', () => {
-  it('has at least one featured project and one freelance case study', () => {
+  it('has at least one featured project', () => {
     expect(content.projects.some((p) => p.featured)).toBe(true);
-    expect(content.freelance.length).toBeGreaterThan(0);
   });
 
   it('links at least one skill in every group to evidence', () => {
@@ -14,7 +13,7 @@ describe('content', () => {
   });
 
   it('uses unique, permanent slugs', () => {
-    const slugs = [...content.projects, ...content.freelance].map((s) => s.slug);
+    const slugs = content.projects.map((s) => s.slug);
     expect(new Set(slugs).size).toBe(slugs.length);
   });
 
@@ -25,15 +24,5 @@ describe('content', () => {
   it('rejects alt text shorter than 10 characters', () => {
     const study = content.projects[0];
     expect(CaseStudy.safeParse({ ...study, media: { ...study.media, alt: 'shot' } }).success).toBe(false);
-  });
-
-  it('keeps decision pins on the cover', () => {
-    const study = content.projects[0];
-    const [first, ...rest] = study.body.decisions;
-    const off = {
-      ...study,
-      body: { ...study.body, decisions: [{ ...first, at: { x: 120, y: 40 } }, ...rest] },
-    };
-    expect(CaseStudy.safeParse(off).success).toBe(false);
   });
 });

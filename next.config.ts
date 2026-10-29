@@ -39,6 +39,8 @@ const nextConfig: NextConfig = {
         destination: '/#work',
         permanent: true,
       })),
+      // The freelance section and its sample case studies were removed
+      { source: '/freelance/:slug', destination: '/#work', permanent: true },
     ];
   },
   async headers() {

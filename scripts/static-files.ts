@@ -1,9 +1,9 @@
 // Writes public/llms.txt and public/humans.txt from content on every build.
 import { writeFileSync } from 'node:fs';
-import { caseStudyHref, config, freelance, profile, projects, services } from '../src/content/index.ts';
+import { caseStudyHref, config, profile, projects } from '../src/content/index.ts';
 
 const url = config.site.url;
-const best = [...projects, ...freelance].filter((p) => p.featured).slice(0, 3);
+const best = projects.filter((p) => p.featured).slice(0, 3);
 
 const llms = `# ${profile.name}
 
@@ -14,11 +14,6 @@ ${profile.bio}
 
 ## Selected work
 ${best.map((p) => `- [${p.title}](${url}${caseStudyHref(p)}): ${p.outcome}`).join('\n')}
-
-## Freelance services
-${services.map((s) => `- ${s.name}: ${s.description}`).join('\n')}
-
-Availability: ${config.availability.freelanceLabel ?? config.availability.freelance}
 
 ## Contact
 - Email: ${config.links.email}
