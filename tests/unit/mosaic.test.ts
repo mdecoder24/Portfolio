@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { dust, easeOut, imageToCells, maskToCells, scatter, starfield } from '@/scene/mosaic';
+import { diffusionTarget, dust, easeOut, imageToCells, maskToCells, scatter, starfield } from '@/scene/mosaic';
 
 describe('mosaic', () => {
   it('turns solid mask pixels into centred cells on the step grid', () => {
@@ -56,5 +56,18 @@ describe('mosaic', () => {
       expect(Math.abs(a.orbits[i * 3 + 2])).toBeLessThanOrEqual(1);
     }
     expect(dust(500).orbits).toEqual(a.orbits);
+  });
+
+  it('diffuses the portrait as it scrolls away and reassembles it on the way back', () => {
+    // Desktop: the frame starts in view, so it diffuses from the first pixel of scroll
+    expect(diffusionTarget(0, 900, 420, 500)).toBe(0);
+    expect(diffusionTarget(200, 900, 420, 500)).toBeCloseTo(0.5);
+    expect(diffusionTarget(400, 900, 420, 500)).toBe(1);
+    expect(diffusionTarget(5000, 900, 420, 500)).toBe(1);
+    expect(diffusionTarget(-40, 900, 420, 500)).toBe(0);
+    // Phone: the frame sits below the fold and stays whole until its centre passes the middle of the screen
+    expect(diffusionTarget(300, 780, 690, 380)).toBe(0);
+    expect(diffusionTarget(452, 780, 690, 380)).toBeCloseTo(0.5);
+    expect(diffusionTarget(300, 780, 690, 0)).toBe(0);
   });
 });
