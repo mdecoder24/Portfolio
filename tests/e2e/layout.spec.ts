@@ -13,7 +13,7 @@ test('the hero leads with the name, role and key facts', async ({ page }) => {
   const h1 = page.getByRole('heading', { level: 1 });
   await expect(h1).toHaveAccessibleName(/^Kushwant Kumar Reddy\s*,\s*Full-stack & AI engineer$/);
   const hero = page.locator('#hero');
-  await expect(hero.getByRole('term')).toHaveText(['Based in', 'Degree', 'Day job', 'Hackathons']);
+  await expect(hero.getByRole('term')).toHaveText(['Based in', 'Degree', 'Day job', 'Freelance']);
 });
 
 test('the hero centres a large portrait with the name and role in front of its lower half', async ({ page }) => {
@@ -86,7 +86,7 @@ test('the nav underline slides to the section in view, and counts land on their 
     })
     .toBeLessThanOrEqual(1);
   await page.evaluate(() => scrollTo(0, 0));
-  await expect(page.locator('#hero dd').last()).toHaveText(/9-time finalist/);
+  await expect(page.locator('#hero dd').last()).toHaveText(/14\+ projects shipped/);
 });
 
 test('the pixel robot patrols the fact strip, and stands still under reduced motion', async ({ page }) => {
