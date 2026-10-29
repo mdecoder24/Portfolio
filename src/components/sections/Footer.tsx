@@ -4,12 +4,6 @@ import { PreferenceToggles } from '@/components/layout/PreferenceToggles';
 import type { Config } from '@/content/schema';
 
 export function Footer({ config, name }: { config: Config; name: string }) {
-  const updated = new Date(`${config.site.lastUpdated}T00:00:00+05:30`).toLocaleDateString('en-IN', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-    timeZone: 'Asia/Kolkata',
-  });
   const link = 'rounded-xs text-ink-2 underline-offset-4 hover:text-ink hover:underline focus-visible:outline-none focus-visible:shadow-focus';
 
   return (
@@ -57,8 +51,7 @@ export function Footer({ config, name }: { config: Config; name: string }) {
           <p className="inline-flex items-center gap-3 tabular">
             <Monogram className="text-[1.125rem]" />
             <span>
-              Last updated <time dateTime={config.site.lastUpdated}>{updated}</time> · © {config.site.lastUpdated.slice(0, 4)}{' '}
-              {name}
+              © {config.site.lastUpdated.slice(0, 4)} {name}
             </span>
           </p>
         </div>
