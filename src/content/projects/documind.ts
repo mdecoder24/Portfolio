@@ -13,15 +13,32 @@ export const documind = CaseStudy.parse({
   stack: ['Next.js', 'FastAPI', 'pgvector', 'AI SDK', 'Python'],
   categories: ['ai-ml', 'full-stack'],
   featured: true,
-  media: { src: '/media/documind/cover.svg', alt: 'Chat answer quoting a PDF with a highlighted citation on page 12' },
+  media: {
+    src: '/media/documind/cover.svg',
+    alt: 'Chat answer quoting a PDF with a highlighted citation on page 12',
+  },
   links: [{ label: 'Code', href: 'https://github.com/kushwantkr/documind' }],
   body: {
-    problem: 'Students lose time searching long PDFs, and generic chatbots answer without saying where the answer came from.',
-    built: 'A retrieval system that splits PDFs by layout, embeds them in pgvector, and answers with citations that open the exact page.',
+    problem:
+      'Students lose time searching long PDFs, and generic chatbots answer without saying where the answer came from.',
+    built:
+      'A retrieval system that splits PDFs by layout, embeds them in pgvector, and answers with citations that open the exact page.',
     decisions: [
-      { title: 'Chunk by layout, not by length', detail: 'Headings and tables stay intact, so citations point at whole ideas.' },
-      { title: 'Citations are required', detail: 'An answer without a source is rejected and retried.' },
-      { title: 'pgvector over a vector service', detail: 'One PostgreSQL database kept the stack simple for a student team.' },
+      {
+        title: 'Chunk by layout, not by length',
+        detail: 'Headings and tables stay intact, so citations point at whole ideas.',
+        at: { x: 27, y: 47 },
+      },
+      {
+        title: 'Citations are required',
+        detail: 'An answer without a source is rejected and retried.',
+        at: { x: 66, y: 58 },
+      },
+      {
+        title: 'pgvector over a vector service',
+        detail: 'One PostgreSQL database kept the stack simple for a student team.',
+        at: { x: 86, y: 21 },
+      },
     ],
     results: ['Correct citation on 87% of a 120-question test set', 'Answers in about 2 seconds'],
     differently: 'I would build the evaluation set in week one, not week ten.',

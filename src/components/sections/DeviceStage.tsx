@@ -68,6 +68,7 @@ export function DeviceStage({ study, priority = false }: { study: CaseStudy; pri
         height={1000}
         sizes="(min-width: 1024px) 640px, 100vw"
         priority={priority}
+        loading="eager"
         unoptimized={study.media.src.endsWith('.svg')}
         className={cn(
           'absolute inset-[9%] h-[82%] w-[82%] rounded-sm object-contain transition-opacity duration-700',

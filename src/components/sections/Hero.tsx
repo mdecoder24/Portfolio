@@ -1,26 +1,33 @@
 import { ArrowDown, ArrowUpRight } from 'lucide-react';
 import Image from 'next/image';
 import { SceneMount } from '@/components/layout/SceneMount';
-import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { MetalTitle } from '@/components/ui/MetalTitle';
 import type { Config, Profile } from '@/content/schema';
 
 /**
- * The photograph's frame, centred between the two halves of the name. The 3D scene measures this element and redraws
+ * The photograph's frame, centred behind the name. The 3D scene measures this element and redraws
  * its contents as a pixel mosaic that assembles on load: the photo named in data-src, or the KR monogram when there is
  * no photo yet. The flat image (or a flat KR) shows until the mosaic is ready (data-mosaic="on"), and stays when 3D
  * is off.
  */
 function Portrait({ src }: { src?: string }) {
   const frame =
-    'group/portrait relative block aspect-[4/5] w-[min(52vw,14rem)] overflow-hidden rounded-lg border border-rule bg-plate/40 lg:w-[clamp(12rem,19vw,18rem)]';
-  const fade = 'transition-opacity duration-700 group-data-[mosaic=on]/portrait:opacity-0';
+    'group/portrait relative block aspect-[4/5] w-[min(84vw,22rem)] sm:w-[25rem] lg:w-[clamp(22rem,32vw,29rem)]';
+  const fade = 'transition-opacity duration-500 group-data-[mosaic=diffusing]/portrait:opacity-0';
   if (src)
     return (
       <span id="hero-portrait" data-src={src} className={frame}>
-        {/* Inside the h1, beside the name, so the photo needs no alt text of its own */}
-        <Image src={src} alt="" fill priority sizes="(min-width: 1024px) 19vw, 52vw" className={`object-cover grayscale ${fade}`} />
+        {/* Decorative portrait beside the heading; the h1 carries the accessible name */}
+        <Image
+          src={src}
+          alt=""
+          fill
+          priority
+          unoptimized
+          sizes="(min-width: 1024px) 32vw, 84vw"
+          className={`object-contain object-bottom grayscale ${fade}`}
+        />
       </span>
     );
   return (
@@ -31,62 +38,56 @@ function Portrait({ src }: { src?: string }) {
 }
 
 /**
- * The first viewport answers a recruiter's questions in order: who (the name around the portrait), what (the role),
- * where and for whom (employer, city), and whether I'm free (the availability badge), then four facts in a ruled strip.
+ * Split editorial hero: the left column leads with the name, role, summary, and primary actions; the right column
+ * showcases the large borderless portrait (which diffuses in as a 3D pixel mosaic on load), grounded by the four-fact
+ * strip across the bottom.
  */
 export function Hero({ profile, config }: { profile: Profile; config: Config }) {
-  const [first, ...rest] = profile.name.split(' ');
-  const last = rest.join(' ');
-  // On wide screens the name shares its line with the portrait, so it steps down a size. Name and portrait centre as
-  // one group: pinning the frame to the page centre left the short surname with a wide empty margin
-  const word = 'type-display lg:text-[length:min(7.6vw,8.5rem)]';
+  const fullName = profile.name.trim().replace(/\s+/g, ' ');
+  const word =
+    'type-display whitespace-nowrap text-[length:clamp(1.65rem,4.6vw,3.25rem)] lg:text-[length:clamp(2.2rem,3.25vw,3.75rem)] leading-none [&_.w]:mr-[0.14em] [&_.w:last-child]:mr-0 [&_.w]:pb-[0.06em]';
 
   return (
     <section
       id="hero"
       aria-labelledby="hero-title"
-      className="relative isolate -mt-(--nav-height) flex flex-col justify-end overflow-hidden lg:min-h-svh"
+      className="relative isolate -mt-(--nav-height) flex flex-col justify-between overflow-hidden lg:min-h-svh"
     >
-      {/* Star dust and the KR mosaic; a radial vignette keeps the edges quiet */}
-      <div aria-hidden="true" className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_50%_40%,var(--tint),var(--paper)_70%)]" />
+      {/* Star dust and the portrait mosaic; a radial vignette keeps the edges quiet */}
+      <div aria-hidden="true" className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_68%_42%,var(--tint),var(--paper)_72%)]" />
       {config.flags.threeD && (
         <div className="absolute inset-0 -z-10">
           <SceneMount />
         </div>
       )}
 
-      <div className="container-kit grid gap-10 pb-8 pt-[calc(var(--nav-height)+var(--space-7))] sm:gap-12 sm:pb-10">
-        <div className="grid justify-items-center gap-6 text-center sm:gap-8">
-          <div className="rise">
-            <Badge tone={config.availability.freelance}>{config.availability.freelanceLabel}</Badge>
-          </div>
-          <h1 id="hero-title" className="grid justify-items-center gap-5 sm:gap-6">
-            <span className="flex flex-wrap items-center justify-center gap-x-4 gap-y-6 lg:grid lg:w-full lg:grid-cols-[auto_auto_auto] lg:justify-center lg:gap-x-[2.5vw]">
-              <span className="rise order-first flex basis-full justify-center [--rise-delay:40ms] lg:col-start-2 lg:row-start-1">
-                <Portrait src={profile.portrait} />
-              </span>
-              <MetalTitle as="span" text={first} entrance="load" className={`${word} lg:col-start-1 lg:row-start-1 lg:justify-self-end [--rise-delay:120ms]`} />
-              <span className="sr-only"> </span>
-              {last && <MetalTitle as="span" text={last} entrance="load" className={`${word} lg:col-start-3 lg:row-start-1 lg:justify-self-start [--rise-delay:200ms]`} />}
-            </span>
-            <span className="sr-only">, </span>
-            <span className="rise type-h3 font-medium text-ink-2 [--rise-delay:280ms]">Full-stack &amp; AI engineer</span>
-          </h1>
-        </div>
+      <div className="container-kit my-auto grid gap-10 pb-8 pt-[calc(var(--nav-height)+var(--space-6))] sm:gap-12 sm:pb-10">
+        <div className="grid items-center gap-10 lg:grid-cols-12 lg:gap-8">
+          <div className="grid content-start gap-5 lg:col-span-7 sm:gap-6">
+            <h1 id="hero-title" className="grid gap-3 sm:gap-4">
+              <MetalTitle as="span" text={fullName} entrance="load" className={`${word} [--rise-delay:80ms]`} />
+              <span className="sr-only">, </span>
+              <span className="rise type-h3 font-medium text-ink [--rise-delay:240ms]">Full-stack &amp; AI engineer</span>
+            </h1>
 
-        <div className="rise grid gap-8 lg:grid-cols-12 lg:items-end [--rise-delay:380ms]">
-          <p className="max-w-[44ch] type-lead text-ink lg:col-span-7">
-            {profile.headline}. <span className="text-ink-2">{profile.subheadline}</span>
-          </p>
-          <div className="flex flex-wrap gap-3 lg:col-span-5 lg:justify-end">
-            <Button href="#work">
-              View my work
-              <ArrowDown className="size-4" strokeWidth={1.75} aria-hidden="true" />
-            </Button>
-            <Button href="#contact" variant="secondary">
-              Get in touch
-              <ArrowUpRight className="size-4" strokeWidth={1.75} aria-hidden="true" />
-            </Button>
+            <p className="rise max-w-[46ch] type-lead text-ink [--rise-delay:320ms]">
+              {profile.headline}. <span className="text-ink-2">{profile.subheadline}</span>
+            </p>
+
+            <div className="rise flex flex-wrap gap-3 pt-1 [--rise-delay:400ms]">
+              <Button href="#work">
+                View my work
+                <ArrowDown className="size-4" strokeWidth={1.75} aria-hidden="true" />
+              </Button>
+              <Button href="#contact" variant="secondary">
+                Get in touch
+                <ArrowUpRight className="size-4" strokeWidth={1.75} aria-hidden="true" />
+              </Button>
+            </div>
+          </div>
+
+          <div aria-hidden="true" className="grid place-items-center lg:col-span-5 lg:justify-self-end">
+            <Portrait src={profile.portrait} />
           </div>
         </div>
 

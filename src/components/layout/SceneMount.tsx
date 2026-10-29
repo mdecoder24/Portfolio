@@ -9,6 +9,15 @@ import { prefersReducedMotion, useUi } from '@/stores/ui';
 // Renders inside a positioned box (the hero figure); the poster beneath it stays until the canvas is ready.
 const SceneRoot = dynamic(() => import('@/scene/SceneRoot'), { ssr: false });
 
+// Silence three 0.186's THREE.Clock deprecation warning triggered internally by @react-three/fiber 9.8
+if (typeof window !== 'undefined') {
+  const origWarn = console.warn;
+  console.warn = (...args: unknown[]) => {
+    if (typeof args[0] === 'string' && args[0].includes('THREE.Clock:')) return;
+    origWarn.apply(console, args);
+  };
+}
+
 const TIER_QUERY: Record<string, Tier> = { high: 3, medium: 2, low: 1, off: 0 };
 
 function hasWebGL2() {

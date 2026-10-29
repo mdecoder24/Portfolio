@@ -38,26 +38,32 @@ export function PageObserver() {
     window.addEventListener('scroll', onScroll, { passive: true });
     measure();
 
-    // Scroll reveals: opt in only when motion is allowed, so content is never hidden without JavaScript
+    // Scroll reveals: opt in only when motion is allowed, so content is never hidden without JavaScript.
+    // Deferred by one frame so hydration completes before any DOM data-shown attributes are mutated.
     let revealIo: IntersectionObserver | undefined;
+    let raf = 0;
     if (!prefersReducedMotion()) {
-      document.documentElement.dataset.reveal = '';
-      revealIo = new IntersectionObserver(
-        (entries) => {
-          for (const e of entries)
-            if (e.isIntersecting) {
-              (e.target as HTMLElement).dataset.shown = '';
-              revealIo?.unobserve(e.target);
-            }
-        },
-        { rootMargin: '0px 0px -8% 0px' },
-      );
-      document.querySelectorAll('.reveal, .reveal-words').forEach((el) => revealIo?.observe(el));
+      raf = requestAnimationFrame(() => {
+        document.documentElement.dataset.reveal = '';
+        revealIo = new IntersectionObserver(
+          (entries) => {
+            for (const e of entries)
+              if (e.isIntersecting) {
+                (e.target as HTMLElement).dataset.shown = '';
+                revealIo?.unobserve(e.target);
+              }
+          },
+          { rootMargin: '0px 0px -8% 0px' },
+        );
+        document.querySelectorAll('.reveal, .reveal-words').forEach((el) => revealIo?.observe(el));
+      });
     }
 
     return () => {
+      cancelAnimationFrame(raf);
       revealIo?.disconnect();
       delete document.documentElement.dataset.reveal;
+      document.querySelectorAll('[data-shown]').forEach((el) => delete (el as HTMLElement).dataset.shown);
       io.disconnect();
       ro.disconnect();
       window.removeEventListener('scroll', onScroll);

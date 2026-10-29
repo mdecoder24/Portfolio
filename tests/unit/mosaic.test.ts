@@ -30,6 +30,7 @@ describe('mosaic', () => {
 
   it('skips transparent pixels', () => {
     expect(maskToCells(new Uint8ClampedArray(16), 4, 4, 1, 1).count).toBe(0);
+    expect(imageToCells(new Uint8ClampedArray(16), 2, 2).count).toBe(0);
   });
 
   it('scatters and seeds stars deterministically', () => {

@@ -12,15 +12,30 @@ export const pulse = CaseStudy.parse({
   stack: ['Next.js', 'WebSockets', 'PostgreSQL', 'Tailwind CSS'],
   categories: ['full-stack'],
   featured: true,
-  media: { src: '/media/pulse/cover.svg', alt: 'Kanban board with three columns and live cursors of teammates' },
+  media: {
+    src: '/media/pulse/cover.svg',
+    alt: 'Kanban board with three columns and live cursors of teammates',
+  },
   links: [{ label: 'Code', href: 'https://github.com/kushwantkr/pulse' }],
   body: {
     problem: 'Student project teams tracked work in group chats and lost track of who was doing what.',
     built: 'A kanban board where every change appears for teammates instantly, with presence and history.',
     decisions: [
-      { title: 'WebSockets with an event log', detail: 'Every change is an event, so reconnecting clients replay what they missed.' },
-      { title: 'Optimistic updates', detail: 'Cards move instantly and roll back only if the server disagrees.' },
-      { title: 'Free-tier friendly', detail: 'One small server and one database, so it costs nothing to run.' },
+      {
+        title: 'WebSockets with an event log',
+        detail: 'Every change is an event, so reconnecting clients replay what they missed.',
+        at: { x: 13, y: 20 },
+      },
+      {
+        title: 'Optimistic updates',
+        detail: 'Cards move instantly and roll back only if the server disagrees.',
+        at: { x: 50, y: 30 },
+      },
+      {
+        title: 'Free-tier friendly',
+        detail: 'One small server and one database, so it costs nothing to run.',
+        at: { x: 82, y: 47 },
+      },
     ],
     results: ['300+ students across 4 colleges', 'Median sync delay under 120 ms'],
     differently: 'I would use a CRDT library instead of hand-written conflict rules.',

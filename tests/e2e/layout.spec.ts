@@ -8,24 +8,27 @@ test('no horizontal scroll, and the hero headline is visible in the first viewpo
   await expect(page.getByRole('link', { name: 'Résumé' }).first()).toBeVisible();
 });
 
-test('the hero leads with the name, role, availability and key facts', async ({ page }) => {
+test('the hero leads with the name, role and key facts', async ({ page }) => {
   await page.goto('/?3d=off');
   const h1 = page.getByRole('heading', { level: 1 });
   await expect(h1).toHaveAccessibleName(/^Kushwant KR\s*,\s*Full-stack & AI engineer$/);
   const hero = page.locator('#hero');
-  await expect(hero.getByText(/^Freelance: /)).toBeInViewport();
   await expect(hero.getByRole('term')).toHaveText(['Based in', 'Degree', 'Day job', 'Freelance']);
 });
 
-test('on wide screens the name and portrait centre as one group', async ({ page, isMobile }) => {
-  test.skip(isMobile, 'the name wraps under the portrait on phones');
+test('on wide screens the hero uses a split layout with the name on the left and a large portrait on the right', async ({ page, isMobile }) => {
+  test.skip(isMobile, 'the hero stacks on phones');
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto('/?3d=off');
-  const { left, right, width } = await page.locator('#hero-title > span').first().evaluate((row) => {
-    const parts = [...row.children].filter((c) => !c.classList.contains('sr-only')).map((c) => c.getBoundingClientRect());
-    return { left: Math.min(...parts.map((r) => r.left)), right: Math.max(...parts.map((r) => r.right)), width: innerWidth };
-  });
-  expect(Math.abs(left - (width - right))).toBeLessThan(4);
+  const words = page.locator('#hero-title .w');
+  const [a, b] = await Promise.all([words.first().boundingBox(), words.last().boundingBox()]);
+  const frame = await page.locator('#hero-portrait').boundingBox();
+  if (!a || !b || !frame) throw new Error('hero lockup not rendered');
+  // One line: both halves share a baseline row on the left side
+  expect(Math.abs(a.y - b.y)).toBeLessThan(4);
+  // The large portrait sits to the right of the heading without overlapping it
+  expect(frame.width).toBeGreaterThan(340);
+  expect(frame.x).toBeGreaterThan(b.x + b.width);
 });
 
 test('section numbers run in reading order', async ({ page }) => {
@@ -33,7 +36,7 @@ test('section numbers run in reading order', async ({ page }) => {
   const numbers = await page.locator('main section[id]:not(#hero)').evaluateAll((sections) =>
     sections.map((s) => s.querySelector('.type-code > .text-ink')?.textContent),
   );
-  expect(numbers).toEqual(['01', '02', '03', '04', '05', '06']);
+  expect(numbers).toEqual(['01', '02', '03', '04', '05', '06', '07']);
 });
 
 test('case-study pages render with previous and next links', async ({ page }) => {

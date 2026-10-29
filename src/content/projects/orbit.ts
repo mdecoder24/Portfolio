@@ -18,9 +18,17 @@ export const orbit = CaseStudy.parse({
     problem: 'I wanted to learn shaders on something I could show, and most 3D demos ran badly on phones.',
     built: 'A solar system you can fly through, with atmosphere and ring shaders written by hand.',
     decisions: [
-      { title: 'Shaders over textures', detail: 'Procedural surfaces kept the download under 1 MB.' },
-      { title: 'Quality tiers', detail: 'The scene measures frame rate and steps down detail on weak GPUs.' },
-      { title: 'Instanced asteroids', detail: '10,000 asteroids in one draw call.' },
+      {
+        title: 'Shaders over textures',
+        detail: 'Procedural surfaces kept the download under 1 MB.',
+        at: { x: 50, y: 43 },
+      },
+      {
+        title: 'Quality tiers',
+        detail: 'The scene measures frame rate and steps down detail on weak GPUs.',
+        at: { x: 67, y: 20 },
+      },
+      { title: 'Instanced asteroids', detail: '10,000 asteroids in one draw call.', at: { x: 25, y: 50 } },
     ],
     results: ['60 fps on a mid-range Android phone', 'Under 1 MB first load'],
     differently: 'I would profile on a real phone from day one rather than a laptop.',

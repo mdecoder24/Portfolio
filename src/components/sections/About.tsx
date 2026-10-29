@@ -4,7 +4,8 @@ import { Section } from '@/components/ui/SectionHeader';
 import type { Profile, Skill } from '@/content/schema';
 import { highlight } from '@/lib/highlight';
 
-const STRESS = ['Associate Software Engineer', 'Knowvation Learnings', 'freelance projects', 'B.Tech in Computer Science', 'AI'];
+// Three stresses at most: the paragraph is a lead, and when every other phrase is bright none of them stand out
+const STRESS = ['Associate Software Engineer', 'freelance projects', 'B.Tech in Computer Science'];
 
 const TIERS: { tier: Skill['tier']; label: string }[] = [
   { tier: 'daily', label: 'Daily drivers' },
@@ -18,7 +19,9 @@ function SkillItem({ skill }: { skill: Skill }) {
   return (
     <a
       href={href.startsWith('#') ? `/${href}` : href}
-      className="group/skill inline-flex items-center gap-1 rounded-xs text-ink underline decoration-rule-strong underline-offset-4 transition-[text-decoration-color] duration-150 hover:decoration-ink focus-visible:outline-none focus-visible:shadow-focus"
+      // No resting underline: across twenty items it read as noise. Brighter text and the arrow mark a link; the
+      // underline arrives on hover
+      className="group/skill inline-flex items-center gap-1 rounded-xs text-ink underline decoration-transparent underline-offset-4 transition-[text-decoration-color] duration-150 hover:decoration-ink focus-visible:outline-none focus-visible:shadow-focus"
     >
       {skill.name}
       <ArrowUpRight

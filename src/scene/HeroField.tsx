@@ -9,12 +9,12 @@ import { imageToCells, maskToCells, mulberry32, scatter, starfield } from './mos
 export const FOV = 35;
 export const CAMERA_Z = 10;
 const HALF_H = CAMERA_Z * Math.tan((FOV * Math.PI) / 360);
-const ASSEMBLE_SECONDS = 2.4;
+const ASSEMBLE_SECONDS = 2.0;
 // The KR glyphs span about two thirds of the sampled mask's width; the monogram fills this share of the frame's width
 const GLYPH_SHARE = 0.66;
 const MONOGRAM_FILL = 0.74;
-// Photo cells per row for a given tier step (5, 6, 8 → 72, 60, 45 columns)
-const PHOTO_COLS_PER_STEP = 360;
+// Photo cells per row for a given tier step (5, 6, 8 → 96, 80, 60 columns)
+const PHOTO_COLS_PER_STEP = 480;
 const PORTRAIT_ASPECT = 5 / 4;
 
 type Anchor = { x: number; y: number; width: number; src: string | null; frame: HTMLElement | null };
@@ -56,7 +56,7 @@ function useFrameAnchor(): Anchor | null {
 }
 
 const mosaicVert = /* glsl */ `
-uniform float uProgress, uTime, uPush, uProjScale, uCell;
+uniform float uProgress, uTime, uPush, uProjScale, uCell, uPhoto;
 uniform vec2 uPointer;
 attribute vec3 aStart;
 attribute float aSeed;
@@ -65,48 +65,51 @@ varying float vShade;
 varying float vAccent;
 varying float vTone;
 varying float vLift;
+varying float vJoined;
 void main() {
   float t = clamp(uProgress * 1.35 - aSeed * 0.35, 0.0, 1.0);
   float e = 1.0 - pow(1.0 - t, 5.0);
   vec3 p = mix(aStart, position, e);
-  // The cursor parts the cells like a hand through sand: near cells are pushed out and lifted toward the camera,
-  // each by a slightly different amount so the edge of the hole stays ragged rather than a clean circle
+  // The cursor parts the monogram cells like a hand through sand; photo cells stay in place so the portrait stays clear
   vec2 d = p.xy - uPointer;
   float r = length(d);
-  float near = (1.0 - smoothstep(0.0, 0.26, r)) * uPush * e;
+  float near = (1.0 - smoothstep(0.0, 0.26, r)) * uPush * e * (1.0 - uPhoto);
   float jitter = 0.7 + 0.6 * fract(aSeed * 53.1);
   p.xy += normalize(d + 1e-5) * near * near * 0.16 * jitter;
-  p.z += near * 0.35 * jitter + sin(uTime * 0.6 + aSeed * 40.0) * 0.006;
+  p.z += near * 0.35 * jitter + sin(uTime * 0.6 + aSeed * 40.0) * 0.006 * (1.0 - uPhoto * e);
   vec4 mv = modelViewMatrix * vec4(p, 1.0);
   gl_Position = projectionMatrix * mv;
-  gl_PointSize = clamp(uCell * uProjScale / -mv.z * 0.86, 1.0, 64.0);
+  gl_PointSize = clamp(uCell * uProjScale / -mv.z * mix(0.86, 1.04, uPhoto * e), 1.0, 64.0);
   vShade = 0.35 + 0.65 * fract(aSeed * 91.7) + 0.12 * sin(uTime * 2.4 + aSeed * 210.0);
-  vAccent = step(0.988, aSeed);
+  vAccent = step(0.988, aSeed) * (1.0 - uPhoto);
   vTone = aTone;
   vLift = near;
+  vJoined = e;
 }
 `;
 
-// The monogram shades each cell from the ink colour; the photo uses each cell's own luminance with a slight flicker.
-// Both keep the scattering of accent cells.
+// The monogram shades each cell from the ink colour; the photo uses each cell's own black-and-white luminance,
+// settling cleanly as the diffused pixels join together.
 const mosaicFrag = /* glsl */ `
 uniform vec3 uInk, uAccent;
-uniform float uOpacity, uPhoto;
+uniform float uOpacity, uPhoto, uReveal;
 varying float vShade;
 varying float vAccent;
 varying float vTone;
 varying float vLift;
+varying float vJoined;
 void main() {
   vec3 monogram = uInk * clamp(vShade, 0.15, 1.0);
-  // A gentle S-curve lifts the photo's contrast so it still reads through the gaps between cells; photo cells are
-  // opaque so the page colour behind never washes them out. The lower exponent opens up the shadows, which the
-  // gaps between cells otherwise crush to black
-  float tone = smoothstep(0.0, 1.0, pow(vTone, 0.78));
-  vec3 photo = vec3(tone) * (0.9 + 0.2 * fract(vShade * 7.0));
+  // vTone is already in linear light; colorspace_fragment converts it back to sRGB. A slight floor keeps dark hair
+  // visible against the dark background while the pixels diffuse in
+  float tone = mix(0.03, 1.0, vTone);
+  float grain = mix(0.85 + 0.3 * fract(vShade * 7.0), 1.0, vJoined);
+  vec3 photo = vec3(tone * grain);
   vec3 colour = mix(mix(monogram, photo, uPhoto), uAccent, vAccent);
-  // Cells lifted by the cursor catch the light
   colour = mix(colour, uInk, vLift * 0.45);
-  gl_FragColor = vec4(colour, mix(uOpacity, 1.0, uPhoto));
+  float alpha = mix(uOpacity, uReveal, uPhoto);
+  if (alpha < 0.01) discard;
+  gl_FragColor = vec4(colour, alpha);
   #include <colorspace_fragment>
 }
 `;
@@ -170,6 +173,7 @@ async function samplePhoto(src: string, cols: number) {
   canvas.height = rows;
   const ctx = canvas.getContext('2d', { willReadFrequently: true });
   if (!ctx) return null;
+  ctx.imageSmoothingEnabled = false;
   const target = cols / rows;
   let sw = img.naturalWidth;
   let sh = img.naturalHeight;
@@ -211,7 +215,7 @@ function useMosaic(src: string | null | undefined, frame: HTMLElement | null, st
         made = { geometry: cellsGeometry(mask.positions, mask.count), cell: mask.cell, photo: false };
       }
       setCells(made);
-      if (frame) frame.dataset.mosaic = 'on';
+      if (frame) frame.dataset.mosaic = 'diffusing';
     };
     void build();
     return () => {
@@ -238,6 +242,7 @@ export function HeroField({
   delay: number;
 }) {
   const size = useThree((s) => s.size);
+  const invalidate = useThree((s) => s.invalidate);
   const anchor = useFrameAnchor();
   const mosaic = useMosaic(anchor ? anchor.src : undefined, anchor?.frame ?? null, step);
 
@@ -264,6 +269,7 @@ export function HeroField({
           uProjScale: { value: 1 },
           uCell: { value: 1 },
           uPhoto: { value: 0 },
+          uReveal: { value: 1 },
           uInk: { value: colors.ink },
           uAccent: { value: colors.accent },
           uOpacity: { value: colors.light ? 0.9 : 0.95 },
@@ -287,7 +293,10 @@ export function HeroField({
     const m = materials.mosaic.uniforms;
     m.uPhoto.value = mosaic.photo ? 1 : 0;
     m.uProgress.value = still ? 1 : 0;
-  }, [mosaic, materials, still]);
+    m.uReveal.value = still && mosaic.photo ? 0 : 1;
+    if (still && anchor?.frame) anchor.frame.dataset.mosaic = 'on';
+    invalidate();
+  }, [mosaic, materials, still, anchor, invalidate]);
 
   useEffect(
     () => () => {
@@ -303,7 +312,7 @@ export function HeroField({
   const halfAspect = HALF_H * (size.width / size.height);
   const x = anchor?.x ?? 0;
   const y = anchor?.y ?? 0;
-  const width = anchor ? (mosaic?.photo ? anchor.width * 0.96 : (anchor.width * MONOGRAM_FILL) / GLYPH_SHARE) : 1;
+  const width = anchor ? (mosaic?.photo ? anchor.width : (anchor.width * MONOGRAM_FILL) / GLYPH_SHARE) : 1;
 
   useFrame((state, delta) => {
     if (!mosaic) return;
@@ -316,7 +325,13 @@ export function HeroField({
 
     m.uTime.value += delta;
     materials.stars.uniforms.uTime.value += delta;
-    if (m.uTime.value > delay) m.uProgress.value = Math.min(1, m.uProgress.value + delta / ASSEMBLE_SECONDS);
+    if (m.uTime.value > delay) {
+      m.uProgress.value = Math.min(1, m.uProgress.value + delta / ASSEMBLE_SECONDS);
+      if (m.uProgress.value >= 1) {
+        if (anchor?.frame && anchor.frame.dataset.mosaic !== 'on') anchor.frame.dataset.mosaic = 'on';
+        if (mosaic.photo) m.uReveal.value = Math.max(0, m.uReveal.value - delta * 2.2);
+      }
+    }
     // Pointer in the mosaic's local space: world units at z = 0, then undo its position and scale
     const target = 1 - Math.exp(-delta / 0.12);
     m.uPointer.value.x += ((state.pointer.x * halfAspect - x) / width - m.uPointer.value.x) * target;
