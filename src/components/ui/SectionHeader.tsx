@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import { Fragment, type CSSProperties, type ReactNode } from 'react';
 import { cn } from '@/lib/cn';
 
 /** A small mono label with a rule running out to the right edge. */
@@ -37,18 +37,29 @@ export function Section({
   return (
     <section id={id} aria-labelledby={`${id}-title`} className={cn('relative border-t border-rule', className)}>
       <div className="container-kit grid gap-12 py-(--section-pad) sm:gap-16 [&>*]:min-w-0">
-        <header className="reveal grid gap-5 lg:grid-cols-12 lg:gap-8">
-          <p className="flex items-baseline gap-3 type-code text-ink-2 lg:col-span-3 lg:pt-3">
+        <header className="grid gap-5 lg:grid-cols-12 lg:gap-8">
+          <p className="reveal flex items-baseline gap-3 type-code text-ink-2 lg:col-span-3 lg:pt-3">
             <span className="text-ink">{String(index).padStart(2, '0')}</span>
             <span aria-hidden="true" className="h-px w-6 translate-y-[-0.3em] bg-rule-strong" />
             {label}
           </p>
           <div className="grid gap-5 lg:col-span-9">
-            <h2 id={`${id}-title`} className="max-w-[18ch] type-h2 text-ink">
-              {title}
+            {/* The title rises word by word after its label; screen readers get it once, whole */}
+            <h2 id={`${id}-title`} className="reveal-words max-w-[18ch] type-h2 text-ink">
+              <span className="sr-only">{title}</span>
+              <span aria-hidden="true">
+                {title.split(' ').map((word, i) => (
+                  <Fragment key={i}>
+                    {i > 0 && ' '}
+                    <span className="w inline-block" style={{ '--i': i + 1 } as CSSProperties}>
+                      {word}
+                    </span>
+                  </Fragment>
+                ))}
+              </span>
             </h2>
-            {intro && <div className="max-w-[56ch] type-lead text-ink-2">{intro}</div>}
-            {aside}
+            {intro && <div className="reveal max-w-[56ch] type-lead text-ink-2 [--reveal-delay:160ms]">{intro}</div>}
+            {aside && <div className="reveal [--reveal-delay:220ms]">{aside}</div>}
           </div>
         </header>
         {children}

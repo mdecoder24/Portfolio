@@ -2,6 +2,7 @@ import { ArrowDown, ArrowUpRight } from 'lucide-react';
 import Image from 'next/image';
 import { SceneMount } from '@/components/layout/SceneMount';
 import { Button } from '@/components/ui/Button';
+import { CountUp } from '@/components/ui/CountUp';
 import { MetalTitle } from '@/components/ui/MetalTitle';
 import type { Config, Profile } from '@/content/schema';
 
@@ -78,7 +79,7 @@ export function Hero({ profile, config }: { profile: Profile; config: Config }) 
             <div className="rise flex flex-wrap gap-3 pt-1 [--rise-delay:400ms]">
               <Button href="#work">
                 View my work
-                <ArrowDown className="size-4" strokeWidth={1.75} aria-hidden="true" />
+                <ArrowDown className="nudge-down size-4" strokeWidth={1.75} aria-hidden="true" />
               </Button>
               <Button href="#contact" variant="secondary">
                 Get in touch
@@ -99,7 +100,10 @@ export function Hero({ profile, config }: { profile: Profile; config: Config }) 
               className="grid content-start gap-1 border-rule py-5 max-lg:odd:pr-4 max-lg:even:border-l max-lg:even:pl-4 max-lg:[&:nth-child(n+3)]:border-t lg:px-5 lg:first:pl-0 lg:[&+&]:border-l"
             >
               <dt className="type-code text-ink-2">{f.term}</dt>
-              <dd className="type-ui text-ink">{f.detail}</dd>
+              <dd className="type-ui text-ink">
+                {/* Starts once the strip has risen in */}
+                <CountUp text={f.detail} delay={500} />
+              </dd>
             </div>
           ))}
         </dl>

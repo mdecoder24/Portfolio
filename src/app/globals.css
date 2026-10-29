@@ -261,6 +261,22 @@
   }
 }
 
+/*
+ * Arrows in buttons lean the way they point on hover, so the button feels like it is about to go there. Pointer
+ * devices only: a tap would leave the arrow stuck out.
+ */
+.btn svg {
+  transition: translate 160ms var(--ease-out-quint);
+}
+@media (hover: hover) and (pointer: fine) {
+  .btn:hover svg:not(.animate-spin) {
+    translate: 2px -2px;
+  }
+  .btn:hover svg.nudge-down {
+    translate: 0 2px;
+  }
+}
+
 /* The contact form reveals project details for freelance enquiries, without JavaScript */
 form:has(option[value='freelance']:checked) .freelance-fields {
   display: grid;

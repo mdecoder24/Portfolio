@@ -51,3 +51,21 @@ test('case-study pages render with previous and next links', async ({ page }) =>
   await expect(page.getByRole('heading', { level: 1, name: 'Pulse' })).toBeVisible();
   await expect(page.getByRole('navigation', { name: 'More case studies' }).getByRole('link')).toHaveCount(2);
 });
+
+test('the nav underline slides to the section in view, and counts land on their real value', async ({ page }) => {
+  test.skip((page.viewportSize()?.width ?? 0) < 900, 'the inline nav links show from 900 px');
+  await page.goto('/?3d=off');
+  await page.locator('#work').scrollIntoViewIfNeeded();
+  const current = page.locator('nav a[aria-current="location"]');
+  await expect(current).toHaveText('Work');
+  const marker = page.locator('nav ul > span[aria-hidden="true"]');
+  await expect(marker).toHaveCSS('opacity', '1');
+  await expect
+    .poll(async () => {
+      const [m, l] = await Promise.all([marker.boundingBox(), current.boundingBox()]);
+      return m && l ? Math.round(Math.abs(m.x - l.x) + Math.abs(m.width - l.width)) : -1;
+    })
+    .toBeLessThanOrEqual(1);
+  await page.evaluate(() => scrollTo(0, 0));
+  await expect(page.locator('#hero dd').last()).toHaveText(/14\+ projects shipped/);
+});

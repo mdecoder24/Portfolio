@@ -13,6 +13,8 @@ export function NavBar({ socials, onHome }: { socials: { label: string; href: st
   const active = useUi((s) => s.activeSection);
   const [scrolled, setScrolled] = useState(false);
   const progress = useRef<HTMLSpanElement>(null);
+  const list = useRef<HTMLUListElement>(null);
+  const marker = useRef<HTMLSpanElement>(null);
   const dialog = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
@@ -31,6 +33,29 @@ export function NavBar({ socials, onHome }: { socials: { label: string; href: st
     };
   }, []);
 
+  useEffect(() => {
+    // One underline slides between links as the section in view changes, so the bar shows where the reader went.
+    // It is a 1 px line scaled to the link's width: transform only, no layout per move
+    const ul = list.current;
+    const bar = marker.current;
+    if (!ul || !bar) return;
+    const place = () => {
+      const link = ul.querySelector<HTMLElement>('a[aria-current="location"]');
+      if (!link) {
+        bar.style.opacity = '0';
+        return;
+      }
+      // Coming back from hidden it appears under the link instead of sliding over from wherever it last was
+      bar.style.transitionProperty = bar.style.opacity === '1' ? 'translate, scale, opacity' : 'opacity';
+      bar.style.translate = `${link.offsetLeft}px 0`;
+      bar.style.scale = `${link.offsetWidth} 1`;
+      bar.style.opacity = '1';
+    };
+    place();
+    window.addEventListener('resize', place);
+    return () => window.removeEventListener('resize', place);
+  }, [active, onHome]);
+
   const hash = (id: string) => (onHome ? `#${id}` : `/#${id}`);
   const close = () => dialog.current?.close();
 
@@ -47,7 +72,7 @@ export function NavBar({ socials, onHome }: { socials: { label: string; href: st
         >
           <Monogram />
         </Link>
-        <ul className="ml-auto hidden items-center gap-7 min-[900px]:flex">
+        <ul ref={list} className="relative ml-auto hidden items-center gap-7 min-[900px]:flex">
           {NAV_ITEMS.map((item) => {
             const current = onHome && active === item.id;
             return (
@@ -57,8 +82,7 @@ export function NavBar({ socials, onHome }: { socials: { label: string; href: st
                   aria-current={current ? 'location' : undefined}
                   className={cn(
                     'relative inline-flex min-h-11 items-center rounded-xs type-small font-medium text-ink-2 transition-colors duration-150 hover:text-ink focus-visible:outline-none focus-visible:shadow-focus',
-                    'after:absolute after:inset-x-0 after:bottom-2 after:h-px after:origin-left after:scale-x-0 after:bg-ink after:transition-transform after:duration-200 after:ease-out-quint',
-                    'aria-[current=location]:text-ink aria-[current=location]:after:scale-x-100',
+                    'aria-[current=location]:text-ink',
                   )}
                 >
                   {item.label}
@@ -66,12 +90,17 @@ export function NavBar({ socials, onHome }: { socials: { label: string; href: st
               </li>
             );
           })}
+          <span
+            ref={marker}
+            aria-hidden="true"
+            className="pointer-events-none absolute bottom-2 left-0 h-px w-px origin-left bg-ink opacity-0 transition-[translate,scale,opacity] duration-240 ease-in-out-quint"
+          />
         </ul>
         <div className="ml-auto flex items-center gap-2 min-[900px]:ml-2">
           <a
             href={RESUME_HREF}
             download="Kushwant-KR-Resume.pdf"
-            className="inline-flex min-h-10 items-center gap-1.5 rounded-control bg-cream px-4 type-small font-medium text-on-cream transition-[background-color,scale] duration-150 hover:bg-ink-hover focus-visible:outline-none focus-visible:shadow-focus active:scale-[0.97]"
+            className="btn inline-flex min-h-10 items-center gap-1.5 rounded-control bg-cream px-4 type-small font-medium text-on-cream transition-[background-color,scale] duration-150 hover:bg-ink-hover focus-visible:outline-none focus-visible:shadow-focus active:scale-[0.97]"
           >
             Résumé
             <ArrowUpRight className="size-4" strokeWidth={1.75} aria-hidden="true" />

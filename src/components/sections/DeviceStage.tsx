@@ -54,7 +54,8 @@ export function DeviceStage({ study, priority = false }: { study: CaseStudy; pri
   return (
     <div
       ref={host}
-      className="relative aspect-[16/11] overflow-hidden rounded-lg border border-rule bg-[radial-gradient(ellipse_at_50%_20%,var(--plate-hover),var(--paper)_70%)]"
+      // Lifts a touch under the pointer, so the project reads as something you can pick up and open
+      className="relative aspect-[16/11] overflow-hidden rounded-lg border border-rule transition-[translate,border-color] duration-240 ease-out-quint hover:-translate-y-1 hover:border-rule-strong bg-[radial-gradient(ellipse_at_50%_20%,var(--plate-hover),var(--paper)_70%)]"
     >
       {/* A pool of light on the floor under the device, like a studio shot */}
       <span

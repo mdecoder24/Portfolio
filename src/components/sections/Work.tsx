@@ -1,6 +1,7 @@
 import { ArrowUpRight } from 'lucide-react';
 import type { CSSProperties } from 'react';
 import { Button } from '@/components/ui/Button';
+import { CountUp } from '@/components/ui/CountUp';
 import { SampleRibbon } from '@/components/ui/SampleRibbon';
 import { Section } from '@/components/ui/SectionHeader';
 import { caseStudyHref, testimonials } from '@/content';
@@ -21,7 +22,9 @@ function Details({ study, n, compact = false }: { study: CaseStudy; n: number; c
       <SampleRibbon placeholder={study.placeholder} />
       <h4 className="type-h3 text-ink">{study.title}</h4>
       <p className="max-w-[48ch] type-body text-ink-2">
-        <span className="text-ink">{study.outcome}</span> {!compact && study.body.built}
+        <span className="text-ink">
+          <CountUp text={study.outcome} />
+        </span> {!compact && study.body.built}
       </p>
       {quote && (
         <figure className="grid max-w-[48ch] gap-1 border-l border-rule-strong pl-4 type-small">
