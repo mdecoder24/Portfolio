@@ -48,3 +48,6 @@ Everything here is client-only three.js, and it is decoration: the page must wor
 ## Notes for this repo
 - Shaders live as strings in shaders.ts rather than .glsl files, so no turbopack raw rule is needed yet.
 - rig.ts holds per-frame values shared between scene components (opening progress, damped weights).
+- Exception to the one-canvas rule, approved by the owner: Backdrop.tsx is a second, fixed full-viewport canvas
+  (z-canvas) of drifting dust behind the whole home page, mounted through src/components/layout/BackdropMount.tsx.
+  It follows the tier SceneMount chooses. Smoke.tsx and Device.tsx also run their own canvases.

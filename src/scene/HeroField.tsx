@@ -1,7 +1,7 @@
 'use client';
 
 import { useFrame, useThree } from '@react-three/fiber';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { AdditiveBlending, BufferAttribute, BufferGeometry, NormalBlending, ShaderMaterial, Vector2 } from 'three';
 import type { SceneColors } from './colors';
 import { imageToCells, maskToCells, mulberry32, scatter, starfield } from './mosaic';
@@ -298,6 +298,22 @@ export function HeroField({
     invalidate();
   }, [mosaic, materials, still, anchor, invalidate]);
 
+  // Hover on a fine pointer only: a tap would fire enter without a matching leave and strand the sharp photo
+  const hover = useRef(false);
+  useEffect(() => {
+    const frame = anchor?.frame;
+    if (!frame || still || !matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+    const enter = () => (hover.current = true);
+    const leave = () => (hover.current = false);
+    frame.addEventListener('pointerenter', enter);
+    frame.addEventListener('pointerleave', leave);
+    return () => {
+      frame.removeEventListener('pointerenter', enter);
+      frame.removeEventListener('pointerleave', leave);
+      hover.current = false;
+    };
+  }, [anchor?.frame, still]);
+
   useEffect(
     () => () => {
       field.dispose();
@@ -328,8 +344,14 @@ export function HeroField({
     if (m.uTime.value > delay) {
       m.uProgress.value = Math.min(1, m.uProgress.value + delta / ASSEMBLE_SECONDS);
       if (m.uProgress.value >= 1) {
-        if (anchor?.frame && anchor.frame.dataset.mosaic !== 'on') anchor.frame.dataset.mosaic = 'on';
-        if (mosaic.photo) m.uReveal.value = Math.max(0, m.uReveal.value - delta * 2.2);
+        // The photo holds as pixels; hovering the frame crossfades to the sharp image beneath, at the pace of its CSS fade
+        const reveal = mosaic.photo && hover.current;
+        const state = mosaic.photo && !reveal ? 'pixel' : 'on';
+        if (anchor?.frame && anchor.frame.dataset.mosaic !== state) anchor.frame.dataset.mosaic = state;
+        if (mosaic.photo) {
+          const step = delta * 2.2;
+          m.uReveal.value = reveal ? Math.max(0, m.uReveal.value - step) : Math.min(1, m.uReveal.value + step);
+        }
       }
     }
     // Pointer in the mosaic's local space: world units at z = 0, then undo its position and scale

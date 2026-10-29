@@ -8,13 +8,14 @@ import type { Config, Profile } from '@/content/schema';
 /**
  * The photograph's frame, centred behind the name. The 3D scene measures this element and redraws
  * its contents as a pixel mosaic that assembles on load: the photo named in data-src, or the KR monogram when there is
- * no photo yet. The flat image (or a flat KR) shows until the mosaic is ready (data-mosaic="on"), and stays when 3D
- * is off.
+ * no photo yet. The flat image (or a flat KR) hides while the mosaic assembles; a photo then stays pixelated
+ * (data-mosaic="pixel") and shows sharp only while hovered (data-mosaic="on"). It stays flat when 3D is off.
  */
 function Portrait({ src }: { src?: string }) {
   const frame =
     'group/portrait relative block aspect-[4/5] w-[min(84vw,22rem)] sm:w-[25rem] lg:w-[clamp(22rem,32vw,29rem)]';
-  const fade = 'transition-opacity duration-500 group-data-[mosaic=diffusing]/portrait:opacity-0';
+  const fade =
+    'transition-opacity duration-500 group-data-[mosaic=diffusing]/portrait:opacity-0 group-data-[mosaic=pixel]/portrait:opacity-0';
   if (src)
     return (
       <span id="hero-portrait" data-src={src} className={frame}>

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { easeOut, imageToCells, maskToCells, scatter, starfield } from '@/scene/mosaic';
+import { dust, easeOut, imageToCells, maskToCells, scatter, starfield } from '@/scene/mosaic';
 
 describe('mosaic', () => {
   it('turns solid mask pixels into centred cells on the step grid', () => {
@@ -43,5 +43,18 @@ describe('mosaic', () => {
     expect(easeOut(0)).toBe(0);
     expect(easeOut(1)).toBe(1);
     expect(easeOut(0.5)).toBeGreaterThan(0.9);
+  });
+
+  it('builds backdrop dust orbits in range and the same every time', () => {
+    const a = dust(500);
+    expect(a.orbits).toHaveLength(1500);
+    expect(a.seeds).toHaveLength(500);
+    for (let i = 0; i < 500; i++) {
+      expect(a.orbits[i * 3]).toBeGreaterThanOrEqual(0);
+      expect(a.orbits[i * 3]).toBeLessThanOrEqual(1);
+      expect(a.orbits[i * 3 + 1]).toBeLessThan(Math.PI * 2);
+      expect(Math.abs(a.orbits[i * 3 + 2])).toBeLessThanOrEqual(1);
+    }
+    expect(dust(500).orbits).toEqual(a.orbits);
   });
 });
