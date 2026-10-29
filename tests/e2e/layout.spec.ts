@@ -107,3 +107,12 @@ test('the pixel robot patrols the fact strip, and stands still under reduced mot
   await page.waitForTimeout(1000);
   expect(await x()).toBeCloseTo(still, 0);
 });
+
+test('the nav links to Education, and marks it current once scrolled there', async ({ page }) => {
+  test.skip((page.viewportSize()?.width ?? 0) < 900, 'the inline nav links show from 900 px');
+  await page.goto('/?3d=off');
+  const link = page.getByRole('navigation').first().getByRole('link', { name: 'Education' });
+  await expect(link).toHaveAttribute('href', /#education$/);
+  await page.locator('#education').scrollIntoViewIfNeeded();
+  await expect(link).toHaveAttribute('aria-current', 'location');
+});
