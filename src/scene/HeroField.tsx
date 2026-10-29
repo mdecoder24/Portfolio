@@ -363,9 +363,9 @@ export function HeroField({
     if (m.uTime.value > delay) {
       m.uProgress.value = Math.min(1, m.uProgress.value + delta / ASSEMBLE_SECONDS);
       if (m.uProgress.value >= 1) {
-        // The photo stays as pixels for good; the flat image beneath stays hidden
-        const state = mosaic.photo ? 'pixel' : 'on';
-        if (anchor?.frame && anchor.frame.dataset.mosaic !== state) anchor.frame.dataset.mosaic = state;
+        // The mosaic stays as pixels for good; the flat photo or KR beneath stays hidden, or it would show through
+        // whenever the cells breathe out into dust
+        if (anchor?.frame && anchor.frame.dataset.mosaic !== 'pixel') anchor.frame.dataset.mosaic = 'pixel';
       }
     }
     // Pointer in the mosaic's local space: world units at z = 0, then undo its position and scale

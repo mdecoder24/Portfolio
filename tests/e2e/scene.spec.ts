@@ -16,21 +16,22 @@ test('?3d=off renders the poster and no canvas', async ({ page }) => {
   await page.goto('/?3d=off');
   await page.waitForTimeout(3000);
   await expect(page.locator('#hero canvas')).toHaveCount(0);
-  // The flat portrait stays visible in its frame
-  await expect(page.locator('#hero-portrait img')).toBeVisible();
+  // The flat KR stays visible in its frame
+  await expect(page.locator('#hero-portrait > span')).toBeVisible();
   await expect(page.locator('#hero-portrait')).not.toHaveAttribute('data-mosaic', 'on');
 });
 
-test('the portrait diffuses as a pixel mosaic and stays pixelated', async ({ page }) => {
+test('the KR monogram diffuses as a pixel mosaic and stays pixelated', async ({ page }) => {
   await page.goto('/?tier=low');
   const frame = page.locator('#hero-portrait');
+  const flat = frame.locator('> span');
   await expect(frame).toHaveAttribute('data-mosaic', 'pixel', { timeout: 15_000 });
-  await expect(frame.locator('img')).toHaveCSS('opacity', '0');
-  // Hovering parts the pixels; it never swaps in the flat photo
+  await expect(flat).toHaveCSS('opacity', '0');
+  // Hovering parts the pixels; it never swaps in the flat KR
   await frame.hover();
   await page.waitForTimeout(600);
   await expect(frame).toHaveAttribute('data-mosaic', 'pixel');
-  await expect(frame.locator('img')).toHaveCSS('opacity', '0');
+  await expect(flat).toHaveCSS('opacity', '0');
 });
 
 test('the footer 3D toggle removes the canvas', async ({ page }) => {
