@@ -51,7 +51,7 @@ export function Footer({ config, name }: { config: Config; name: string }) {
           <p className="inline-flex items-center gap-3 tabular">
             <Monogram className="text-[1.125rem]" />
             <span>
-              © {config.site.lastUpdated.slice(0, 4)} {name}
+              © {config.site.lastUpdated.slice(0, 4)} All rights reserved
             </span>
           </p>
         </div>
