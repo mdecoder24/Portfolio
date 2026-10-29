@@ -1,18 +1,15 @@
 'use client';
 
 import { useFrame, useThree } from '@react-three/fiber';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { AdditiveBlending, BufferAttribute, BufferGeometry, NormalBlending, ShaderMaterial, Vector2 } from 'three';
-import { useScroll } from '@/stores/scroll';
 import type { SceneColors } from './colors';
-import { breath, diffusionTarget, isRestful, imageToCells, maskToCells, mulberry32, scatter, starfield } from './mosaic';
+import { imageToCells, maskToCells, mulberry32, scatter, starfield } from './mosaic';
 
 export const FOV = 35;
 export const CAMERA_Z = 10;
 const HALF_H = CAMERA_Z * Math.tan((FOV * Math.PI) / 360);
 const ASSEMBLE_SECONDS = 2.0;
-// The design system's scroll damping (smoothTime 0.25 s): the portrait follows the scrollbar without snapping to it
-const DIFFUSE_SMOOTH = 0.25;
 // Matches the flat photo's 500 ms CSS fade, so the pixels and the sharp photo cross over in step
 const CLEAR_SMOOTH = 0.15;
 // The KR glyphs span about two thirds of the sampled mask's width; the monogram fills this share of the frame's width
@@ -26,9 +23,6 @@ type Anchor = {
   x: number;
   y: number;
   width: number;
-  /** The frame's centre and height in page pixels, for diffusing it as it scrolls away */
-  pageCentre: number;
-  pageHeight: number;
   src: string | null;
   frame: HTMLElement | null;
 };
@@ -54,8 +48,6 @@ function useFrameAnchor(): Anchor | null {
         x: (f.left + f.width / 2 - (c.left + c.width / 2)) * unit,
         y: (c.top + c.height / 2 - (f.top + f.height / 2)) * unit,
         width: f.width * unit,
-        pageCentre: f.top + f.height / 2 + window.scrollY,
-        pageHeight: f.height,
         src: frame.dataset.src ?? null,
         frame,
       });
@@ -72,7 +64,7 @@ function useFrameAnchor(): Anchor | null {
 }
 
 const mosaicVert = /* glsl */ `
-uniform float uProgress, uTime, uPush, uProjScale, uCell, uDiffuse;
+uniform float uProgress, uTime, uPush, uProjScale, uCell;
 uniform vec2 uPointer;
 attribute vec3 aStart;
 attribute float aSeed;
@@ -81,35 +73,26 @@ varying float vShade;
 varying float vAccent;
 varying float vTone;
 varying float vLift;
-varying float vDiffuse;
 void main() {
   float t = clamp(uProgress * 1.35 - aSeed * 0.35, 0.0, 1.0);
   float e = 1.0 - pow(1.0 - t, 5.0);
   vec3 p = mix(aStart, position, e);
-  // Scrolling away blows the portrait back out toward the shell it assembled from, drifting up like dust on a draught;
-  // each cell leaves at its own moment, so scrolling back plays the opening again in reverse. Smoothstep, since the
-  // cells are moving on screen rather than entering
-  float dt = clamp(uDiffuse * 1.6 - fract(aSeed * 17.3) * 0.6, 0.0, 1.0);
-  float de = dt * dt * (3.0 - 2.0 * dt);
-  vec3 dust = aStart * 1.15 + vec3(sin(uTime * 0.5 + aSeed * 30.0) * 0.05, 0.3 + cos(uTime * 0.4 + aSeed * 20.0) * 0.05, 0.0);
-  p = mix(p, dust, de);
   // The cursor parts the cells like a hand through sand: near cells are pushed out and lifted toward the camera,
   // each by a slightly different amount so the edge of the hole stays ragged rather than a clean circle
   vec2 d = p.xy - uPointer;
   float r = length(d);
-  float near = (1.0 - smoothstep(0.0, 0.26, r)) * uPush * e * (1.0 - de);
+  float near = (1.0 - smoothstep(0.0, 0.26, r)) * uPush * e;
   float jitter = 0.7 + 0.6 * fract(aSeed * 53.1);
   p.xy += normalize(d + 1e-5) * near * near * 0.16 * jitter;
   p.z += near * 0.35 * jitter + sin(uTime * 0.6 + aSeed * 40.0) * 0.006;
   vec4 mv = modelViewMatrix * vec4(p, 1.0);
   gl_Position = projectionMatrix * mv;
   // Cells drawn a little under their pitch leave the dark seams that make the portrait read as pixels
-  gl_PointSize = clamp(uCell * uProjScale / -mv.z * 0.86 * (1.0 - 0.4 * de), 1.0, 64.0);
+  gl_PointSize = clamp(uCell * uProjScale / -mv.z * 0.86, 1.0, 64.0);
   vShade = 0.35 + 0.65 * fract(aSeed * 91.7) + 0.12 * sin(uTime * 2.4 + aSeed * 210.0);
   vAccent = step(0.988, aSeed);
   vTone = aTone;
   vLift = near;
-  vDiffuse = de;
 }
 `;
 
@@ -122,7 +105,6 @@ varying float vShade;
 varying float vAccent;
 varying float vTone;
 varying float vLift;
-varying float vDiffuse;
 void main() {
   vec3 monogram = uInk * clamp(vShade, 0.15, 1.0);
   // A gentle S-curve lifts the photo's contrast so it still reads through the gaps between cells. The lower exponent
@@ -134,8 +116,8 @@ void main() {
   colour = mix(colour, uInk, vLift * 0.45);
   // Photo cells are opaque so the page colour never washes them out; uReveal drops to 0 only for the reduced-motion
   // still, which shows the flat photo instead
-  // uSolid fades the cells out while the portrait rests, handing over to the sharp flat photo beneath
-  float alpha = mix(uOpacity, uReveal, uPhoto) * (1.0 - 0.6 * vDiffuse) * uSolid;
+  // uSolid fades the cells out once they have assembled, handing over to the sharp flat photo beneath
+  float alpha = mix(uOpacity, uReveal, uPhoto) * uSolid;
   if (alpha < 0.01) discard;
   gl_FragColor = vec4(colour, alpha);
   #include <colorspace_fragment>
@@ -273,8 +255,6 @@ export function HeroField({
   const invalidate = useThree((s) => s.invalidate);
   const anchor = useFrameAnchor();
   const mosaic = useMosaic(anchor ? anchor.src : undefined, anchor?.frame ?? null, step);
-  // Seconds since the mosaic finished assembling: the clock for its idle breath
-  const settled = useRef(0);
 
   const field = useMemo(() => {
     const g = new BufferGeometry();
@@ -295,7 +275,6 @@ export function HeroField({
           uProgress: { value: still ? 1 : 0 },
           uTime: { value: 0 },
           uPush: { value: 0 },
-          uDiffuse: { value: 0 },
           uPointer: { value: new Vector2(99, 99) },
           uProjScale: { value: 1 },
           uCell: { value: 1 },
@@ -358,13 +337,6 @@ export function HeroField({
 
     m.uTime.value += delta;
     materials.stars.uniforms.uTime.value += delta;
-    const { y: scrollY, viewportH } = useScroll.getState();
-    const scrolled = anchor ? diffusionTarget(scrollY, viewportH, anchor.pageCentre, anchor.pageHeight) : 0;
-    // Left alone, the portrait still breathes in and out of dust so the landing never sits static; scrolling away
-    // takes over whenever it diffuses further
-    if (m.uProgress.value >= 1) settled.current += delta;
-    const toward = Math.max(scrolled, breath(settled.current));
-    m.uDiffuse.value += (toward - m.uDiffuse.value) * (1 - Math.exp(-delta / DIFFUSE_SMOOTH));
     if (m.uTime.value > delay) m.uProgress.value = Math.min(1, m.uProgress.value + delta / ASSEMBLE_SECONDS);
     // Pointer in the mosaic's local space: world units at z = 0, then undo its position and scale
     const target = 1 - Math.exp(-delta / 0.12);
@@ -372,10 +344,9 @@ export function HeroField({
     m.uPointer.value.y += ((state.pointer.y * HALF_H - y) / width - m.uPointer.value.y) * target;
     const fine = state.pointer.x !== 0 || state.pointer.y !== 0;
     m.uPush.value += ((fine ? 1 : 0) - m.uPush.value) * target;
-    // At rest the sharp photo shows; the pixels take over to breathe, to blow away on scroll, and to part under the
-    // cursor. The monogram has no sharp version, so it stays as pixels
-    const pointed = fine && Math.abs(m.uPointer.value.x) < 0.5 && Math.abs(m.uPointer.value.y) < PORTRAIT_ASPECT / 2;
-    const clear = mosaic.photo && isRestful(m.uProgress.value, toward, m.uDiffuse.value, pointed);
+    // The effect plays once, on load: assembled, the photo turns sharp and stays that way. The monogram has no sharp
+    // version, so it stays as pixels
+    const clear = mosaic.photo && m.uProgress.value >= 1;
     m.uSolid.value += ((clear ? 0 : 1) - m.uSolid.value) * (1 - Math.exp(-delta / CLEAR_SMOOTH));
     const look = clear ? 'clear' : m.uProgress.value >= 1 ? 'pixel' : 'diffusing';
     if (anchor?.frame && anchor.frame.dataset.mosaic !== look) anchor.frame.dataset.mosaic = look;

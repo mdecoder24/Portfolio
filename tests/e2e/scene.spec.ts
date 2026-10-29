@@ -21,23 +21,18 @@ test('?3d=off renders the poster and no canvas', async ({ page }) => {
   await expect(page.locator('#hero-portrait')).not.toHaveAttribute('data-mosaic', 'on');
 });
 
-test('the portrait assembles as a pixel mosaic, rests as the sharp photo, and pixelates under the cursor', async ({
-  page,
-}) => {
+test('the portrait assembles as a pixel mosaic on load, then stays the sharp photo', async ({ page }) => {
   await page.goto('/?tier=low');
   const frame = page.locator('#hero-portrait');
   const flat = frame.locator('img');
-  // Once the cells settle, the sharp photo fades back in over them
   await expect(frame).toHaveAttribute('data-mosaic', 'clear', { timeout: 15_000 });
   await expect(flat).toHaveCSS('opacity', '1');
-  // Hovering hands back to the pixels so they can part around the cursor
+  // The effect does not come back: not under the cursor, not on scroll, not after waiting
   await frame.hover();
-  await expect(frame).toHaveAttribute('data-mosaic', 'pixel');
-  await expect(flat).toHaveCSS('opacity', '0');
-  // Moving away (still inside the hero, where the scene tracks the pointer) lets it settle sharp again; the timeout
-  // covers one idle breath out and back
-  await page.locator('#hero-title').hover();
-  await expect(frame).toHaveAttribute('data-mosaic', 'clear', { timeout: 10_000 });
+  await page.mouse.wheel(0, 400);
+  await page.waitForTimeout(8000);
+  await expect(frame).toHaveAttribute('data-mosaic', 'clear');
+  await expect(flat).toHaveCSS('opacity', '1');
 });
 
 test('the footer 3D toggle removes the canvas', async ({ page }) => {

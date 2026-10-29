@@ -10,9 +10,9 @@ import type { Config, Profile } from '@/content/schema';
 /**
  * The photograph's frame, centred behind the name. The 3D scene measures this element and redraws
  * its contents as a pixel mosaic that assembles on load: the photo named in data-src, or the KR monogram when there is
- * no photo yet. The flat image (or a flat KR) hides while the mosaic assembles and whenever it is pixels
- * (data-mosaic="pixel"), as the cells breathe in and out of dust; once they settle (data-mosaic="clear") the sharp photo
- * fades back in over them. It stays flat when 3D is off or motion is reduced.
+ * no photo yet. The flat image (or a flat KR) hides while the mosaic assembles; once the cells land
+ * (data-mosaic="clear") the sharp photo fades back in over them and stays. The monogram stays as pixels
+ * (data-mosaic="pixel"). It stays flat when 3D is off or motion is reduced.
  */
 function Portrait({ src }: { src?: string }) {
   const frame =

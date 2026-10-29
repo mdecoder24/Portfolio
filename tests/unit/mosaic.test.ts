@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { BREATH, breath, diffusionTarget, dust, isRestful, easeOut, imageToCells, maskToCells, scatter, starfield } from '@/scene/mosaic';
+import { dust, easeOut, imageToCells, maskToCells, scatter, starfield } from '@/scene/mosaic';
 
 describe('mosaic', () => {
   it('turns solid mask pixels into centred cells on the step grid', () => {
@@ -56,39 +56,5 @@ describe('mosaic', () => {
       expect(Math.abs(a.orbits[i * 3 + 2])).toBeLessThanOrEqual(1);
     }
     expect(dust(500).orbits).toEqual(a.orbits);
-  });
-
-  it('diffuses the portrait as it scrolls away and reassembles it on the way back', () => {
-    // Desktop: the frame starts in view, so it diffuses from the first pixel of scroll
-    expect(diffusionTarget(0, 900, 420, 500)).toBe(0);
-    expect(diffusionTarget(200, 900, 420, 500)).toBeCloseTo(0.5);
-    expect(diffusionTarget(400, 900, 420, 500)).toBe(1);
-    expect(diffusionTarget(5000, 900, 420, 500)).toBe(1);
-    expect(diffusionTarget(-40, 900, 420, 500)).toBe(0);
-    // Phone: the frame sits below the fold and stays whole until its centre passes the middle of the screen
-    expect(diffusionTarget(300, 780, 690, 380)).toBe(0);
-    expect(diffusionTarget(452, 780, 690, 380)).toBeCloseTo(0.5);
-    expect(diffusionTarget(300, 780, 690, 0)).toBe(0);
-  });
-
-  it('breathes the idle portrait out to dust and back on a loop', () => {
-    const { hold, out, dust: drift, back } = BREATH;
-    expect(breath(0)).toBe(0);
-    expect(breath(hold - 0.1)).toBe(0);
-    expect(breath(hold + out / 2)).toBeCloseTo(0.5);
-    expect(breath(hold + out + drift / 2)).toBe(1);
-    expect(breath(hold + out + drift + back / 2)).toBeCloseTo(0.5);
-    expect(breath(hold + out + drift + back)).toBe(0);
-    expect(breath(hold + out + drift + back + hold + out / 2)).toBeCloseTo(0.5);
-  });
-});
-
-describe('isRestful', () => {
-  it('rests only when assembled, settled, not breathing, and not pointed at', () => {
-    expect(isRestful(1, 0, 0, false)).toBe(true);
-    expect(isRestful(0.9, 0, 0, false)).toBe(false);
-    expect(isRestful(1, 0.2, 0, false)).toBe(false);
-    expect(isRestful(1, 0, 0.05, false)).toBe(false);
-    expect(isRestful(1, 0, 0, true)).toBe(false);
   });
 });
