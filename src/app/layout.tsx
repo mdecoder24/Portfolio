@@ -44,7 +44,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <script dangerouslySetInnerHTML={{ __html: prefScript }} />
       </head>
-      <body id="top">
+      {/* Browser extensions stamp classes on <body> before React hydrates (for example "check_gok_chrome_installed");
+          this silences only that element's own attribute mismatch, not its children's */}
+      <body id="top" suppressHydrationWarning>
         <SkipLink />
         {children}
         <PageObserver />
