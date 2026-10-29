@@ -18,16 +18,16 @@ export const signLanguageRecognition = CaseStudy.parse({
     problem:
       'Most people never learn sign language, so a lot of everyday conversations still need an interpreter.',
     built:
-      'A real-time sign-language detector. I wrote the preprocessing and training pipelines for the model, built the front end in React, and deployed it on Firebase.',
+      'A real-time computer vision system that recognises sign language. A TensorFlow deep learning model does the recognition, trained through ML pipelines I built, with MediaPipe and a React front end, deployed on Firebase.',
     decisions: [
       {
         title: 'My own training pipeline',
-        detail: 'The data preprocessing and model training are pipelines I built.',
+        detail: 'The ML training pipelines behind the model are my own.',
         at: { x: 77, y: 34 },
       },
       {
-        title: 'MediaPipe and TensorFlow',
-        detail: 'MediaPipe and TensorFlow handle the detection, inside a React app.',
+        title: 'A deep learning model',
+        detail: 'Recognition runs on a TensorFlow deep learning model with MediaPipe, inside a React app.',
         at: { x: 36, y: 40 },
       },
       {

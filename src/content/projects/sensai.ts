@@ -6,7 +6,7 @@ export const sensai = CaseStudy.parse({
   title: 'SENSAI, AI career coach',
   context: 'AI app',
   outcome:
-    'An AI coach that reviews résumés and gives feedback on mock interviews. Its evaluations got 35% more precise.',
+    'An AI coach that reviews résumés and gives personalised feedback on mock interviews. Its evaluations got 35% more precise.',
   role: 'Developer',
   stack: ['Next.js', 'Node.js', 'Prisma', 'Gemini API'],
   categories: ['ai-ml', 'full-stack'],
@@ -19,11 +19,11 @@ export const sensai = CaseStudy.parse({
     problem:
       'Getting a résumé reviewed, or practising for an interview, usually means finding someone with the time to help.',
     built:
-      'A career assistant built on the Gemini API. It analyses résumés and gives feedback on mock interviews. Next.js runs the app, Node.js sits behind it, and Prisma looks after the data.',
+      'A full-stack generative AI career assistant. It analyses résumés and gives personalised feedback on mock interviews, driven by prompt engineering on the Gemini API. Next.js runs the app, Node.js sits behind it, and Prisma looks after the data.',
     decisions: [
       {
-        title: 'Gemini does the reading',
-        detail: 'Both the résumé analysis and the interview feedback come from the Gemini API.',
+        title: 'Prompts do the heavy lifting',
+        detail: 'The résumé analysis and interview feedback come from prompt engineering on the Gemini API.',
         at: { x: 60, y: 60 },
       },
       {

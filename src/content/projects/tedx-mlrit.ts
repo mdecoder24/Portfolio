@@ -18,7 +18,7 @@ export const tedxMlrit = CaseStudy.parse({
     problem:
       'The event needed an official website that would hold up when a lot of people opened it at once.',
     built:
-      'The official TEDx MLRIT website, written in TypeScript and JavaScript with Supabase behind it. Responsive, and tuned for performance.',
+      'The official TEDx MLRIT website, written in TypeScript and JavaScript with a Supabase back end. Responsive, tuned for performance, and it reliably handled large-scale event traffic.',
     decisions: [
       { title: 'TypeScript first', detail: 'Written in TypeScript and JavaScript.', at: { x: 30, y: 30 } },
       { title: 'Supabase behind it', detail: "Supabase stores the site's data.", at: { x: 47, y: 74 } },
