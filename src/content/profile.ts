@@ -1,9 +1,9 @@
 import { Profile } from './schema.ts';
 
 export const profile = Profile.parse({
-  name: 'Kushwant  KR',
+  name: 'Kushwant Kumar Reddy',
   role: 'Software Engineer · Full-Stack & AI',
-  nameLine: 'Kushwant KR, software engineer for full-stack and AI',
+  nameLine: 'Kushwant Kumar Reddy, software engineer for full-stack and AI',
   headline: 'I build web products that think and move',
   subheadline:
     'Associate Software Engineer at Knowvation Learnings and a freelance developer in Hyderabad. Full-stack apps with a soft spot for AI and 3D.',

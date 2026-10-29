@@ -43,9 +43,9 @@ function Portrait({ src }: { src?: string }) {
  * strip across the bottom.
  */
 export function Hero({ profile, config }: { profile: Profile; config: Config }) {
-  const [first, ...rest] = profile.name.split(' ');
-  const last = rest.join(' ');
-  const word = 'type-display text-[length:clamp(3.25rem,11vw,5.75rem)] lg:text-[length:clamp(4.25rem,6.6vw,7.25rem)]';
+  const fullName = profile.name.trim().replace(/\s+/g, ' ');
+  const word =
+    'type-display whitespace-nowrap text-[length:clamp(1.65rem,4.6vw,3.25rem)] lg:text-[length:clamp(2.2rem,3.25vw,3.75rem)] leading-none [&_.w]:mr-[0.14em] [&_.w:last-child]:mr-0 [&_.w]:pb-[0.06em]';
 
   return (
     <section
@@ -63,13 +63,9 @@ export function Hero({ profile, config }: { profile: Profile; config: Config }) 
 
       <div className="container-kit my-auto grid gap-10 pb-8 pt-[calc(var(--nav-height)+var(--space-6))] sm:gap-12 sm:pb-10">
         <div className="grid items-center gap-10 lg:grid-cols-12 lg:gap-8">
-          <div className="grid content-start gap-6 lg:col-span-7 sm:gap-8">
-            <h1 id="hero-title" className="grid gap-4 sm:gap-5">
-              <span className="flex flex-wrap items-baseline gap-x-[0.18em]">
-                <MetalTitle as="span" text={first} entrance="load" className={`${word} [--rise-delay:80ms]`} />
-                <span className="sr-only"> </span>
-                {last && <MetalTitle as="span" text={last} entrance="load" className={`${word} [--rise-delay:160ms]`} />}
-              </span>
+          <div className="grid content-start gap-5 lg:col-span-7 sm:gap-6">
+            <h1 id="hero-title" className="grid gap-3 sm:gap-4">
+              <MetalTitle as="span" text={fullName} entrance="load" className={`${word} [--rise-delay:80ms]`} />
               <span className="sr-only">, </span>
               <span className="rise type-h3 font-medium text-ink [--rise-delay:240ms]">Full-stack &amp; AI engineer</span>
             </h1>
