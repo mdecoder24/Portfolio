@@ -19,6 +19,19 @@ export const signLanguageRecognition = CaseStudy.parse({
     screen: '/media/sign-language-recognition/phone.jpg',
     alt: 'The SLR home page: a gradient headline about learning sign language beside a glowing blue scan of a raised hand',
   },
+  // From the repository's README and package.json
+  readme: {
+    overview:
+      'A real-time sign language recognition app. It reads hand signs through the webcam and recognises the 26 letters and 16 common words of American Sign Language.',
+    features: [
+      'Recognition in real time from the webcam',
+      'A custom dataset, with the training code in the repository',
+      'Progress charts for each signed-in user',
+      'Hosting, sign-in and storage on Firebase',
+    ],
+    tech: ['React', 'Redux', 'MediaPipe', 'Chart.js', 'Firebase'],
+    run: ['npm install', 'npm start'],
+  },
   body: {
     problem:
       'Most people never learn sign language, so a lot of everyday conversations still need an interpreter.',

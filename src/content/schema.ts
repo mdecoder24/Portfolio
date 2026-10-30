@@ -50,6 +50,16 @@ export const CaseStudy = z.object({
     // Only Kushwant can write this; the section is hidden until he does
     differently: z.string().optional(),
   }),
+  // A short README for the card's details panel, taken from the project's repository
+  readme: z
+    .object({
+      overview: z.string().max(240),
+      features: z.array(z.string().max(90)).min(1).max(5),
+      tech: z.array(z.string()).min(1).max(10),
+      run: z.array(z.string()).min(1).max(4), // shell commands, in order
+      needs: z.string().optional(), // finishes the sentence "Needs …": what to set up before the commands work
+    })
+    .optional(),
   pearlNotes: z.string().optional(), // facts Pearl may use that the page doesn't show
   confidential: z.array(z.string()).default([]), // facts Pearl must never reveal
   placeholder: z.boolean().default(false),

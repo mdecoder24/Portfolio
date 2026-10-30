@@ -193,3 +193,20 @@ test('certifications follow education, each linking to its certificate', async (
     await expect(link).toHaveAttribute('rel', 'noopener noreferrer');
   }
 });
+
+test('each project card opens a short README from View details, and Escape closes it', async ({ page }) => {
+  await page.goto('/?3d=off#work');
+  const cards = page.locator('#work article');
+  await expect(cards.getByRole('button', { name: /^View details/ })).toHaveCount(4);
+  const open = cards.first().getByRole('button', { name: /^View details.*MLRIT MUN 2025 website/ });
+  await open.click();
+  const panel = page.getByRole('dialog', { name: 'MLRIT MUN 2025 website' });
+  await expect(panel).toBeVisible();
+  await expect(panel.getByRole('heading', { name: 'Features' })).toBeVisible();
+  await expect(panel.locator('pre')).toContainText('npm run dev');
+  await page.keyboard.press('Escape');
+  await expect(panel).toBeHidden();
+  await open.click();
+  await panel.getByRole('button', { name: 'Close' }).click();
+  await expect(panel).toBeHidden();
+});

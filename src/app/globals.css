@@ -518,3 +518,44 @@ form:has(option[value='freelance']:checked) .freelance-fields {
   opacity: 0.55;
   pointer-events: none;
 }
+
+/*
+ * A project's README panel. It is opened by a click on the card, a few times a visit, so it gets a short entrance:
+ * a fade with a settle from just below full size, and the same path out. display and overlay move discretely so the
+ * exit can play before the popover leaves the top layer.
+ */
+.readme,
+.readme::backdrop {
+  opacity: 0;
+  transition:
+    opacity 200ms var(--ease-out-quint),
+    scale 200ms var(--ease-out-quint),
+    display 200ms allow-discrete,
+    overlay 200ms allow-discrete;
+}
+.readme {
+  scale: 0.97;
+}
+.readme:popover-open,
+.readme:popover-open::backdrop {
+  opacity: 1;
+  scale: 1;
+}
+@starting-style {
+  .readme:popover-open,
+  .readme:popover-open::backdrop {
+    opacity: 0;
+  }
+  .readme:popover-open {
+    scale: 0.97;
+  }
+}
+/* Reduced motion keeps the fade and drops the movement */
+@media (prefers-reduced-motion: reduce) {
+  :root:not([data-motion='full']) .readme {
+    scale: 1;
+  }
+}
+:root[data-motion='reduced'] .readme {
+  scale: 1;
+}

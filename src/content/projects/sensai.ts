@@ -20,6 +20,20 @@ export const sensai = CaseStudy.parse({
     screen: '/media/sensai/phone.jpg',
     alt: 'The SENSAI home page: the headline "Your AI Career Coach for Professional Success" over a dark grid, with a Get Started button',
   },
+  // From the repository's README and package.json
+  readme: {
+    overview:
+      'A full-stack AI career coach. Job seekers build résumés and cover letters and practise mock interviews, with help from the Gemini API.',
+    features: [
+      'An AI résumé and cover letter builder',
+      'Mock interview practice with AI answers',
+      'Sign-in and protected pages with Clerk',
+      'Background jobs with Inngest',
+    ],
+    tech: ['Next.js', 'React 19', 'Tailwind CSS', 'shadcn/ui', 'Prisma', 'PostgreSQL', 'Clerk', 'Gemini API', 'Inngest'],
+    run: ['npm install', 'npm run dev'],
+    needs: 'a PostgreSQL database, plus Clerk and Gemini API keys in a .env file',
+  },
   body: {
     problem:
       'Getting a résumé reviewed, or practising for an interview, usually means finding someone with the time to help.',

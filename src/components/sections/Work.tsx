@@ -9,6 +9,7 @@ import { caseStudyHref } from '@/content';
 import type { CaseStudy } from '@/content/schema';
 import { cn } from '@/lib/cn';
 import { DeviceStage } from './DeviceStage';
+import { ProjectReadme } from './ProjectReadme';
 import { BRAND_PATHS } from './stack-logos';
 
 function GitHubMark() {
@@ -88,6 +89,7 @@ function Details({ study, n, compact = false }: { study: CaseStudy; n: number; c
           title={study.title}
           variant="secondary"
         />
+        <ProjectReadme study={study} />
       </div>
     </>
   );

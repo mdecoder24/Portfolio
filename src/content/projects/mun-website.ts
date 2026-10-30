@@ -19,6 +19,19 @@ export const munWebsite = CaseStudy.parse({
     screen: '/media/mun-website/phone.jpg',
     alt: 'The MLRIT MUN 2025 home page: the dates October 24–26, 2025 above a conference countdown and the title "MLRIT Model United Nations 2025" in white and gold',
   },
+  // From the repository: app routes and package.json; its README has only a title
+  readme: {
+    overview:
+      'The website for MLRIT Model United Nations 2025, run by Club Literati. Delegates find the dates, pick a committee, meet the organising team and register.',
+    features: [
+      'A countdown to the conference on the home page',
+      'Committee pages with each agenda and background guide',
+      'Pages for the club, the core team and the sponsors',
+      'Vercel Analytics on every page',
+    ],
+    tech: ['Next.js 16', 'React 19', 'TypeScript', 'Tailwind CSS 4', 'shadcn/ui', 'Vercel'],
+    run: ['npm install', 'npm run dev'],
+  },
   body: {
     problem:
       'The 2025 conference, run by Club Literati, needed one place where delegates could find the dates, pick a committee, meet the organising team and register.',
