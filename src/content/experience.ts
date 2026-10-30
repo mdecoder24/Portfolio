@@ -53,6 +53,21 @@ export const experience = Experience.array().parse([
   },
   // Volunteer roles: the résumé's achievements, with dates and the roles it leaves out from LinkedIn (31 Oct 2026)
   {
+    id: 'gdg-hyderabad',
+    kind: 'volunteer',
+    role: 'Volunteer',
+    org: 'GDG Hyderabad',
+    // The chapter's own mark on gdg.community.dev; it has no LinkedIn page
+    logo: '/media/logos/gdg-hyderabad.png',
+    // Set by Kushwant on 31 Oct 2026
+    start: '2024-05',
+    current: true,
+    points: [
+      'Volunteered at 2 DevFest Hyderabad events',
+      'On the organising team of Agentathon, a Guinness World Record hackathon',
+    ],
+  },
+  {
     id: 'club-literati',
     kind: 'volunteer',
     role: 'Technical Head',
@@ -101,15 +116,5 @@ export const experience = Experience.array().parse([
     logo: '/media/logos/club-literati.png',
     start: '2023-08',
     end: '2024-08',
-  },
-  {
-    id: 'gdg-hyderabad',
-    kind: 'volunteer',
-    role: 'Volunteer',
-    org: 'GDG Hyderabad',
-    points: [
-      'Volunteered at 2 DevFest Hyderabad events',
-      'On the organising team of Agentathon, a Guinness World Record hackathon',
-    ],
   },
 ]);
