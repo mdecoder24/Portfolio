@@ -3,6 +3,7 @@ import { RevealObserver } from '@/components/layout/RevealObserver';
 import { SiteChrome } from '@/components/layout/SiteChrome';
 import { StickyIntro } from '@/components/layout/StickyIntro';
 import { About } from '@/components/sections/About';
+import { Certifications } from '@/components/sections/Certifications';
 import { Contact } from '@/components/sections/Contact';
 import { Education } from '@/components/sections/Education';
 import { Experience } from '@/components/sections/Experience';
@@ -34,6 +35,7 @@ export default function Home() {
           achievements={content.achievements}
           config={config}
         />
+        <Certifications index={next()} certifications={content.certifications} />
         <Contact index={next()} config={config} profile={profile} />
         <RevealObserver />
       </SiteChrome>

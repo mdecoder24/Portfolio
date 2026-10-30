@@ -62,7 +62,7 @@ test('section numbers run in reading order', async ({ page }) => {
   const numbers = await page
     .locator('main section[id]:not(#hero)')
     .evaluateAll((sections) => sections.map((s) => s.querySelector('[data-section-number]')?.textContent?.trim()));
-  expect(numbers).toEqual(['01', '02', '03', '04', '05', '06']);
+  expect(numbers).toEqual(['01', '02', '03', '04', '05', '06', '07']);
 });
 
 test('case-study pages render with previous and next links', async ({ page }) => {
@@ -179,4 +179,17 @@ test('a freelance section sits between the projects and education, and the nav l
     'href',
     'https://www.kemplast.in/',
   );
+});
+
+test('certifications follow education, each linking to its certificate', async ({ page }) => {
+  await page.goto('/?3d=off');
+  const ids = await page.locator('main section[id]').evaluateAll((sections) => sections.map((s) => s.id));
+  expect(ids.indexOf('certifications')).toBe(ids.indexOf('education') + 1);
+  const links = page.locator('#certifications').getByRole('link');
+  await expect(links).toHaveCount(4);
+  await expect(links.first()).toHaveAccessibleName(/AWS Cloud Solutions Architect/);
+  for (const link of await links.all()) {
+    await expect(link).toHaveAttribute('href', /^https:\/\/drive\.google\.com\/file\/d\//);
+    await expect(link).toHaveAttribute('rel', 'noopener noreferrer');
+  }
 });

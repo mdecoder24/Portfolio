@@ -74,6 +74,14 @@ export const Freelance = z.object({
   placeholder: z.boolean().default(false),
 });
 
+// A certificate from the résumé, linked to the proof of it
+export const Certification = z.object({
+  title: z.string(),
+  issuer: z.string(),
+  href: z.url(),
+  placeholder: z.boolean().default(false),
+});
+
 export const Config = z.object({
   availability: z.object({
     freelance: z.enum(['available', 'limited', 'booked']),
@@ -167,6 +175,7 @@ export const Achievement = z.object({
 export type CaseStudy = z.infer<typeof CaseStudy>;
 export type Config = z.infer<typeof Config>;
 export type Freelance = z.infer<typeof Freelance>;
+export type Certification = z.infer<typeof Certification>;
 export type Profile = z.infer<typeof Profile>;
 export type Experience = z.infer<typeof Experience>;
 export type Skill = z.infer<typeof Skill>;

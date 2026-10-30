@@ -4,6 +4,7 @@ export const NAV_ITEMS = [
   { id: 'work', label: 'Work' },
   { id: 'freelance', label: 'Freelance' },
   { id: 'education', label: 'Education' },
+  { id: 'certifications', label: 'Certifications' },
   { id: 'contact', label: 'Contact' },
 ] as const;
 

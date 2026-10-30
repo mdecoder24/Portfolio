@@ -32,6 +32,7 @@ collect('freelance', [c.freelance]);
 collect('freelance work', c.freelance.work);
 collect('education', c.education);
 collect('achievements', c.achievements);
+collect('certifications', c.certifications);
 caseStudies.forEach((s) => s.placeholder && placeholders.push(`case study ${s.slug}`));
 
 if (placeholders.length) {
