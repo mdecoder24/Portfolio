@@ -13,7 +13,7 @@ test('the hero leads with the name, role and key facts', async ({ page }) => {
   const h1 = page.getByRole('heading', { level: 1 });
   await expect(h1).toHaveAccessibleName(/^Kushwant Kumar Reddy\s*,\s*Full-stack & AI engineer$/);
   const hero = page.locator('#hero');
-  await expect(hero.getByRole('term')).toHaveText(['Based in', 'Degree', 'Day job', 'Freelance']);
+  await expect(hero.getByRole('term')).toHaveText(['Based in', 'Degree', 'Working as', 'Freelance']);
 });
 
 test('the hero centres a large portrait with the name and role in front of its lower half', async ({ page }) => {
