@@ -6,7 +6,8 @@ export const experience = Experience.array().parse([
     id: 'knowvation',
     role: 'Associate Software Engineer',
     org: 'Knowvation Learnings Pvt Ltd',
-    start: '2026-02',
+    // Set by Kushwant on 31 Oct 2026; the résumé gives a later start
+    start: '2023-08',
     points: [
       'Managed the Knowvation Learnings website and its client-facing web platforms end to end as a full-stack developer',
       'Cut API latency by 40% through relational database indexing and better-structured APIs',
