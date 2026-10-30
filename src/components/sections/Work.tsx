@@ -163,7 +163,7 @@ export function Work({ index, projects }: { index: number; projects: CaseStudy[]
     <Section
       id="work"
       index={index}
-      label="Selected work"
+      label="My projects"
       title="Things I've built"
       intro="Each one opens into a short write-up."
     >

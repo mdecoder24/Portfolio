@@ -161,6 +161,11 @@ test('project cards link out to GitHub and the live site, and their titles open 
   await expect(page.locator('#work').getByText('Read the case study')).toHaveCount(0);
   // The MUN site leads the list
   await expect(page.locator('#work article').first()).toContainText('MLRIT MUN 2025 website');
+  await expect(page.locator('#work article')).toHaveCount(4);
+  const sensai = page.locator('#work article').nth(3);
+  await expect(sensai).toContainText('SENSAI, AI career coach');
+  await expect(sensai.getByRole('link', { name: /^GitHub/ })).toHaveAttribute('href', 'https://github.com/mdeocder24/sensai');
+  await expect(sensai.getByRole('link', { name: /^Live site/ })).toHaveAttribute('href', 'https://ai-career-coach-mu.vercel.app/');
 });
 
 test('a freelance section sits between the projects and education, and the nav links to it', async ({ page }) => {
