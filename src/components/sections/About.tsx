@@ -3,6 +3,7 @@ import { SampleRibbon } from '@/components/ui/SampleRibbon';
 import { Section } from '@/components/ui/SectionHeader';
 import type { Profile, Skill } from '@/content/schema';
 import { highlight } from '@/lib/highlight';
+import { StackTeardown } from './StackTeardown';
 
 // Three stresses at most: the paragraph is a lead, and when every other phrase is bright none of them stand out
 const STRESS = ['the whole stack', 'Knowvation Learnings', 'computer vision'];
@@ -38,7 +39,14 @@ function SkillItem({ skill }: { skill: Skill }) {
 
 export function About({ profile, skills }: { profile: Profile; skills: Skill[] }) {
   return (
-    <Section id="about" index={1} label="About" title="I turn fuzzy ideas into products people actually use.">
+    <Section
+      id="about"
+      index={1}
+      label="About"
+      title="I turn fuzzy ideas into products people actually use."
+      // The left rail is empty on desktop, so the stack's exploded view fills it; below lg the list says it all
+      rail={<StackTeardown skills={skills} className="h-full" />}
+    >
       <div className="grid gap-12 lg:grid-cols-12 lg:gap-8">
         <div className="reveal grid content-start gap-6 lg:col-span-9 lg:col-start-4">
           <SampleRibbon placeholder={profile.placeholder} />

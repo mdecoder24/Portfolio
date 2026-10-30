@@ -1,4 +1,5 @@
 import { BackdropMount } from '@/components/layout/BackdropMount';
+import { RevealObserver } from '@/components/layout/RevealObserver';
 import { SiteChrome } from '@/components/layout/SiteChrome';
 import { StickyIntro } from '@/components/layout/StickyIntro';
 import { About } from '@/components/sections/About';
@@ -32,6 +33,7 @@ export default function Home() {
           config={config}
         />
         <Contact index={next()} config={config} profile={profile} />
+        <RevealObserver />
       </SiteChrome>
     </>
   );

@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import { useScroll } from '@/stores/scroll';
-import { hydratePrefs, prefersReducedMotion, SECTION_IDS, useUi, type SectionId } from '@/stores/ui';
+import { hydratePrefs, SECTION_IDS, useUi, type SectionId } from '@/stores/ui';
 
 /** Feeds the ui and scroll stores: preferences, the section in view, and section offsets for the 3D layer. */
 export function PageObserver() {
@@ -38,32 +38,9 @@ export function PageObserver() {
     window.addEventListener('scroll', onScroll, { passive: true });
     measure();
 
-    // Scroll reveals: opt in only when motion is allowed, so content is never hidden without JavaScript.
-    // Deferred by one frame so hydration completes before any DOM data-shown attributes are mutated.
-    let revealIo: IntersectionObserver | undefined;
-    let raf = 0;
-    if (!prefersReducedMotion()) {
-      raf = requestAnimationFrame(() => {
-        document.documentElement.dataset.reveal = '';
-        revealIo = new IntersectionObserver(
-          (entries) => {
-            for (const e of entries)
-              if (e.isIntersecting) {
-                (e.target as HTMLElement).dataset.shown = '';
-                revealIo?.unobserve(e.target);
-              }
-          },
-          { rootMargin: '0px 0px -8% 0px' },
-        );
-        document.querySelectorAll('.reveal, .reveal-words').forEach((el) => revealIo?.observe(el));
-      });
-    }
+    // Scroll reveals live in RevealObserver, inside the page tree, so they never touch sections still hydrating
 
     return () => {
-      cancelAnimationFrame(raf);
-      revealIo?.disconnect();
-      delete document.documentElement.dataset.reveal;
-      document.querySelectorAll('[data-shown]').forEach((el) => delete (el as HTMLElement).dataset.shown);
       io.disconnect();
       ro.disconnect();
       window.removeEventListener('scroll', onScroll);

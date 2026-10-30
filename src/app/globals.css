@@ -384,3 +384,32 @@ form:has(option[value='freelance']:checked) .freelance-fields {
   opacity: 1;
   translate: 0 0;
 }
+
+/* Stack teardown: each plate lies tilted like a part in an exploded diagram */
+.teardown .plate {
+  transform: rotateX(60deg) rotateZ(-45deg);
+}
+/* The tilt flattens to rotate(-45deg) then half height, so this exact inverse stands each mark upright and readable */
+.teardown .plate > * {
+  transform: rotate(45deg) scaleY(2);
+}
+/*
+ * Apart by default; with JavaScript and motion the plates start stacked on the top one and open downwards when shown.
+ * They gather at the top, not the middle, so the closed stack is already on screen when the opening plays
+ */
+:root[data-reveal] .teardown .layer {
+  /* Percentages here are of the layer's own height, so the closed stack stays tight whatever height the rail is */
+  translate: 0 calc(var(--c) * (100% - 1.25rem));
+  transition: translate 1100ms var(--ease-out-quint);
+  transition-delay: calc(var(--c) * -50ms);
+}
+:root[data-reveal] .teardown .layer-label {
+  opacity: 0;
+  transition: opacity 400ms var(--ease-out-quint) 900ms;
+}
+:root[data-reveal] .teardown[data-shown] .layer {
+  translate: 0 0;
+}
+:root[data-reveal] .teardown[data-shown] .layer-label {
+  opacity: 1;
+}
