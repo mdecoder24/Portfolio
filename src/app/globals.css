@@ -21,6 +21,8 @@
 @theme {
   --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-in-out-quint: cubic-bezier(0.65, 0, 0.35, 1);
+  /* easeOutBack (easings.co): a small overshoot, so a part settles into place rather than stopping dead */
+  --ease-out-back: cubic-bezier(0.34, 1.56, 0.64, 1);
   @keyframes rise {
     from {
       opacity: 0;
@@ -394,21 +396,45 @@ form:has(option[value='freelance']:checked) .freelance-fields {
   transform: rotate(45deg) scaleY(2);
 }
 /*
- * Apart by default; with JavaScript and motion the plates start stacked on the top one and open downwards when shown.
- * They gather at the top, not the middle, so the closed stack is already on screen when the opening plays
+ * Apart by default. With JavaScript and motion the plates start stacked on the top one; when shown, each in turn springs
+ * down to its place while twisting a quarter turn into its tilt, then its marks pop in one by one and its name slides in
  */
 :root[data-reveal] .teardown .layer {
-  /* Percentages here are of the layer's own height, so the closed stack stays tight whatever height the rail is */
-  translate: 0 calc(var(--c) * (100% - 1.25rem));
-  transition: translate 1100ms var(--ease-out-quint);
-  transition-delay: calc(var(--c) * -50ms);
+  /* Percentages are of the layer's own height, so the closed stack stays tight at any width */
+  translate: 0 calc(var(--c) * (100% - 1rem));
+  transition: translate 900ms var(--ease-out-back) calc(var(--i) * 90ms);
+}
+:root[data-reveal] .teardown .plate {
+  transform: rotateX(60deg) rotateZ(-90deg);
+  transition: transform 900ms var(--ease-out-quint) calc(var(--i) * 90ms);
+}
+:root[data-reveal] .teardown .plate > * {
+  opacity: 0;
+  scale: 0.7;
+  transition:
+    opacity 300ms var(--ease-out-quint),
+    scale 400ms var(--ease-out-back);
+  transition-delay: calc(550ms + var(--i) * 90ms + var(--j) * 35ms);
 }
 :root[data-reveal] .teardown .layer-label {
   opacity: 0;
-  transition: opacity 400ms var(--ease-out-quint) 900ms;
+  translate: -0.5rem 0;
+  transition:
+    opacity 400ms var(--ease-out-quint),
+    translate 400ms var(--ease-out-quint);
+  /* After its plate has landed, so names never cross while the stack is still opening */
+  transition-delay: calc(900ms + var(--i) * 90ms);
 }
-:root[data-reveal] .teardown[data-shown] .layer {
+:root[data-reveal] .teardown[data-shown] .layer,
+:root[data-reveal] .teardown[data-shown] .layer-label {
   translate: 0 0;
+}
+:root[data-reveal] .teardown[data-shown] .plate {
+  transform: rotateX(60deg) rotateZ(-45deg);
+}
+:root[data-reveal] .teardown[data-shown] .plate > * {
+  opacity: 1;
+  scale: 1;
 }
 :root[data-reveal] .teardown[data-shown] .layer-label {
   opacity: 1;
@@ -467,57 +493,5 @@ form:has(option[value='freelance']:checked) .freelance-fields {
     box-shadow:
       0 0 0 4px var(--color-accent-soft),
       0 0 20px color-mix(in oklab, var(--color-accent) 35%, transparent);
-  }
-}
-
-/* Stack teardown guide lines: dashes from the first plate's centre to the last, drawn in from the top after it opens */
-.teardown {
-  pointer-events: auto;
-}
-.teardown .axis {
-  position: absolute;
-  top: calc(100% / 12);
-  bottom: calc(100% / 12);
-  width: 1px;
-  translate: -0.5px 0;
-  background: repeating-linear-gradient(to bottom, var(--color-rule-strong) 0 4px, transparent 4px 9px);
-  transform-origin: top;
-}
-:root[data-reveal] .teardown .axis {
-  scale: 1 0;
-  transition: scale 900ms var(--ease-out-quint) 700ms;
-}
-:root[data-reveal] .teardown[data-shown] .axis {
-  scale: 1 1;
-}
-
-/* Pointing at a layer lifts its plate out of the stack in the accent and lets the others fall back */
-.teardown .plate {
-  transition:
-    translate 250ms var(--ease-out-quint),
-    border-color 200ms ease,
-    box-shadow 200ms ease,
-    opacity 200ms ease;
-}
-.teardown .layer-label {
-  transition: color 200ms ease;
-}
-@media (hover: hover) and (pointer: fine) {
-  .teardown .layer:hover .plate {
-    border-color: var(--color-accent);
-    box-shadow:
-      var(--shadow-float),
-      0 0 0 1px var(--color-accent),
-      0 0 32px color-mix(in oklab, var(--color-accent) 35%, transparent);
-  }
-  /* The lift is movement, so it waits for data-reveal: never under reduced motion */
-  :root[data-reveal] .teardown .layer:hover .plate {
-    translate: 0 -0.75rem;
-  }
-  .teardown:has(.layer:hover) .layer:not(:hover) .plate {
-    opacity: 0.45;
-  }
-  .teardown .layer:hover .layer-label {
-    color: var(--color-ink);
   }
 }

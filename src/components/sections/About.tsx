@@ -39,16 +39,15 @@ function SkillItem({ skill }: { skill: Skill }) {
 
 export function About({ profile, skills }: { profile: Profile; skills: Skill[] }) {
   return (
-    <Section
-      id="about"
-      index={1}
-      label="About"
-      title="I turn fuzzy ideas into products people actually use."
-      // The left rail is empty on desktop, so the stack's exploded view fills it; below lg the list says it all
-      rail={<StackTeardown skills={skills} className="h-full" />}
-    >
+    <Section id="about" index={1} label="About" title="I turn fuzzy ideas into products people actually use.">
       <div className="grid gap-12 lg:grid-cols-12 lg:gap-8">
-        <div className="reveal grid content-start gap-6 lg:col-span-9 lg:col-start-4">
+        {/* Under the title, the left rail is empty on desktop, so the stack's exploded view fills it beside the bio;
+            below lg the list says it all */}
+        <StackTeardown
+          skills={skills}
+          className="self-start max-lg:hidden lg:col-span-3 lg:col-start-1 lg:row-span-2 lg:row-start-1"
+        />
+        <div className="reveal grid content-start gap-6 lg:col-span-9 lg:col-start-4 lg:row-start-1">
           <SampleRibbon placeholder={profile.placeholder} />
           <p className="max-w-[60ch] type-lead text-ink-2 [&_strong]:font-medium">{highlight(profile.bio, STRESS)}</p>
           <dl className="grid gap-x-8 gap-y-4 border-t border-rule pt-6 sm:grid-cols-2">

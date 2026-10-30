@@ -22,7 +22,6 @@ export function Section({
   title,
   intro,
   aside,
-  rail,
   children,
   className,
 }: {
@@ -32,8 +31,6 @@ export function Section({
   title: string;
   intro?: ReactNode;
   aside?: ReactNode;
-  /** Decoration for the left rail on desktop, filling it from below the label to the section's end */
-  rail?: ReactNode;
   children: ReactNode;
   className?: string;
 }) {
@@ -68,12 +65,6 @@ export function Section({
         </header>
         {children}
       </div>
-      {rail && (
-        // Laid over the section on the same 12-column grid, so the rail runs beside the header and the content alike
-        <div className="container-kit pointer-events-none absolute inset-0 grid py-(--section-pad) max-lg:hidden lg:grid-cols-12 lg:gap-8">
-          <div className="pt-16 lg:col-span-3">{rail}</div>
-        </div>
-      )}
     </section>
   );
 }
