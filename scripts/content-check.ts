@@ -28,6 +28,8 @@ collect('config', [c.config]);
 collect('profile', [c.profile]);
 collect('experience', c.experience);
 collect('skills', c.skills);
+collect('freelance', [c.freelance]);
+collect('freelance work', c.freelance.work);
 collect('education', c.education);
 collect('achievements', c.achievements);
 caseStudies.forEach((s) => s.placeholder && placeholders.push(`case study ${s.slug}`));

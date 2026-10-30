@@ -55,6 +55,25 @@ export const CaseStudy = z.object({
   placeholder: z.boolean().default(false),
 });
 
+// The freelance section: a short bio in first person, then the client work, newest first
+export const Freelance = z.object({
+  bio: z.array(z.string()).min(1), // one string per paragraph
+  work: z
+    .array(
+      z.object({
+        title: z.string().max(60),
+        client: z.string().optional(), // a name only with the client's permission, otherwise a label such as "a Hyderabad clinic"
+        summary: z.string().max(200),
+        stack: z.array(z.string()).default([]),
+        year: z.string().regex(/^\d{4}$/).optional(),
+        href: z.url().optional(),
+        placeholder: z.boolean().default(false),
+      }),
+    )
+    .default([]),
+  placeholder: z.boolean().default(false),
+});
+
 export const Config = z.object({
   availability: z.object({
     freelance: z.enum(['available', 'limited', 'booked']),
@@ -147,6 +166,7 @@ export const Achievement = z.object({
 
 export type CaseStudy = z.infer<typeof CaseStudy>;
 export type Config = z.infer<typeof Config>;
+export type Freelance = z.infer<typeof Freelance>;
 export type Profile = z.infer<typeof Profile>;
 export type Experience = z.infer<typeof Experience>;
 export type Skill = z.infer<typeof Skill>;

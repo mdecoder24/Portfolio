@@ -6,6 +6,7 @@ import { About } from '@/components/sections/About';
 import { Contact } from '@/components/sections/Contact';
 import { Education } from '@/components/sections/Education';
 import { Experience } from '@/components/sections/Experience';
+import { Freelance } from '@/components/sections/Freelance';
 import { Hero } from '@/components/sections/Hero';
 import { Work } from '@/components/sections/Work';
 import * as content from '@/content';
@@ -26,6 +27,7 @@ export default function Home() {
         <About profile={profile} skills={content.skills} />
         <Experience entries={content.experience} />
         <Work index={next()} projects={content.projects} />
+        <Freelance index={next()} freelance={content.freelance} config={config} />
         <Education
           index={next()}
           education={content.education}

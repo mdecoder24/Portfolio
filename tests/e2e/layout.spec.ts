@@ -62,7 +62,7 @@ test('section numbers run in reading order', async ({ page }) => {
   const numbers = await page
     .locator('main section[id]:not(#hero)')
     .evaluateAll((sections) => sections.map((s) => s.querySelector('[data-section-number]')?.textContent?.trim()));
-  expect(numbers).toEqual(['01', '02', '03', '04', '05']);
+  expect(numbers).toEqual(['01', '02', '03', '04', '05', '06']);
 });
 
 test('case-study pages render with previous and next links', async ({ page }) => {
@@ -161,4 +161,17 @@ test('project cards link out to GitHub and the live site, and their titles open 
   await expect(page.locator('#work').getByText('Read the case study')).toHaveCount(0);
   // The MUN site leads the list
   await expect(page.locator('#work article').first()).toContainText('MLRIT MUN 2025 website');
+});
+
+test('a freelance section sits between the projects and education, and the nav links to it', async ({ page }) => {
+  await page.goto('/?3d=off');
+  const ids = await page.locator('main section[id]').evaluateAll((sections) => sections.map((s) => s.id));
+  expect(ids.indexOf('freelance')).toBe(ids.indexOf('work') + 1);
+  expect(ids.indexOf('education')).toBe(ids.indexOf('freelance') + 1);
+  await expect(page.getByRole('heading', { level: 2, name: 'Freelance and client work' })).toBeAttached();
+  await expect(page.locator('footer').getByRole('link', { name: 'Freelance' })).toHaveAttribute('href', /#freelance$/);
+  await expect(page.locator('#freelance').getByRole('link', { name: 'Kemplast Process Solutions website' })).toHaveAttribute(
+    'href',
+    'https://www.kemplast.in/',
+  );
 });

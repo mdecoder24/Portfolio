@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-export const SECTION_IDS = ['hero', 'about', 'experience', 'work', 'education', 'contact'] as const;
+export const SECTION_IDS = ['hero', 'about', 'experience', 'work', 'freelance', 'education', 'contact'] as const;
 export type SectionId = (typeof SECTION_IDS)[number];
 
 export type MotionPref = 'auto' | 'reduced' | 'full';

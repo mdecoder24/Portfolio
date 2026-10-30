@@ -9,6 +9,7 @@ export { profile } from './profile.ts';
 export { experience } from './experience.ts';
 export { skills } from './skills.ts';
 export { education, achievements } from './education.ts';
+export { freelance } from './freelance.ts';
 
 export const projects: CaseStudy[] = [munWebsite, signLanguageRecognition, tedxMlrit];
 
