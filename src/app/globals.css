@@ -413,3 +413,59 @@ form:has(option[value='freelance']:checked) .freelance-fields {
 :root[data-reveal] .teardown[data-shown] .layer-label {
   opacity: 1;
 }
+
+/*
+ * Experience rows: light that draws the eye to the dropdowns. Once a closed row shows, a band of accent light sweeps
+ * across it and its toggle glows a few times, then rests; hovering pools light by the toggle. The sweep and glow sit
+ * behind data-reveal, so they never run without JavaScript or under reduced motion; the hover light only fades
+ */
+.role-sweep {
+  position: absolute;
+  inset-block: 0;
+  left: 0;
+  width: 40%;
+  background: linear-gradient(100deg, transparent, color-mix(in oklab, var(--color-accent) 14%, transparent), transparent);
+  translate: -100% 0;
+  opacity: 0;
+}
+:root[data-reveal] .reveal[data-shown] > details:not([open]) .role-sweep {
+  animation: role-sweep 1400ms var(--ease-in-out-quint) calc(var(--reveal-delay, 0ms) + 500ms) both;
+}
+.role-light::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(60% 140% at 100% 50%, color-mix(in oklab, var(--color-accent) 10%, transparent), transparent 70%);
+  opacity: 0;
+  transition: opacity 200ms ease;
+}
+@media (hover: hover) and (pointer: fine) {
+  .role-row:hover .role-light::after {
+    opacity: 1;
+  }
+  .role-row:hover .role-toggle {
+    box-shadow: 0 0 0 4px var(--color-accent-soft);
+  }
+}
+:root[data-reveal] .reveal[data-shown] > details:not([open]) .role-toggle {
+  animation: role-glow 1800ms ease-in-out calc(var(--reveal-delay, 0ms) + 1200ms) 3;
+}
+@keyframes role-sweep {
+  15%,
+  85% {
+    opacity: 1;
+  }
+  to {
+    translate: 350% 0;
+    opacity: 0;
+  }
+}
+@keyframes role-glow {
+  50% {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+    box-shadow:
+      0 0 0 4px var(--color-accent-soft),
+      0 0 20px color-mix(in oklab, var(--color-accent) 35%, transparent);
+  }
+}
