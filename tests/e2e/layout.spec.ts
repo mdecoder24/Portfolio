@@ -131,3 +131,12 @@ test('choices saved under the retired keys are cleared, so the footer starts at 
   await expect(page.locator('html')).not.toHaveAttribute('data-motion', 'reduced');
   expect(await page.evaluate(() => [localStorage.getItem('kr-3d'), localStorage.getItem('kr-motion')])).toEqual([null, null]);
 });
+
+test('the hero links to GitHub, LinkedIn and email, each named for screen readers', async ({ page }) => {
+  await page.goto('/?3d=off');
+  const socials = page.locator('#hero').getByRole('list', { name: 'Social links' });
+  await expect(socials.getByRole('link', { name: 'GitHub' })).toHaveAttribute('href', 'https://github.com/mdecoder24');
+  await expect(socials.getByRole('link', { name: 'LinkedIn' })).toHaveAttribute('href', /linkedin\.com\/in\/kushwant-kr/);
+  await expect(socials.getByRole('link', { name: 'Email' })).toHaveAttribute('href', 'mailto:kushwant.work@gmail.com');
+  await expect(socials).toBeInViewport();
+});

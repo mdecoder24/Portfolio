@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/Button';
 import { CountUp } from '@/components/ui/CountUp';
 import { MetalTitle } from '@/components/ui/MetalTitle';
 import { PatrolBot } from '@/components/ui/PatrolBot';
+import { SocialLinks } from '@/components/ui/SocialLinks';
 import type { Config, Profile } from '@/content/schema';
 
 /**
@@ -101,6 +102,12 @@ export function Hero({ profile, config }: { profile: Profile; config: Config }) 
                 <ArrowUpRight className="size-4" strokeWidth={1.75} aria-hidden="true" />
               </Button>
             </div>
+
+            {/* Under the role on wide screens, under the actions on phones */}
+            <SocialLinks
+              links={config.links}
+              className="rise justify-center [--rise-delay:440ms] lg:col-start-2 lg:row-start-2"
+            />
           </div>
         </div>
 
