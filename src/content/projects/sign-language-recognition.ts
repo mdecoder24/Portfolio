@@ -9,6 +9,10 @@ export const signLanguageRecognition = CaseStudy.parse({
   role: 'Developer',
   stack: ['React', 'TensorFlow', 'MediaPipe', 'Firebase'],
   categories: ['ai-ml'],
+  links: [
+    { label: 'GitHub', href: 'https://github.com/mdecoder24/Sign-Language-Recognition' },
+    { label: 'Live', href: 'https://sign-language-recognitio-a7e2a.web.app/' },
+  ],
   featured: true,
   media: {
     src: '/media/sign-language-recognition/cover.svg',

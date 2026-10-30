@@ -1,5 +1,6 @@
 import { ArrowUpRight } from 'lucide-react';
-import type { CSSProperties } from 'react';
+import Link from 'next/link';
+import type { CSSProperties, ReactNode } from 'react';
 import { Button } from '@/components/ui/Button';
 import { CountUp } from '@/components/ui/CountUp';
 import { SampleRibbon } from '@/components/ui/SampleRibbon';
@@ -8,6 +9,45 @@ import { caseStudyHref } from '@/content';
 import type { CaseStudy } from '@/content/schema';
 import { cn } from '@/lib/cn';
 import { DeviceStage } from './DeviceStage';
+import { BRAND_PATHS } from './stack-logos';
+
+function GitHubMark() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" className="size-4" fill="currentColor">
+      <path d={BRAND_PATHS.GitHub} />
+    </svg>
+  );
+}
+
+/** One way out of a project card; until its link is added to the content it shows, unavailable, in the same place */
+function ProjectLink({
+  href,
+  label,
+  title,
+  icon,
+  variant,
+}: {
+  href?: string;
+  label: string;
+  title: string;
+  icon?: ReactNode;
+  variant: 'primary' | 'secondary';
+}) {
+  if (!href)
+    return (
+      <Button variant={variant} icon={icon} disabled aria-disabled="true">
+        {label}
+        <span className="sr-only">: link coming soon</span>
+      </Button>
+    );
+  return (
+    <Button href={href} variant={variant} icon={icon} target="_blank" rel="noopener noreferrer">
+      {label}
+      <ArrowUpRight className="size-4" strokeWidth={1.75} aria-hidden="true" />
+      <span className="sr-only">: {title}</span>
+    </Button>
+  );
+}
 
 /** Everything about a project except its picture: shared by the large client rows and the compact personal cards */
 function Details({ study, n, compact = false }: { study: CaseStudy; n: number; compact?: boolean }) {
@@ -19,7 +59,15 @@ function Details({ study, n, compact = false }: { study: CaseStudy; n: number; c
         <span className="max-sm:basis-full">{study.context}</span>
       </div>
       <SampleRibbon placeholder={study.placeholder} />
-      <h4 className="type-h3 text-ink">{study.title}</h4>
+      <h4 className="type-h3 text-ink">
+        {/* The title opens the write-up, now that the buttons lead out to the code and the live site */}
+        <Link
+          href={caseStudyHref(study)}
+          className="rounded-xs underline decoration-transparent underline-offset-4 transition-[text-decoration-color] duration-150 hover:decoration-ink focus-visible:outline-none focus-visible:shadow-focus"
+        >
+          {study.title}
+        </Link>
+      </h4>
       <p className="max-w-[48ch] type-body text-ink-2">
         <span className="text-ink">
           <CountUp text={study.outcome} />
@@ -27,17 +75,19 @@ function Details({ study, n, compact = false }: { study: CaseStudy; n: number; c
       </p>
       <p className="type-code text-ink-2">{study.stack.join(', ')}</p>
       <div className="flex flex-wrap gap-3 pt-1">
-        <Button href={caseStudyHref(study)}>
-          Read the case study
-          <ArrowUpRight className="size-4" strokeWidth={1.75} aria-hidden="true" />
-          <span className="sr-only">: {study.title}</span>
-        </Button>
-        {study.links.map((l) => (
-          <Button key={l.href} href={l.href} variant="secondary">
-            {l.label === 'Live' ? 'Live site' : l.label}
-            <ArrowUpRight className="size-4" strokeWidth={1.75} aria-hidden="true" />
-          </Button>
-        ))}
+        <ProjectLink
+          href={study.links.find((l) => l.label === 'GitHub')?.href}
+          label="GitHub"
+          title={study.title}
+          icon={<GitHubMark />}
+          variant="primary"
+        />
+        <ProjectLink
+          href={study.links.find((l) => l.label === 'Live')?.href}
+          label="Live site"
+          title={study.title}
+          variant="secondary"
+        />
       </div>
     </>
   );

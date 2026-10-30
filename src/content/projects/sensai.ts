@@ -10,6 +10,8 @@ export const sensai = CaseStudy.parse({
   role: 'Developer',
   stack: ['Next.js', 'Node.js', 'Prisma', 'Gemini API'],
   categories: ['ai-ml', 'full-stack'],
+  // GitHub and Live links to come: the card shows both buttons as unavailable until they are added here
+  links: [],
   featured: true,
   media: {
     src: '/media/sensai/cover.svg',

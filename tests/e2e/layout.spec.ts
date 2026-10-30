@@ -150,3 +150,16 @@ test('every role in experience starts closed, and a current role reads Current i
   await expect(summaries.filter({ hasText: /– Current/ }).first()).toBeVisible();
   await expect(summaries.filter({ hasText: /present/ })).toHaveCount(0);
 });
+
+test('project cards link out to GitHub and the live site, and their titles open the case study', async ({ page }) => {
+  await page.goto('/?3d=off#work');
+  const card = page.locator('#work article').filter({ hasText: 'TEDx MLRIT website' });
+  await expect(card.getByRole('link', { name: /^GitHub/ })).toHaveAttribute('href', 'https://github.com/mdecoder24/TEDx-MLRIT');
+  await expect(card.getByRole('link', { name: /^Live site/ })).toHaveAttribute('href', 'https://tedxmlrit.vercel.app/');
+  await expect(card.getByRole('link', { name: 'TEDx MLRIT website', exact: true })).toHaveAttribute('href', '/projects/tedx-mlrit');
+  await expect(page.locator('#work').getByText('Read the case study')).toHaveCount(0);
+  // A project without its links yet keeps both buttons in place, unavailable
+  const sensai = page.locator('#work article').filter({ hasText: 'SENSAI' });
+  await expect(sensai.getByRole('button', { name: /^GitHub/ })).toBeDisabled();
+  await expect(sensai.getByRole('button', { name: /^Live site/ })).toBeDisabled();
+});

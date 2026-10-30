@@ -9,6 +9,10 @@ export const tedxMlrit = CaseStudy.parse({
   role: 'Developer',
   stack: ['TypeScript', 'JavaScript', 'Supabase'],
   categories: ['full-stack'],
+  links: [
+    { label: 'GitHub', href: 'https://github.com/mdecoder24/TEDx-MLRIT' },
+    { label: 'Live', href: 'https://tedxmlrit.vercel.app/' },
+  ],
   featured: true,
   media: {
     src: '/media/tedx-mlrit/cover.svg',
