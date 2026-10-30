@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 const month = z.string().regex(/^\d{4}-\d{2}$/); // "2026-07"
 const slug = z.string().regex(/^[a-z0-9-]+$/);
-// Site-relative paths ("/projects/sensai", "#experience") or absolute URLs
+// Site-relative paths ("/projects/tedx-mlrit", "#experience") or absolute URLs
 const href = z
   .string()
   .refine((v) => v.startsWith('/') || v.startsWith('#') || URL.canParse(v), 'Invalid href');

@@ -66,8 +66,8 @@ test('section numbers run in reading order', async ({ page }) => {
 });
 
 test('case-study pages render with previous and next links', async ({ page }) => {
-  await page.goto('/projects/sensai?3d=off');
-  await expect(page.getByRole('heading', { level: 1, name: 'SENSAI, AI career coach' })).toBeVisible();
+  await page.goto('/projects/mun-website?3d=off');
+  await expect(page.getByRole('heading', { level: 1, name: 'MLRIT MUN 2025 website' })).toBeVisible();
   await expect(page.getByRole('navigation', { name: 'More case studies' }).getByRole('link')).toHaveCount(2);
 });
 
@@ -159,8 +159,6 @@ test('project cards link out to GitHub and the live site, and their titles open 
   await expect(card.getByRole('link', { name: /^Live site/ })).toHaveAttribute('href', 'https://tedxmlrit.vercel.app/');
   await expect(card.getByRole('link', { name: 'TEDx MLRIT website', exact: true })).toHaveAttribute('href', '/projects/tedx-mlrit');
   await expect(page.locator('#work').getByText('Read the case study')).toHaveCount(0);
-  // A project without its links yet keeps both buttons in place, unavailable
-  const sensai = page.locator('#work article').filter({ hasText: 'SENSAI' });
-  await expect(sensai.getByRole('button', { name: /^GitHub/ })).toBeDisabled();
-  await expect(sensai.getByRole('button', { name: /^Live site/ })).toBeDisabled();
+  // The MUN site leads the list
+  await expect(page.locator('#work article').first()).toContainText('MLRIT MUN 2025 website');
 });

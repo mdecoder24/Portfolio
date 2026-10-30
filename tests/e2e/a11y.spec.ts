@@ -6,7 +6,7 @@ test.beforeEach(async ({ page }) => {
   await page.addInitScript(() => localStorage.setItem('kr-motion-v2', 'reduced'));
 });
 
-for (const path of ['/?3d=off', '/projects/sensai?3d=off', '/privacy', '/no-such-page']) {
+for (const path of ['/?3d=off', '/projects/mun-website?3d=off', '/privacy', '/no-such-page']) {
   test(`no axe violations on ${path}`, async ({ page }) => {
     await page.goto(path);
     const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa']).analyze();
