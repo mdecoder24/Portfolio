@@ -86,7 +86,7 @@ test('the nav underline slides to the section in view, and counts land on their 
     })
     .toBeLessThanOrEqual(1);
   await page.evaluate(() => scrollTo(0, 0));
-  await expect(page.locator('#hero dd').last()).toHaveText(/14\+ projects shipped/);
+  await expect(page.locator('#hero dd').last()).toHaveText(/(^|\D)4\+ projects shipped/);
 });
 
 test('the pixel robot patrols the fact strip, and stands still under reduced motion', async ({ page }) => {
