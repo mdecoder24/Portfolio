@@ -424,7 +424,7 @@ form:has(option[value='freelance']:checked) .freelance-fields {
   inset-block: 0;
   left: 0;
   width: 40%;
-  background: linear-gradient(100deg, transparent, color-mix(in oklab, var(--color-accent) 14%, transparent), transparent);
+  background: linear-gradient(100deg, transparent, color-mix(in oklab, var(--color-accent) 18%, transparent), transparent);
   translate: -100% 0;
   opacity: 0;
 }

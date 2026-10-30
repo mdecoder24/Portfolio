@@ -41,9 +41,10 @@ export function Section({
     <section id={id} aria-labelledby={`${id}-title`} className={cn('relative border-t border-rule', className)}>
       <div className="container-kit grid gap-12 py-(--section-pad) sm:gap-16 [&>*]:min-w-0">
         <header className="grid gap-5 lg:grid-cols-12 lg:gap-8">
-          <p className="reveal flex items-baseline gap-3 type-code text-ink-2 lg:col-span-3 lg:pt-3">
-            <span className="text-ink">{String(index).padStart(2, '0')}</span>
-            <span aria-hidden="true" className="h-px w-6 translate-y-[-0.3em] bg-rule-strong" />
+          {/* The section name is a heading-sized marker in the accent, level with the title, so it reads at a glance */}
+          <p className="reveal flex items-baseline gap-3 type-h4 text-ink lg:col-span-3">
+            <span className="font-mono text-accent tabular-nums">{String(index).padStart(2, '0')}</span>
+            <span aria-hidden="true" className="h-px w-6 translate-y-[-0.3em] bg-accent" />
             {label}
           </p>
           <div className="grid gap-5 lg:col-span-9">
