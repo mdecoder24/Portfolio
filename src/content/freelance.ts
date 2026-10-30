@@ -1,9 +1,10 @@
 import { Freelance } from './schema.ts';
 
-// Stand-in until Kushwant writes his own: the bio below is a sample; the work list is real
+// Built only from facts on the site (the day job, 14+ freelance projects, the work listed below); no invented clients or numbers
 export const freelance = Freelance.parse({
   bio: [
-    'Alongside my day job I take on freelance projects. This is a sample paragraph: my own words about the work I do for clients go here.',
+    'Outside my day job at Knowvation Learnings, I build websites and web apps for businesses. I have shipped 14+ freelance projects so far, from company websites with full product catalogues to custom web apps.',
+    'I take a project from the first conversation to launch: working out what the business needs, building it in Next.js and React, and putting it live. I aim for sites that load fast and work just as well on a phone as on a desktop.',
   ],
   work: [
     {
@@ -15,5 +16,4 @@ export const freelance = Freelance.parse({
       href: 'https://www.kemplast.in/',
     },
   ],
-  placeholder: true,
 });
