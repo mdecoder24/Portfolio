@@ -11,6 +11,7 @@ export const config = Config.parse({
     email: 'kushwant.work@gmail.com',
     linkedin: 'https://www.linkedin.com/in/kushwant-kr',
     github: 'https://github.com/mdecoder24',
+    leetcode: 'https://leetcode.com/u/Rudra0/',
   },
   site: { url: 'https://kushwantkr.dev', lastUpdated: '2026-10-30' },
   placeholder: true,

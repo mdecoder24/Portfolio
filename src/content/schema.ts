@@ -71,6 +71,7 @@ export const Config = z.object({
     email: z.email(),
     linkedin: z.url(),
     github: z.url(),
+    leetcode: z.url(),
     repo: z.url().optional(),
     booking: z.url().optional(),
   }),
