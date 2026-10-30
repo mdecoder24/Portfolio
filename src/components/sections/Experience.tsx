@@ -2,7 +2,7 @@ import { ChevronDown } from 'lucide-react';
 import { SampleRibbon } from '@/components/ui/SampleRibbon';
 import { Section } from '@/components/ui/SectionHeader';
 import type { Experience as ExperienceEntry } from '@/content/schema';
-import { formatRange } from '@/lib/format';
+import { formatMonth, formatRange } from '@/lib/format';
 
 /** Roles as full-width rows on the section grid; each opens to its outcomes. Opening works without JavaScript. */
 export function Experience({ entries }: { entries: ExperienceEntry[] }) {
@@ -11,11 +11,17 @@ export function Experience({ entries }: { entries: ExperienceEntry[] }) {
       <ul className="border-t border-rule">
         {entries.map((e, i) => (
           <li key={e.id} className="reveal border-b border-rule" style={{ '--reveal-delay': `${i * 80}ms` } as React.CSSProperties}>
-            <details className="group" open={e.current}>
+            <details className="group">
               <summary className="grid cursor-pointer list-none grid-cols-[minmax(0,1fr)_auto] items-baseline gap-x-6 gap-y-1 py-6 transition-colors duration-200 hover:text-ink-hover focus-visible:outline-none focus-visible:shadow-focus lg:grid-cols-12 lg:gap-x-8 [&::-webkit-details-marker]:hidden">
                 <span className="type-code text-ink-2 max-lg:col-span-2 lg:col-span-3">
-                  {formatRange(e.start, e.end)}
-                  {e.current && <span className="ml-2 text-ok">Current</span>}
+                  {/* A current role ends in the word itself, in its status colour, rather than "present" plus a tag */}
+                  {e.current ? (
+                    <>
+                      {formatMonth(e.start)} – <span className="text-ok">Current</span>
+                    </>
+                  ) : (
+                    formatRange(e.start, e.end)
+                  )}
                 </span>
                 <span className="grid gap-1 lg:col-span-8">
                   <span className="type-h3 text-ink">{e.role}</span>

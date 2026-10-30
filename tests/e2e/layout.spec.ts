@@ -140,3 +140,13 @@ test('the hero links to GitHub, LinkedIn and email, each named for screen reader
   await expect(socials.getByRole('link', { name: 'Email' })).toHaveAttribute('href', 'mailto:kushwant.work@gmail.com');
   await expect(socials).toBeInViewport();
 });
+
+test('every role in experience starts closed, and a current role reads Current in place of present', async ({ page }) => {
+  await page.goto('/?3d=off#experience');
+  const roles = page.locator('#experience details');
+  await expect(roles.first()).toBeVisible();
+  for (const role of await roles.all()) await expect(role).not.toHaveAttribute('open');
+  const summaries = page.locator('#experience summary');
+  await expect(summaries.filter({ hasText: /– Current/ }).first()).toBeVisible();
+  await expect(summaries.filter({ hasText: /present/ })).toHaveCount(0);
+});
