@@ -147,11 +147,14 @@ export const Experience = z.object({
   kind: z.enum(['professional', 'volunteer']).default('professional'),
   role: z.string(),
   org: z.string(),
+  // Square logo in public/media/logos, from the organisation's LinkedIn page; rows without one show its initials
+  logo: z.string().startsWith('/').optional(),
   location: z.string().optional(),
   // Optional for volunteer roles whose dates aren't known yet; the row then shows no dates rather than guess them
   start: month.optional(),
   end: month.optional(),
-  points: z.array(z.string()).min(1).max(5),
+  // Empty when LinkedIn gives no detail; the row then has nothing to open
+  points: z.array(z.string()).max(5).default([]),
   stack: z.array(z.string()).max(5).default([]),
   current: z.boolean().default(false),
   placeholder: z.boolean().default(false),

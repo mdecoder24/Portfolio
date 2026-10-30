@@ -216,6 +216,10 @@ test('experience splits into professional and volunteer roles', async ({ page })
   const section = page.locator('#experience');
   await expect(section.getByRole('heading', { level: 3 })).toHaveText([/^Professional experience/, /^Volunteer experience/]);
   const volunteer = section.locator('div:has(> h3:text-matches("^Volunteer experience"))');
-  await expect(volunteer.locator('summary')).toHaveCount(3);
-  await expect(volunteer.locator('summary').first()).toContainText('Google Developer Groups on Campus');
+  await expect(volunteer.locator('> ul > li')).toHaveCount(8);
+  await expect(volunteer.locator('> ul > li').first()).toContainText('Club Literati');
+  // Each row carries the organisation's logo, or its initials when there is none
+  const logos = section.locator('img[src*="logos"]');
+  expect(await logos.count()).toBeGreaterThan(0);
+  for (const img of await logos.all()) expect(await img.evaluate((el: HTMLImageElement) => el.naturalWidth)).toBeGreaterThan(0);
 });

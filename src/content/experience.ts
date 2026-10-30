@@ -6,6 +6,7 @@ export const experience = Experience.array().parse([
     id: 'knowvation',
     role: 'Associate Software Engineer',
     org: 'Knowvation Learnings Pvt Ltd',
+    logo: '/media/logos/knowvation.png',
     // Set by Kushwant on 31 Oct 2026; the résumé gives a later start
     start: '2023-08',
     points: [
@@ -19,9 +20,18 @@ export const experience = Experience.array().parse([
     current: true,
   },
   {
+    id: 'krudex',
+    role: 'Founder',
+    org: 'Krudex Technologies',
+    logo: '/media/logos/krudex.png',
+    start: '2025-09',
+    current: true,
+  },
+  {
     id: 'kemplast',
     role: 'Software Development Engineer',
     org: 'Kemplast Inc',
+    logo: '/media/logos/kemplast.png',
     start: '2025-09',
     end: '2026-02',
     points: [
@@ -32,13 +42,90 @@ export const experience = Experience.array().parse([
     ],
     stack: ['Next.js', 'React 19', 'TypeScript', 'Supabase', 'Vercel'],
   },
-  // Volunteer roles, from the résumé's achievements; no dates until Kushwant gives them
+  // From LinkedIn (31 Oct 2026), which lists these roles without detail
+  {
+    id: 'tedx-website-manager',
+    role: 'Website Manager',
+    org: 'TEDx',
+    start: '2025-02',
+    end: '2025-04',
+  },
+  {
+    id: 'cisco-thingqbator',
+    role: 'UI/UX Designer',
+    org: 'Cisco ThingQbator RVCE',
+    logo: '/media/logos/cisco-thingqbator.png',
+    start: '2023-10',
+    end: '2024-01',
+  },
+  // Volunteer roles: the résumé's achievements, with dates and the roles it leaves out from LinkedIn (31 Oct 2026)
+  {
+    id: 'club-literati',
+    kind: 'volunteer',
+    role: 'Technical Head',
+    org: 'Club Literati, MLRIT',
+    logo: '/media/logos/club-literati.png',
+    // LinkedIn calls this role Technical Lead
+    start: '2025-08',
+    end: '2026-04',
+    points: ['Built 4 event websites for the club'],
+  },
   {
     id: 'gdg-on-campus',
     kind: 'volunteer',
     role: 'Lead',
     org: 'Google Developer Groups on Campus, MLRIT',
+    logo: '/media/logos/gdg-mlrit.png',
+    // LinkedIn lists this as Google DGC Organiser
+    start: '2025-08',
+    end: '2026-10',
     points: ['Led a team of 35', 'A community of 600+ members'],
+  },
+  {
+    id: 'gdgc-co-lead',
+    kind: 'volunteer',
+    role: 'Co-Lead',
+    org: 'Google Developer Groups on Campus, MLRIT',
+    logo: '/media/logos/gdg-mlrit.png',
+    start: '2024-09',
+    end: '2025-08',
+  },
+  {
+    id: 'club-literati-senior-web',
+    kind: 'volunteer',
+    role: 'Senior Web Developer',
+    org: 'Club Literati, MLRIT',
+    logo: '/media/logos/club-literati.png',
+    start: '2024-08',
+    end: '2025-08',
+  },
+  {
+    id: 'gdsc-wow-hyderabad',
+    kind: 'volunteer',
+    role: 'Operations Team Member',
+    org: 'GDSC WoW Hyderabad',
+    logo: '/media/logos/gdsc-wow-hyderabad.png',
+    start: '2024-03',
+    end: '2024-04',
+    points: ['Volunteered at GDSC WoW Hyderabad 2024, an event that brought together 500+ student developers'],
+  },
+  {
+    id: 'gdsc-core-team',
+    kind: 'volunteer',
+    role: 'Core Team Member',
+    org: 'Google Developer Student Clubs, MLRIT',
+    logo: '/media/logos/gdg-mlrit.png',
+    start: '2023-08',
+    end: '2024-07',
+  },
+  {
+    id: 'club-literati-web',
+    kind: 'volunteer',
+    role: 'Web Developer',
+    org: 'Club Literati, MLRIT',
+    logo: '/media/logos/club-literati.png',
+    start: '2023-08',
+    end: '2024-08',
   },
   {
     id: 'gdg-hyderabad',
@@ -49,12 +136,5 @@ export const experience = Experience.array().parse([
       'Volunteered at 2 DevFest Hyderabad events',
       'On the organising team of Agentathon, a Guinness World Record hackathon',
     ],
-  },
-  {
-    id: 'club-literati',
-    kind: 'volunteer',
-    role: 'Technical Head',
-    org: 'Club Literati, MLRIT',
-    points: ['Built 4 event websites for the club'],
   },
 ]);
