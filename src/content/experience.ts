@@ -44,13 +44,6 @@ export const experience = Experience.array().parse([
   },
   // From LinkedIn (31 Oct 2026), which lists these roles without detail
   {
-    id: 'tedx-website-manager',
-    role: 'Website Manager',
-    org: 'TEDx',
-    start: '2025-02',
-    end: '2025-04',
-  },
-  {
     id: 'cisco-thingqbator',
     role: 'UI/UX Designer',
     org: 'Cisco ThingQbator RVCE',
@@ -76,19 +69,10 @@ export const experience = Experience.array().parse([
     role: 'Lead',
     org: 'Google Developer Groups on Campus, MLRIT',
     logo: '/media/logos/gdg-mlrit.png',
-    // LinkedIn lists this as Google DGC Organiser
-    start: '2025-08',
+    // Set by Kushwant on 31 Oct 2026, covering the co-lead year LinkedIn lists separately
+    start: '2024-09',
     end: '2026-10',
     points: ['Led a team of 35', 'A community of 600+ members'],
-  },
-  {
-    id: 'gdgc-co-lead',
-    kind: 'volunteer',
-    role: 'Co-Lead',
-    org: 'Google Developer Groups on Campus, MLRIT',
-    logo: '/media/logos/gdg-mlrit.png',
-    start: '2024-09',
-    end: '2025-08',
   },
   {
     id: 'club-literati-senior-web',
@@ -108,15 +92,6 @@ export const experience = Experience.array().parse([
     start: '2024-03',
     end: '2024-04',
     points: ['Volunteered at GDSC WoW Hyderabad 2024, an event that brought together 500+ student developers'],
-  },
-  {
-    id: 'gdsc-core-team',
-    kind: 'volunteer',
-    role: 'Core Team Member',
-    org: 'Google Developer Student Clubs, MLRIT',
-    logo: '/media/logos/gdg-mlrit.png',
-    start: '2023-08',
-    end: '2024-07',
   },
   {
     id: 'club-literati-web',
