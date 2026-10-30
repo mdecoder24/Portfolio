@@ -110,18 +110,18 @@ function Rig({
 }) {
   const group = useRef<Group>(null);
   const time = useRef(0);
-  const base = kind === 'phone' ? 0.35 : -0.35;
   useFrame((_, delta) => {
     const g = group.current;
     if (!g) return;
     if (still) {
-      g.rotation.set(0.04, base * 0.6, 0);
+      g.rotation.set(0.04, 0, 0);
       return;
     }
     time.current += delta;
     const k = 1 - Math.exp(-delta / 0.2);
     const { x, y } = motion.pointer.current;
-    const targetY = base * 0.5 - motion.scroll.current * 0.55 + x * 0.25;
+    // Faces the camera square-on while its row is centred; the scroll turns it in from one side and out the other
+    const targetY = -motion.scroll.current * 0.55 + x * 0.25;
     const targetX = 0.05 + y * 0.12;
     g.rotation.y += (targetY - g.rotation.y) * k;
     g.rotation.x += (targetX - g.rotation.x) * k;
