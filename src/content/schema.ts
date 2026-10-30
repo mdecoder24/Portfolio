@@ -26,7 +26,8 @@ export const CaseStudy = z.object({
   media: z.object({
     src: z.string(),
     device: z.enum(['laptop', 'phone']).default('laptop'), // the 3D mockup the screenshot is shown in
-    screen: z.string().optional(), // portrait screenshot for a phone mockup; falls back to src
+    // Portrait screenshot: the phone mockup's screen, or a phone shown beside the laptop. A phone falls back to src
+    screen: z.string().optional(),
     alt: z.string().min(10),
     video: z.string().optional(),
     poster: z.string().optional(),

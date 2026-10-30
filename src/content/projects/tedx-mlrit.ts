@@ -15,8 +15,9 @@ export const tedxMlrit = CaseStudy.parse({
   ],
   featured: true,
   media: {
-    src: '/media/tedx-mlrit/cover.svg',
-    alt: 'An event website with a large title, the speaker line-up, and a register button',
+    src: '/media/tedx-mlrit/screen.jpg',
+    screen: '/media/tedx-mlrit/phone.jpg',
+    alt: 'The TEDx MLRIT home page: the line "The future is merely the past, echoed forward" over a dark auditorium, with a red ticket button',
   },
   body: {
     problem:

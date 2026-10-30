@@ -15,8 +15,9 @@ export const signLanguageRecognition = CaseStudy.parse({
   ],
   featured: true,
   media: {
-    src: '/media/sign-language-recognition/cover.svg',
-    alt: 'A webcam view with landmarks traced over a raised hand, and the detected sign beside it',
+    src: '/media/sign-language-recognition/screen.jpg',
+    screen: '/media/sign-language-recognition/phone.jpg',
+    alt: 'The SLR home page: a gradient headline about learning sign language beside a glowing blue scan of a raised hand',
   },
   body: {
     problem:

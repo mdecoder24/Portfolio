@@ -26,6 +26,8 @@ export function DeviceStage({ study, priority = false }: { study: CaseStudy; pri
   useUi((s) => s.motionPref); // re-render when the visitor changes motion, so `still` follows it
   const still = typeof window !== 'undefined' && prefersReducedMotion();
   const on = near && tier > 0;
+  // A laptop project with a phone screenshot shows both devices, flat and in 3D
+  const pair = study.media.device === 'laptop' ? study.media.screen : undefined;
 
   useEffect(() => {
     const el = host.current;
@@ -76,11 +78,30 @@ export function DeviceStage({ study, priority = false }: { study: CaseStudy; pri
           ready && on && 'opacity-0',
         )}
       />
+      {pair && (
+        <div
+          className={cn(
+            'absolute right-[5%] bottom-[7%] w-[17%] rounded-lg border border-rule-strong bg-paper p-1 shadow-float transition-opacity duration-700',
+            ready && on && 'opacity-0',
+          )}
+        >
+          <Image
+            src={pair}
+            alt=""
+            width={390}
+            height={833}
+            sizes="(min-width: 1024px) 120px, 20vw"
+            loading="eager"
+            className="aspect-[390/833] w-full rounded-md object-cover object-top"
+          />
+        </div>
+      )}
       {on && (
         <div className={cn('absolute inset-0 opacity-0 transition-opacity duration-700', ready && 'opacity-100')}>
           <Device
             kind={study.media.device}
             src={study.media.device === 'phone' ? (study.media.screen ?? study.media.src) : study.media.src}
+            screen={pair}
             motion={{ scroll, pointer }}
             still={still}
             dprCap={DPR[tier] ?? 1.5}

@@ -7,7 +7,8 @@ import { type Group, SRGBColorSpace } from 'three';
 
 // A project's screenshot on a 3D device: a phone or a laptop built from rounded solids, lit by a procedural studio
 // (no HDR download) with a soft contact shadow. The laptop lid opens once when it first appears; the device turns
-// with the row's scroll position and leans towards the pointer.
+// with the row's scroll position and leans towards the pointer. A laptop with a phone screenshot gets the phone too,
+// standing in front of it on the right, so the site shows at both sizes.
 
 export type DeviceKind = 'phone' | 'laptop';
 type Motion = { scroll: { current: number }; pointer: { current: { x: number; y: number } } };
@@ -16,6 +17,8 @@ const BODY = { color: '#1b1c20', metalness: 0.75, roughness: 0.3, clearcoat: 0.6
 const ALUMINIUM = { color: '#a7abb3', metalness: 0.9, roughness: 0.32 } as const;
 const OPEN = -0.22; // lid angle when open, radians back from upright
 const CLOSED = Math.PI / 2 - 0.02;
+// The pair: the laptop moves left to make room, and a smaller phone stands on the desk line, turned towards the middle
+const PAIR = { laptopX: -0.55, phone: { x: 2.05, y: 0.035, z: 0.9, turn: -0.35, scale: 0.6 } } as const;
 
 function Screen({ src, width, height, z }: { src: string; width: number; height: number; z: number }) {
   const map = useTexture(src);
@@ -92,7 +95,19 @@ function Laptop({ src, still }: { src: string; still: boolean }) {
   );
 }
 
-function Rig({ kind, src, motion, still }: { kind: DeviceKind; src: string; motion: Motion; still: boolean }) {
+function Rig({
+  kind,
+  src,
+  screen,
+  motion,
+  still,
+}: {
+  kind: DeviceKind;
+  src: string;
+  screen?: string;
+  motion: Motion;
+  still: boolean;
+}) {
   const group = useRef<Group>(null);
   const time = useRef(0);
   const base = kind === 'phone' ? 0.35 : -0.35;
@@ -114,7 +129,24 @@ function Rig({ kind, src, motion, still }: { kind: DeviceKind; src: string; moti
   });
   return (
     <group ref={group}>
-      {kind === 'phone' ? <Phone src={src} /> : <Laptop src={src} still={still} />}
+      {kind === 'phone' ? (
+        <Phone src={src} />
+      ) : screen ? (
+        <>
+          <group position={[PAIR.laptopX, 0, 0]}>
+            <Laptop src={src} still={still} />
+          </group>
+          <group
+            position={[PAIR.phone.x, PAIR.phone.y, PAIR.phone.z]}
+            rotation={[0, PAIR.phone.turn, 0]}
+            scale={PAIR.phone.scale}
+          >
+            <Phone src={screen} />
+          </group>
+        </>
+      ) : (
+        <Laptop src={src} still={still} />
+      )}
     </group>
   );
 }
@@ -122,6 +154,7 @@ function Rig({ kind, src, motion, still }: { kind: DeviceKind; src: string; moti
 export default function Device({
   kind,
   src,
+  screen,
   motion,
   still,
   dprCap,
@@ -129,6 +162,7 @@ export default function Device({
 }: {
   kind: DeviceKind;
   src: string;
+  screen?: string;
   motion: Motion;
   still: boolean;
   dprCap: number;
@@ -139,7 +173,12 @@ export default function Device({
       aria-hidden="true"
       dpr={[1, dprCap]}
       frameloop={still ? 'demand' : 'always'}
-      camera={kind === 'phone' ? { fov: 26, position: [0, 0.1, 8.6] } : { fov: 28, position: [0, 1.5, 8.2] }}
+      // The pair is wider than a laptop alone, so its camera stands further back
+      camera={
+        kind === 'phone'
+          ? { fov: 26, position: [0, 0.1, 8.6] }
+          : { fov: 28, position: [0, 1.5, screen ? 9.4 : 8.2] }
+      }
       gl={{ alpha: true, antialias: true, powerPreference: 'high-performance' }}
       onCreated={({ camera }) => {
         camera.lookAt(0, kind === 'phone' ? 0 : -0.1, 0);
@@ -154,7 +193,7 @@ export default function Device({
         <Lightformer form="ring" intensity={1.6} position={[5, 2, -3]} scale={3} target={[0, 0, 0]} />
       </Environment>
       <Suspense fallback={null}>
-        <Rig kind={kind} src={src} motion={motion} still={still} />
+        <Rig kind={kind} src={src} screen={screen} motion={motion} still={still} />
       </Suspense>
       <ContactShadows
         position={[0, kind === 'phone' ? -1.95 : -1.0, 0]}
