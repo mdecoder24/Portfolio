@@ -496,3 +496,25 @@ form:has(option[value='freelance']:checked) .freelance-fields {
       0 0 20px color-mix(in oklab, var(--color-accent) 35%, transparent);
   }
 }
+
+/*
+ * The project card's studio: a lit backdrop with a faint blueprint grid that fades towards the edges, a warm key light
+ * behind the devices from the upper right and a cool fill from the left. All from tokens, so it follows the theme
+ */
+.stage-backdrop {
+  background:
+    radial-gradient(60% 55% at 72% 28%, color-mix(in oklab, var(--color-accent) 16%, transparent), transparent 70%),
+    radial-gradient(50% 60% at 12% 70%, color-mix(in oklab, var(--color-ink) 6%, transparent), transparent 70%),
+    radial-gradient(ellipse at 50% 20%, var(--color-plate-hover), var(--color-paper) 70%);
+}
+.stage-backdrop::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(var(--color-rule) 1px, transparent 1px) 0 0 / 2rem 2rem,
+    linear-gradient(90deg, var(--color-rule) 1px, transparent 1px) 0 0 / 2rem 2rem;
+  mask-image: radial-gradient(ellipse 70% 65% at 50% 45%, black, transparent 80%);
+  opacity: 0.55;
+  pointer-events: none;
+}
