@@ -4,11 +4,30 @@ import { Section } from '@/components/ui/SectionHeader';
 import type { Experience as ExperienceEntry } from '@/content/schema';
 import { formatMonth, formatRange } from '@/lib/format';
 
+function Dates({ e }: { e: ExperienceEntry }) {
+  if (!e.start) return null;
+  // A current role ends in the word itself, in its status colour, rather than "present" plus a tag
+  if (e.current)
+    return (
+      <>
+        {formatMonth(e.start)} – <span className="text-ok">Current</span>
+      </>
+    );
+  return formatRange(e.start, e.end);
+}
+
 /** Roles as full-width rows on the section grid; each opens to its outcomes. Opening works without JavaScript. */
-export function Experience({ entries }: { entries: ExperienceEntry[] }) {
+function Roles({ title, entries }: { title: string; entries: ExperienceEntry[] }) {
+  if (entries.length === 0) return null;
   return (
-    <Section id="experience" index={2} label="Experience" title="Where I've worked">
-      <ul className="border-t border-rule">
+    <div className="grid gap-2">
+      <h3 className="reveal flex items-baseline justify-between gap-4 border-b border-rule pb-4 type-h4 text-ink">
+        {title}
+        <span className="type-code text-ink-2">
+          {entries.length} {entries.length === 1 ? 'role' : 'roles'}
+        </span>
+      </h3>
+      <ul>
         {entries.map((e, i) => (
           <li key={e.id} className="reveal border-b border-rule" style={{ '--reveal-delay': `${i * 80}ms` } as React.CSSProperties}>
             <details className="group">
@@ -18,14 +37,7 @@ export function Experience({ entries }: { entries: ExperienceEntry[] }) {
                   <span className="role-sweep" />
                 </span>
                 <span className="type-code text-ink-2 max-lg:col-span-2 lg:col-span-3">
-                  {/* A current role ends in the word itself, in its status colour, rather than "present" plus a tag */}
-                  {e.current ? (
-                    <>
-                      {formatMonth(e.start)} – <span className="text-ok">Current</span>
-                    </>
-                  ) : (
-                    formatRange(e.start, e.end)
-                  )}
+                  <Dates e={e} />
                 </span>
                 <span className="grid gap-1 lg:col-span-8">
                   <span className="type-h3 text-ink">{e.role}</span>
@@ -49,13 +61,24 @@ export function Experience({ entries }: { entries: ExperienceEntry[] }) {
                       </li>
                     ))}
                   </ul>
-                  <p className="type-code text-ink-2">{e.stack.join(', ')}</p>
+                  {e.stack.length > 0 && <p className="type-code text-ink-2">{e.stack.join(', ')}</p>}
                 </div>
               </div>
             </details>
           </li>
         ))}
       </ul>
+    </div>
+  );
+}
+
+export function Experience({ entries }: { entries: ExperienceEntry[] }) {
+  return (
+    <Section id="experience" index={2} label="Experience" title="Where I've worked">
+      <div className="grid gap-16 lg:gap-20">
+        <Roles title="Professional experience" entries={entries.filter((e) => e.kind === 'professional')} />
+        <Roles title="Volunteer experience" entries={entries.filter((e) => e.kind === 'volunteer')} />
+      </div>
     </Section>
   );
 }

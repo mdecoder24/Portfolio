@@ -32,4 +32,29 @@ export const experience = Experience.array().parse([
     ],
     stack: ['Next.js', 'React 19', 'TypeScript', 'Supabase', 'Vercel'],
   },
+  // Volunteer roles, from the résumé's achievements; no dates until Kushwant gives them
+  {
+    id: 'gdg-on-campus',
+    kind: 'volunteer',
+    role: 'Lead',
+    org: 'Google Developer Groups on Campus, MLRIT',
+    points: ['Led a team of 35', 'A community of 600+ members'],
+  },
+  {
+    id: 'gdg-hyderabad',
+    kind: 'volunteer',
+    role: 'Volunteer',
+    org: 'GDG Hyderabad',
+    points: [
+      'Volunteered at 2 DevFest Hyderabad events',
+      'On the organising team of Agentathon, a Guinness World Record hackathon',
+    ],
+  },
+  {
+    id: 'club-literati',
+    kind: 'volunteer',
+    role: 'Technical Head',
+    org: 'Club Literati, MLRIT',
+    points: ['Built 4 event websites for the club'],
+  },
 ]);

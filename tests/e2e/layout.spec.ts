@@ -210,3 +210,12 @@ test('each project card opens a short README from View details, and Escape close
   await panel.getByRole('button', { name: 'Close' }).click();
   await expect(panel).toBeHidden();
 });
+
+test('experience splits into professional and volunteer roles', async ({ page }) => {
+  await page.goto('/?3d=off#experience');
+  const section = page.locator('#experience');
+  await expect(section.getByRole('heading', { level: 3 })).toHaveText([/^Professional experience/, /^Volunteer experience/]);
+  const volunteer = section.locator('div:has(> h3:text-matches("^Volunteer experience"))');
+  await expect(volunteer.locator('summary')).toHaveCount(3);
+  await expect(volunteer.locator('summary').first()).toContainText('Google Developer Groups on Campus');
+});

@@ -143,13 +143,16 @@ export const Profile = z.object({
 
 export const Experience = z.object({
   id: slug,
+  // Paid roles and volunteer roles sit under their own headings in the section
+  kind: z.enum(['professional', 'volunteer']).default('professional'),
   role: z.string(),
   org: z.string(),
   location: z.string().optional(),
-  start: month,
+  // Optional for volunteer roles whose dates aren't known yet; the row then shows no dates rather than guess them
+  start: month.optional(),
   end: month.optional(),
-  points: z.array(z.string()).min(2).max(5),
-  stack: z.array(z.string()).max(5),
+  points: z.array(z.string()).min(1).max(5),
+  stack: z.array(z.string()).max(5).default([]),
   current: z.boolean().default(false),
   placeholder: z.boolean().default(false),
 });
