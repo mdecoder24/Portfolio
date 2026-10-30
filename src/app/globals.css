@@ -442,7 +442,7 @@ form:has(option[value='freelance']:checked) .freelance-fields {
 
 /*
  * Experience rows: light that draws the eye to the dropdowns. Once a closed row shows, a band of accent light sweeps
- * across it and its toggle glows a few times, then rests; hovering pools light by the toggle. The sweep and glow sit
+ * across it and its toggle glows until the row is opened; hovering pools light by the toggle. The sweep and glow sit
  * behind data-reveal, so they never run without JavaScript or under reduced motion; the hover light only fades
  */
 .role-sweep {
@@ -474,7 +474,8 @@ form:has(option[value='freelance']:checked) .freelance-fields {
   }
 }
 :root[data-reveal] .reveal[data-shown] > details:not([open]) .role-toggle {
-  animation: role-glow 1800ms ease-in-out calc(var(--reveal-delay, 0ms) + 1200ms) 3;
+  /* Keeps pulsing while the row is closed, so the toggle always reads as the way in; opening the row stops it */
+  animation: role-glow 1800ms ease-in-out calc(var(--reveal-delay, 0ms) + 1200ms) infinite;
 }
 @keyframes role-sweep {
   15%,

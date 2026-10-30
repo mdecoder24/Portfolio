@@ -1,0 +1,14 @@
+import { chromium } from '@playwright/test';
+const b = await chromium.launch();
+const p = await b.newPage({ viewport: { width: 1440, height: 900 } });
+await p.goto('http://localhost:3000/?3d=off#experience', { waitUntil: 'networkidle' });
+await p.waitForTimeout(9000);
+const glow = () => p.evaluate(() => document.getAnimations().filter(a => a.animationName === 'role-glow').map(a => a.playState));
+console.log('after 9s:', await glow());
+await p.locator('#experience summary').first().click();
+await p.waitForTimeout(300);
+console.log('after opening first row:', await glow());
+const r = await (await b.newContext({ reducedMotion: 'reduce' })).newPage();
+await r.goto('http://localhost:3000/?3d=off#experience', { waitUntil: 'networkidle' }); await r.waitForTimeout(3000);
+console.log('reduced motion:', await r.evaluate(() => document.getAnimations().filter(a => a.animationName === 'role-glow').length));
+await b.close();
