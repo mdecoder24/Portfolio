@@ -469,3 +469,55 @@ form:has(option[value='freelance']:checked) .freelance-fields {
       0 0 20px color-mix(in oklab, var(--color-accent) 35%, transparent);
   }
 }
+
+/* Stack teardown guide lines: dashes from the first plate's centre to the last, drawn in from the top after it opens */
+.teardown {
+  pointer-events: auto;
+}
+.teardown .axis {
+  position: absolute;
+  top: calc(100% / 12);
+  bottom: calc(100% / 12);
+  width: 1px;
+  translate: -0.5px 0;
+  background: repeating-linear-gradient(to bottom, var(--color-rule-strong) 0 4px, transparent 4px 9px);
+  transform-origin: top;
+}
+:root[data-reveal] .teardown .axis {
+  scale: 1 0;
+  transition: scale 900ms var(--ease-out-quint) 700ms;
+}
+:root[data-reveal] .teardown[data-shown] .axis {
+  scale: 1 1;
+}
+
+/* Pointing at a layer lifts its plate out of the stack in the accent and lets the others fall back */
+.teardown .plate {
+  transition:
+    translate 250ms var(--ease-out-quint),
+    border-color 200ms ease,
+    box-shadow 200ms ease,
+    opacity 200ms ease;
+}
+.teardown .layer-label {
+  transition: color 200ms ease;
+}
+@media (hover: hover) and (pointer: fine) {
+  .teardown .layer:hover .plate {
+    border-color: var(--color-accent);
+    box-shadow:
+      var(--shadow-float),
+      0 0 0 1px var(--color-accent),
+      0 0 32px color-mix(in oklab, var(--color-accent) 35%, transparent);
+  }
+  /* The lift is movement, so it waits for data-reveal: never under reduced motion */
+  :root[data-reveal] .teardown .layer:hover .plate {
+    translate: 0 -0.75rem;
+  }
+  .teardown:has(.layer:hover) .layer:not(:hover) .plate {
+    opacity: 0.45;
+  }
+  .teardown .layer:hover .layer-label {
+    color: var(--color-ink);
+  }
+}

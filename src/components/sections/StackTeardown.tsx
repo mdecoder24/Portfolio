@@ -13,16 +13,22 @@ const LAYERS: { group: Skill['group']; label: string }[] = [
   { group: 'cloud', label: 'Cloud and DevOps' },
 ];
 
+// Plate side as a share of the rail. Tilted, its diagonal is 1.41 times the side, so 0.6 leaves a margin each side
+const PLATE = 0.6;
+// The guide lines run through the plates' side corners and centre, half a diagonal either side of the middle
+const REACH = PLATE * Math.SQRT1_2 * 100;
+const AXES = [50 - REACH, 50, 50 + REACH];
+
 function Logo({ name }: { name: string }) {
   const d = BRAND_PATHS[name];
   if (d)
     return (
-      <svg viewBox="0 0 24 24" className="size-7" fill="currentColor">
+      <svg viewBox="0 0 24 24" className="size-6" fill="currentColor">
         <path d={d} />
       </svg>
     );
   const Glyph = IDEA_GLYPHS[name];
-  return Glyph ? <Glyph className="size-7" strokeWidth={1.75} /> : null;
+  return Glyph ? <Glyph className="size-6" strokeWidth={1.75} /> : null;
 }
 
 /**
@@ -32,7 +38,11 @@ function Logo({ name }: { name: string }) {
 export function StackTeardown({ skills, className }: { skills: Skill[]; className?: string }) {
   return (
     // Six equal rows share whatever height the rail gives, so the exploded stack runs the length of the section
-    <div aria-hidden="true" className={cn('teardown reveal-late grid grid-rows-6', className)}>
+    <div aria-hidden="true" className={cn('teardown reveal-late relative grid grid-rows-6', className)}>
+      {/* Guide lines, as in an exploded drawing: they show in the gaps between plates and draw in once it opens */}
+      {AXES.map((x) => (
+        <span key={x} className="axis" style={{ left: `${x}%` }} />
+      ))}
       {LAYERS.map(({ group, label }, i) => (
         <div
           key={group}
@@ -40,9 +50,12 @@ export function StackTeardown({ skills, className }: { skills: Skill[]; classNam
           // Each layer knows how far it sits below the top one, so the closed stack can gather there
           style={{ '--c': -i, zIndex: LAYERS.length - i } as CSSProperties}
         >
-          <p className="layer-label absolute top-0 left-0 type-code text-ink-2">{label}</p>
-          {/* About 70% of the rail: the diagonal of a square is 1.41 times its side, so the tilted plate just fits */}
-          <div className="plate grid aspect-square w-7/10 grid-cols-3 place-items-center rounded-sm border border-rule-strong bg-plate p-3 text-ink shadow-float">
+          {/* The paper behind the name hides the guide line running past it */}
+          <p className="layer-label absolute top-0 left-0 bg-paper pr-2 type-code text-ink-2">{label}</p>
+          <div
+            className="plate grid aspect-square grid-cols-3 place-items-center rounded-sm border border-rule-strong bg-plate p-3 text-ink shadow-float"
+            style={{ width: `${PLATE * 100}%` }}
+          >
             {skills
               .filter((s) => s.group === group)
               .map((s) => (
