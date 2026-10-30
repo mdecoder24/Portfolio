@@ -50,9 +50,12 @@ export function Contact({ index, config, profile }: { index: number; config: Con
       </div>
       <div className="container-kit grid gap-12 py-(--section-pad) sm:gap-16">
         <div className="grid gap-12 lg:grid-cols-12 lg:gap-8">
-          <p className="reveal flex items-baseline gap-3 type-code text-ink-2 lg:col-span-3 lg:pt-4">
-            <span className="text-ink">{String(index).padStart(2, '0')}</span>
-            <span aria-hidden="true" className="h-px w-6 translate-y-[-0.3em] bg-rule-strong" />
+          {/* Matches the section name in SectionHeader: heading-sized, in the accent, level with the title */}
+          <p className="reveal flex items-baseline gap-3 type-h4 text-ink lg:col-span-3">
+            <span data-section-number className="font-mono text-accent tabular-nums">
+              {String(index).padStart(2, '0')}
+            </span>
+            <span aria-hidden="true" className="h-px w-6 translate-y-[-0.3em] bg-accent" />
             Contact
           </p>
           <div className="grid content-start gap-7 lg:col-span-9">

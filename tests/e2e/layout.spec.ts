@@ -61,7 +61,7 @@ test('section numbers run in reading order', async ({ page }) => {
   await page.goto('/?3d=off');
   const numbers = await page
     .locator('main section[id]:not(#hero)')
-    .evaluateAll((sections) => sections.map((s) => s.querySelector('.type-code > .text-ink')?.textContent));
+    .evaluateAll((sections) => sections.map((s) => s.querySelector('[data-section-number]')?.textContent?.trim()));
   expect(numbers).toEqual(['01', '02', '03', '04', '05']);
 });
 

@@ -43,7 +43,7 @@ export function Section({
         <header className="grid gap-5 lg:grid-cols-12 lg:gap-8">
           {/* The section name is a heading-sized marker in the accent, level with the title, so it reads at a glance */}
           <p className="reveal flex items-baseline gap-3 type-h4 text-ink lg:col-span-3">
-            <span className="font-mono text-accent tabular-nums">{String(index).padStart(2, '0')}</span>
+            <span data-section-number className="font-mono text-accent tabular-nums">{String(index).padStart(2, '0')}</span>
             <span aria-hidden="true" className="h-px w-6 translate-y-[-0.3em] bg-accent" />
             {label}
           </p>
