@@ -57,7 +57,7 @@ export function Freelance({
         <div className="reveal grid justify-items-center gap-4 lg:sticky lg:top-32 lg:col-span-3 lg:row-start-1 lg:self-start lg:justify-items-start">
           <TravelGlobe />
           <p aria-hidden="true" className="type-code text-ink-2">
-            Clients in 4 countries
+            Clients in 5 countries
           </p>
         </div>
         <div className="grid content-start gap-10 lg:col-span-9 lg:col-start-4 lg:row-start-1">
@@ -115,7 +115,7 @@ export function Freelance({
                             key={t}
                             className="stamp rounded-xs border-[1.5px] border-accent px-1.5 py-0.5 text-center type-code whitespace-nowrap text-accent"
                             // A slightly different angle per stamp, as if pressed by hand
-                            style={{ '--s': j, '--r': `${[-8, 5, -3, 7][j % 4]}deg` } as CSSProperties}
+                            style={{ '--s': j, '--r': `${[-8, 5, -3, 7, -5][j % 5]}deg` } as CSSProperties}
                           >
                             {t}
                           </span>

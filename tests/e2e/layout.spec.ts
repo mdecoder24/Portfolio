@@ -180,7 +180,7 @@ test('a freelance section sits between the projects and education, and the nav l
   await expect(page.locator('#freelance').getByText(/shipped 14\+ projects/)).toBeVisible();
   // The numbers sit on their own cards, each named for screen readers by its label
   await expect(page.locator('#freelance').getByRole('listitem')).toHaveCount(3);
-  await expect(page.locator('#freelance').getByRole('listitem').nth(2)).toContainText('India, the US, Spain and the UK');
+  await expect(page.locator('#freelance').getByRole('listitem').nth(2)).toContainText('India, USA, UAE, Spain and UK');
 });
 
 test('certifications follow education, each linking to its certificate', async ({ page }) => {
@@ -218,8 +218,8 @@ test('experience splits into professional and volunteer roles', async ({ page })
   const section = page.locator('#experience');
   await expect(section.getByRole('heading', { level: 3 })).toHaveText([/^Professional experience/, /^Volunteer experience/]);
   const volunteer = section.locator('div:has(> h3:text-matches("^Volunteer experience"))');
-  await expect(volunteer.locator('> ul > li')).toHaveCount(4);
-  await expect(volunteer.locator('> ul > li').first()).toContainText('GDG Hyderabad');
+  await expect(volunteer.locator('.career > ul > li')).toHaveCount(4);
+  await expect(volunteer.locator('.career > ul > li').first()).toContainText('GDG Hyderabad');
   // Each row carries the organisation's logo, or its initials when there is none
   const logos = section.locator('img[src*="logos"]');
   expect(await logos.count()).toBeGreaterThan(0);

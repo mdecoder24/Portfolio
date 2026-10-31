@@ -88,7 +88,7 @@ export const Freelance = z.object({
         label: z.string(),
         detail: z.string().optional(),
         // Short words inked on the card's stub; decoration, since the label and detail already say them
-        stamps: z.array(z.string().max(12)).max(4).default([]),
+        stamps: z.array(z.string().max(12)).max(6).default([]),
       }),
     )
     .max(4)

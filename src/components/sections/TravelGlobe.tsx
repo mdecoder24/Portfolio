@@ -4,6 +4,7 @@ import type { CSSProperties } from 'react';
 const PINS = [
   { code: 'IN', lat: 17.4, lon: 78.5 },
   { code: 'US', lat: 38.9, lon: -77 },
+  { code: 'AE', lat: 24.5, lon: 54.4 },
   { code: 'ES', lat: 40.4, lon: -3.7 },
   { code: 'UK', lat: 51.5, lon: -0.1 },
 ];
@@ -30,9 +31,10 @@ export function TravelGlobe({ className }: { className?: string }) {
                 <span
                   key={`p${lat}`}
                   className="globe-ring"
+                  // Lifted to its latitude, laid flat, then shrunk to that latitude's width; scale goes last so it
+                  // doesn't shrink the lift as well
                   style={{
-                    scale: `${Math.cos(rad).toFixed(3)}`,
-                    transform: `translateY(calc(var(--globe-r) * ${(-Math.sin(rad)).toFixed(3)})) rotateX(90deg)`,
+                    transform: `translateY(calc(var(--globe-r) * ${(-Math.sin(rad)).toFixed(3)})) rotateX(90deg) scale(${Math.cos(rad).toFixed(3)})`,
                   }}
                 />
               );

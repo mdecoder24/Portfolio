@@ -561,7 +561,7 @@ form:has(option[value='freelance']:checked) .freelance-fields {
 }
 
 /*
- * The freelance cards as boarding passes, since the clients span 4 countries. Scrolled to, each one prints out from the
+ * The freelance cards as boarding passes, since the clients span 5 countries. Scrolled to, each one prints out from the
  * top like a ticket from a slot, then its stamps land on the stub one by one. With a mouse, the stub peels back a
  * little at the perforation. All of it waits for RevealObserver, so without JavaScript or under reduced motion the
  * tickets are simply there, stamped.
@@ -719,4 +719,179 @@ form:has(option[value='freelance']:checked) .freelance-fields {
     opacity: 0.85;
     scale: 1;
   }
+}
+
+/*
+ * The freelance globe: CSS 3D rings that turn slowly, a pin per client country that hides as it turns away, and a
+ * plane on a tilted orbit. Only transform animates, so it stays on the compositor.
+ */
+.globe {
+  --globe-r: 4.5rem;
+  position: relative;
+  width: calc(var(--globe-r) * 2);
+  height: calc(var(--globe-r) * 2);
+  perspective: 900px;
+}
+@media (width >= 64rem) {
+  .globe {
+    --globe-r: 5.5rem;
+  }
+}
+.globe-tilt,
+.globe-spin,
+.globe-ring,
+.globe-orbit {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+}
+.globe-tilt {
+  transform: rotateX(-18deg) rotateZ(8deg);
+}
+.globe-spin {
+  animation: globe-spin 28s linear infinite;
+}
+.globe-ring {
+  border: 1px solid var(--color-rule-strong);
+  border-radius: 999px;
+}
+.globe-pin {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  translate: -4px -50%;
+  backface-visibility: hidden;
+}
+.globe-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--color-accent);
+  box-shadow: 0 0 0 3px var(--color-accent-soft);
+}
+.globe-orbit {
+  inset: -18px;
+  border: 1px dashed var(--color-rule);
+  border-radius: 999px;
+  /* Its resting tilt, for when the animation is off */
+  transform: rotateX(70deg);
+  animation: globe-orbit 9s linear infinite;
+}
+.globe-plane {
+  position: absolute;
+  top: 50%;
+  left: -5px;
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  background: var(--color-ink);
+  rotate: 45deg;
+  translate: 0 -50%;
+}
+@keyframes globe-spin {
+  to {
+    transform: rotateY(-360deg);
+  }
+}
+@keyframes globe-orbit {
+  from {
+    transform: rotateX(70deg) rotateZ(0deg);
+  }
+  to {
+    transform: rotateX(70deg) rotateZ(360deg);
+  }
+}
+
+/*
+ * Experience as a transit line. Where the browser supports scroll-driven animation, the rail fills down to the middle
+ * of the screen as the reader scrolls, and each role's station lights as it reaches that line; elsewhere, and under
+ * reduced motion, the line is drawn whole with every station lit. A current role's station pulses.
+ */
+.career {
+  --rail-x: 11px;
+}
+.career-rail,
+.career-fill {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--rail-x);
+  width: 2px;
+  translate: -50% 0;
+}
+.career-rail {
+  background: var(--color-rule);
+}
+.career-fill {
+  background: var(--color-accent);
+  transform-origin: 50% 0;
+}
+.career-stop {
+  position: absolute;
+  z-index: 1;
+  top: 2.6rem;
+  left: calc(var(--rail-x) - 2rem);
+  width: 12px;
+  height: 12px;
+  border: 2px solid var(--color-accent);
+  border-radius: 999px;
+  background: var(--color-accent);
+  translate: -50% -50%;
+  box-shadow: 0 0 0 4px var(--color-accent-soft);
+}
+.career-stop[data-current]::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border: 2px solid var(--color-accent);
+  border-radius: inherit;
+  animation: stop-pulse 2s var(--ease-out-quint) infinite;
+}
+@keyframes stop-pulse {
+  from {
+    opacity: 0.8;
+    scale: 1;
+  }
+  to {
+    opacity: 0;
+    scale: 2.6;
+  }
+}
+@supports (animation-timeline: view()) {
+  /* The timeline's view is shrunk to a line across the middle of the screen, so progress is "how much has passed it" */
+  .career-fill {
+    animation: rail-fill linear both;
+    animation-timeline: view(block 50% 50%);
+  }
+  .career-stop {
+    animation: stop-lit linear both;
+    animation-timeline: view(block 50% 50%);
+  }
+}
+@keyframes rail-fill {
+  from {
+    scale: 1 0;
+  }
+}
+@keyframes stop-lit {
+  from {
+    background: var(--color-paper);
+    border-color: var(--color-rule-strong);
+    box-shadow: 0 0 0 0 transparent;
+  }
+}
+
+/* Reduced motion: the globe stands still, and the career line is drawn whole */
+@media (prefers-reduced-motion: reduce) {
+  :root:not([data-motion='full']) :is(.globe-spin, .globe-orbit, .career-fill, .career-stop),
+  :root:not([data-motion='full']) .career-stop::after {
+    animation: none;
+  }
+}
+:root[data-motion='reduced'] :is(.globe-spin, .globe-orbit, .career-fill, .career-stop),
+:root[data-motion='reduced'] .career-stop::after {
+  animation: none;
 }
