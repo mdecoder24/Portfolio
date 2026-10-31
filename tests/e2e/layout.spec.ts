@@ -303,6 +303,21 @@ test('View more projects opens a panel of the other projects, with the same link
   await expect(panel).toBeHidden();
 });
 
+test('the more-projects invitation traces its border on reveal, and stays still under reduced motion', async ({ page }) => {
+  const beam = (el: Element) => getComputedStyle(el, '::before').animationName;
+  const card = page.locator('#work .invite');
+  await page.goto('/?3d=off#work');
+  await card.scrollIntoViewIfNeeded();
+  await expect.poll(() => card.evaluate(beam)).toBe('beam-trace');
+  await expect(card.getByRole('button', { name: 'View more projects' })).toBeVisible();
+
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/?3d=off#work');
+  await card.scrollIntoViewIfNeeded();
+  await expect(card.getByRole('button', { name: 'View more projects' })).toBeVisible();
+  expect(await card.evaluate(beam)).toBe('none');
+});
+
 test('education reads as a path, newest first, with each score written out beside its ring', async ({ page }) => {
   await page.goto('/?3d=off#education');
   const stages = page.locator('#education ol > li');

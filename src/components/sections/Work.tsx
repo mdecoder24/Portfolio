@@ -242,13 +242,12 @@ function MoreProjects({ studies, offset }: { studies: CaseStudy[]; offset: numbe
           <p className="invite-item type-h3 text-ink [--i:0]">Want to see more projects I&rsquo;ve worked on?</p>
           <p className="invite-item type-body text-ink-2 [--i:1]">A few more builds, each with its own write-up.</p>
         </div>
-        <button
-          type="button"
-          popoverTarget="more-projects"
-          className={buttonClasses({ variant: 'primary', className: 'invite-item [--i:2]' })}
-        >
-          View more projects
-        </button>
+        {/* The wrapper takes the entrance, so the button keeps its own press transition */}
+        <div className="invite-item [--i:2]">
+          <button type="button" popoverTarget="more-projects" className={buttonClasses({ variant: 'primary' })}>
+            View more projects
+          </button>
+        </div>
       </div>
       <div
         id="more-projects"
