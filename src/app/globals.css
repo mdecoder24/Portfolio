@@ -1037,3 +1037,63 @@ ul:has(> .stack-card) {
 :root[data-motion='reduced'] .edu-rail-fill {
   animation: none;
 }
+
+/*
+ * Certificate cards. A second, inset frame gives them a printed certificate's double border. As a card is first shown
+ * its seal stamps on; with a mouse, the card lifts a little on hover and a sheen crosses it. Under reduced motion the
+ * seal is simply there and the card doesn't move.
+ */
+.cert-card {
+  transition:
+    translate 200ms var(--ease-out-quint),
+    border-color 200ms ease;
+}
+.cert-card::before,
+.cert-card::after {
+  content: '';
+  position: absolute;
+  pointer-events: none;
+}
+.cert-card::before {
+  inset: 6px;
+  border: 1px solid var(--color-rule);
+  border-radius: calc(var(--radius-md) - 6px);
+}
+.cert-card::after {
+  z-index: -1;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 30%,
+    color-mix(in oklab, var(--color-ink) 12%, transparent) 50%,
+    transparent 70%
+  );
+  translate: -100% 0;
+}
+@media (hover: hover) and (pointer: fine) {
+  .cert-card:hover {
+    translate: 0 -3px;
+    border-color: var(--color-rule-strong);
+  }
+  .cert-card:hover::after {
+    translate: 100% 0;
+    transition: translate 900ms var(--ease-out-quint);
+  }
+}
+.cert-seal {
+  rotate: -8deg;
+}
+:root[data-reveal] .reveal .cert-seal {
+  opacity: 0;
+}
+:root[data-reveal] .reveal[data-shown] .cert-seal {
+  animation: stamp-in 420ms cubic-bezier(0.2, 0.9, 0.3, 1.25) calc(var(--reveal-delay, 0ms) + 500ms) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  :root:not([data-motion='full']) .cert-card:hover {
+    translate: none;
+  }
+}
+:root[data-motion='reduced'] .cert-card:hover {
+  translate: none;
+}
