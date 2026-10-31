@@ -154,16 +154,22 @@ test('every role in experience starts closed, and a current role reads Current i
 
 test('project cards link out to GitHub and the live site, and their titles open the case study', async ({ page }) => {
   await page.goto('/?3d=off#work');
-  const card = page.locator('#work article').filter({ hasText: 'TEDx MLRIT website' });
-  await expect(card.getByRole('link', { name: /^GitHub/ })).toHaveAttribute('href', 'https://github.com/mdecoder24/TEDx-MLRIT');
-  await expect(card.getByRole('link', { name: /^Live site/ })).toHaveAttribute('href', 'https://tedxmlrit.vercel.app/');
-  await expect(card.getByRole('link', { name: 'TEDx MLRIT website', exact: true })).toHaveAttribute('href', '/projects/tedx-mlrit');
+  const main = page.locator('#work article:not(#more-projects article)');
+  const card = main.filter({ hasText: 'MLRIT MUN 2025 website' });
+  await expect(card.getByRole('link', { name: /^GitHub/ })).toHaveAttribute('href', 'https://github.com/mdecoder24/mun-website');
+  await expect(card.getByRole('link', { name: /^Live site/ })).toHaveAttribute('href', 'https://mlritmun.vercel.app/');
+  await expect(card.getByRole('link', { name: 'MLRIT MUN 2025 website', exact: true })).toHaveAttribute('href', '/projects/mun-website');
   await expect(page.locator('#work').getByText('Read the case study')).toHaveCount(0);
-  // The MUN site leads the list
-  await expect(page.locator('#work article').first()).toContainText('MLRIT MUN 2025 website');
-  // The main grid holds the featured four; the rest wait in the more-projects panel
-  await expect(page.locator('#work article:not(#more-projects article)')).toHaveCount(4);
-  const sensai = page.locator('#work article').nth(3);
+  // The main grid holds the featured four, Kemplast first and MUN third; the rest wait in the more-projects panel
+  await expect(main).toHaveCount(4);
+  await expect(main.first()).toContainText('Kemplast Process Solutions website');
+  await expect(main.first().getByRole('link', { name: /^Live site/ })).toHaveAttribute('href', 'https://www.kemplast.in/');
+  await expect(main.first().getByRole('link', { name: /^GitHub/ })).toHaveAttribute(
+    'href',
+    'https://github.com/Kemplast-main/v0-kemplast-website-redesign',
+  );
+  await expect(main.nth(2)).toContainText('MLRIT MUN 2025 website');
+  const sensai = main.nth(3);
   await expect(sensai).toContainText('SENSAI, AI career coach');
   await expect(sensai.getByRole('link', { name: /^GitHub/ })).toHaveAttribute('href', 'https://github.com/mdeocder24/sensai');
   await expect(sensai.getByRole('link', { name: /^Live site/ })).toHaveAttribute('href', 'https://ai-career-coach-mu.vercel.app/');
@@ -204,9 +210,9 @@ test('certifications follow education, each linking to its certificate', async (
 
 test('each project card opens a short README from View details, and Escape closes it', async ({ page }) => {
   await page.goto('/?3d=off#work');
-  const cards = page.locator('#work article');
+  const cards = page.locator('#work article:not(#more-projects article)');
   await expect(cards.getByRole('button', { name: /^View details/ })).toHaveCount(4);
-  const open = cards.first().getByRole('button', { name: /^View details.*MLRIT MUN 2025 website/ });
+  const open = cards.getByRole('button', { name: /^View details.*MLRIT MUN 2025 website/ });
   await open.click();
   const panel = page.getByRole('dialog', { name: 'MLRIT MUN 2025 website' });
   await expect(panel).toBeVisible();
@@ -245,10 +251,14 @@ test('experience cards stack as a deck on scroll, and an opened card stops stick
 test('View more projects opens a panel of the other projects, with the same links and README', async ({ page }) => {
   await page.goto('/?3d=off#work');
   const open = page.locator('#work').getByRole('button', { name: /^View more projects/ });
-  await expect(open).toContainText('1');
+  await expect(open).toContainText('2');
   await open.click();
   const panel = page.getByRole('dialog', { name: 'More things I’ve built' });
   await expect(panel).toBeVisible();
+  await expect(panel.locator('article').first()).toContainText('TEDx MLRIT website');
+  const tedx = panel.locator('article').filter({ hasText: 'TEDx MLRIT website' });
+  await expect(tedx.getByRole('link', { name: /^GitHub/ })).toHaveAttribute('href', 'https://github.com/mdecoder24/TEDx-MLRIT');
+  await expect(tedx.getByRole('link', { name: /^Live site/ })).toHaveAttribute('href', 'https://tedxmlrit.vercel.app/');
   const card = panel.locator('article').filter({ hasText: 'Billfold, GST invoice maker' });
   await expect(card.getByRole('link', { name: /^GitHub/ })).toHaveAttribute('href', 'https://github.com/mdecoder24/BillFold');
   await expect(card.getByRole('link', { name: /^Live site/ })).toHaveAttribute('href', 'https://billifold.netlify.app/');
