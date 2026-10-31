@@ -273,7 +273,8 @@ test('View more projects opens a panel of the other projects, with the same link
   await page.goto('/?3d=off#work');
   await expect(page.locator('#work').getByText('Want to see more projects I’ve worked on?')).toBeVisible();
   const open = page.locator('#work').getByRole('button', { name: /^View more projects/ });
-  await expect(open).toContainText('2');
+  await expect(open).toHaveText('View more projects');
+  await expect(page.locator('#work').getByRole('list', { name: 'Also in the panel' })).toHaveCount(0);
   await open.click();
   const panel = page.getByRole('dialog', { name: 'More things I’ve built' });
   await expect(panel).toBeVisible();

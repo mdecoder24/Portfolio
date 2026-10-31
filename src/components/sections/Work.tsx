@@ -237,26 +237,17 @@ function MoreProjects({ studies, offset }: { studies: CaseStudy[]; offset: numbe
   return (
     <div className="reveal flex justify-center">
       {/* An invitation card rather than a bare button, so the hidden projects read as worth a look */}
-      <div className="relative isolate grid w-full max-w-2xl justify-items-center gap-6 overflow-hidden rounded-lg border border-rule bg-paper-veil px-6 py-10 text-center shadow-float backdrop-blur-md sm:px-12 sm:py-12">
-        <span className="rounded-control border border-rule bg-accent-soft px-3 py-1 type-code text-accent">
-          {studies.length} more {studies.length === 1 ? 'project' : 'projects'}
-        </span>
+      <div className="invite relative isolate grid w-full max-w-2xl justify-items-center gap-6 overflow-hidden rounded-lg border border-rule bg-paper-veil px-6 py-10 text-center shadow-float backdrop-blur-md sm:px-12 sm:py-12">
         <div className="grid gap-2">
-          <p className="type-h3 text-ink">Want to see more projects I&rsquo;ve worked on?</p>
-          <p className="type-body text-ink-2">A few more builds, each with its own write-up.</p>
+          <p className="invite-item type-h3 text-ink [--i:0]">Want to see more projects I&rsquo;ve worked on?</p>
+          <p className="invite-item type-body text-ink-2 [--i:1]">A few more builds, each with its own write-up.</p>
         </div>
-        <ul className="flex flex-wrap justify-center gap-2" aria-label="Also in the panel">
-          {studies.map((s) => (
-            <li key={s.slug} className="rounded-control border border-rule px-3 py-1 type-small text-ink-2">
-              {s.title}
-            </li>
-          ))}
-        </ul>
-        <button type="button" popoverTarget="more-projects" className={buttonClasses({ variant: 'primary' })}>
+        <button
+          type="button"
+          popoverTarget="more-projects"
+          className={buttonClasses({ variant: 'primary', className: 'invite-item [--i:2]' })}
+        >
           View more projects
-          <span className="grid min-w-6 place-items-center rounded-control bg-on-cream px-1.5 type-code text-cream">
-            {studies.length}
-          </span>
         </button>
       </div>
       <div
