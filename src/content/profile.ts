@@ -14,7 +14,7 @@ export const profile = Profile.parse({
     { term: 'Based in', detail: 'Hyderabad, India' },
     { term: 'Degree', detail: 'B.Tech CSE (AI & ML), 2026' },
     { term: 'Working as', detail: 'ASE at Knowvation Learnings' },
-    { term: 'Freelance', detail: '4+ projects shipped' },
+    { term: 'Freelance', detail: '14+ projects shipped' },
   ],
   interests: ['LLM apps and RAG', 'Full-stack web', 'Computer vision'],
   now: 'Running the Knowvation Learnings website',

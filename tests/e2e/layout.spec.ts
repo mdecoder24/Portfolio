@@ -86,7 +86,7 @@ test('the nav underline slides to the section in view, and counts land on their 
     })
     .toBeLessThanOrEqual(1);
   await page.evaluate(() => scrollTo(0, 0));
-  await expect(page.locator('#hero dd').last()).toHaveText(/(^|\D)4\+ projects shipped/);
+  await expect(page.locator('#hero dd').last()).toHaveText(/(^|\D)14\+ projects shipped/);
 });
 
 test('the pixel robot patrols the fact strip, and stands still under reduced motion', async ({ page }) => {
@@ -177,7 +177,10 @@ test('a freelance section sits between the projects and education, and the nav l
   await expect(page.locator('footer').getByRole('link', { name: 'Freelance' })).toHaveAttribute('href', /#freelance$/);
   // Only the bio shows, on its card; no client list
   await expect(page.locator('#freelance').getByRole('list', { name: 'Client work' })).toHaveCount(0);
-  await expect(page.locator('#freelance').getByText(/4\+ freelance projects/)).toBeVisible();
+  await expect(page.locator('#freelance').getByText(/shipped 14\+ projects/)).toBeVisible();
+  // The numbers sit on their own cards, each named for screen readers by its label
+  await expect(page.locator('#freelance').getByRole('listitem')).toHaveCount(3);
+  await expect(page.locator('#freelance').getByRole('listitem').nth(2)).toContainText('India, the US, Spain and the UK');
 });
 
 test('certifications follow education, each linking to its certificate', async ({ page }) => {

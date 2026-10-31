@@ -1,6 +1,8 @@
 import { ArrowUpRight } from 'lucide-react';
 import type { CSSProperties } from 'react';
+import { Spotlight } from '@/components/layout/Spotlight';
 import { Badge } from '@/components/ui/Badge';
+import { CountUp } from '@/components/ui/CountUp';
 import { SampleRibbon } from '@/components/ui/SampleRibbon';
 import { Section } from '@/components/ui/SectionHeader';
 import type { Config, Freelance as FreelanceContent } from '@/content/schema';
@@ -29,14 +31,35 @@ export function Freelance({ index, freelance, config }: { index: number; freelan
     >
       <div className="grid gap-12 lg:grid-cols-12 lg:gap-8">
         <div className="grid content-start gap-10 lg:col-span-9 lg:col-start-4">
-          {/* The bio sits on a card like the contact form's; its edge and fill brighten under the pointer */}
-          <div className="reveal grid gap-4 rounded-md border border-rule bg-paper-veil p-6 shadow-float backdrop-blur-md transition-[border-color,background-color] duration-200 ease-out sm:p-8 [@media(hover:hover)_and_(pointer:fine)]:hover:border-rule-strong [@media(hover:hover)_and_(pointer:fine)]:hover:bg-plate-hover">
-            <SampleRibbon placeholder={freelance.placeholder} />
-            {freelance.bio.map((p) => (
-              <p key={p} className="max-w-(--measure) type-lead text-ink-2">
-                {p}
-              </p>
-            ))}
+          {/* The bio and the numbers sit on cards like the contact form's; a glow and a lit edge follow the mouse */}
+          <div className="grid gap-4">
+            <div className="spot-card reveal grid gap-4 rounded-md border border-rule bg-paper-veil p-6 shadow-float backdrop-blur-md sm:p-8">
+              <SampleRibbon placeholder={freelance.placeholder} />
+              {freelance.bio.map((p) => (
+                <p key={p} className="max-w-(--measure) type-lead text-ink-2">
+                  {p}
+                </p>
+              ))}
+            </div>
+            {freelance.stats.length > 0 && (
+              <ul className="grid gap-4 sm:grid-cols-3">
+                {freelance.stats.map((s, i) => (
+                  <li
+                    key={s.label}
+                    className="spot-card reveal grid content-start gap-2 rounded-md border border-rule bg-paper-veil p-6 shadow-float backdrop-blur-md"
+                    // One after another, behind the bio card
+                    style={{ '--reveal-delay': `${120 + i * 80}ms` } as CSSProperties}
+                  >
+                    <span className="type-h2 text-ink">
+                      <CountUp text={s.value} delay={200 + i * 80} />
+                    </span>
+                    <span className="type-ui text-ink">{s.label}</span>
+                    {s.detail && <span className="type-small text-ink-2">{s.detail}</span>}
+                  </li>
+                ))}
+              </ul>
+            )}
+            <Spotlight />
           </div>
 
           {freelance.work.length > 0 && (
