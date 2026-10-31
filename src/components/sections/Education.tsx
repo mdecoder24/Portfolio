@@ -43,7 +43,7 @@ function Score({ score }: { score: NonNullable<EducationItem['score']> }) {
 }
 
 /**
- * Education as a path, oldest first: a line runs through a dot for each stage and draws itself as the section scrolls
+ * Education as a path, newest first: a line runs through a dot for each stage and draws itself as the section scrolls
  * past (see .edu-path in globals.css). Each stage is a card that rises in after the one before, and its score ring
  * fills while the number counts up. Without JavaScript or under reduced motion, everything is simply drawn.
  */

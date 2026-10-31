@@ -262,13 +262,13 @@ test('View more projects opens a panel of the other projects, with the same link
   await expect(panel).toBeHidden();
 });
 
-test('education reads as a path, oldest first, with each score written out beside its ring', async ({ page }) => {
+test('education reads as a path, newest first, with each score written out beside its ring', async ({ page }) => {
   await page.goto('/?3d=off#education');
   const stages = page.locator('#education ol > li');
   await expect(stages).toHaveCount(3);
-  await expect(stages.locator('h3')).toHaveText(['Secondary school, General', 'High school, PCM', 'B.Tech, Computer Science (AI & ML)']);
-  await expect(stages.nth(0)).toContainText('74.5%');
+  await expect(stages.locator('h3')).toHaveText(['B.Tech, Computer Science (AI & ML)', 'High school, PCM', 'Secondary school, CBSE']);
+  await expect(stages.nth(0)).toContainText('7.64');
+  await expect(stages.nth(0)).toContainText('CGPA');
   await expect(stages.nth(1)).toContainText('87.5%');
-  await expect(stages.nth(2)).toContainText('7.64');
-  await expect(stages.nth(2)).toContainText('CGPA');
+  await expect(stages.nth(2)).toContainText('74.5%');
 });
