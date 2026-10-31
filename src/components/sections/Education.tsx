@@ -1,28 +1,26 @@
 import { SampleRibbon } from '@/components/ui/SampleRibbon';
 import { Section } from '@/components/ui/SectionHeader';
-import type { Achievement, Config, EducationItem } from '@/content/schema';
-import { formatMonth } from '@/lib/format';
+import type { Config, EducationItem } from '@/content/schema';
 
 export function Education({
   index,
   education,
-  achievements,
   config,
 }: {
   index: number;
   education: EducationItem[];
-  achievements: Achievement[];
   config: Config;
 }) {
   return (
-    <Section id="education" index={index} label="Education" title="Education and achievements">
+    <Section id="education" index={index} label="Education" title="Education">
       <div className="grid gap-12 lg:grid-cols-12 lg:gap-8">
         <div className="grid content-start gap-8 lg:col-span-9 lg:col-start-4">
           {education.map((e) => (
             <div key={e.degree} className="reveal grid content-start gap-2">
               <SampleRibbon placeholder={e.placeholder} />
               <p className="type-code text-ink-2">
-                <time dateTime={String(e.start)}>{e.start}</time> – <time dateTime={String(e.end)}>{e.end}</time>
+                <time dateTime={String(e.start)}>{e.start}</time> –{' '}
+                <time dateTime={String(e.end)}>{e.end}</time>
               </p>
               <h3 className="type-h3 text-ink">{e.degree}</h3>
               <p className="type-body text-ink-2">
@@ -42,35 +40,6 @@ export function Education({
               )}
             </div>
           ))}
-
-          <ul className="border-t border-rule">
-            {achievements.map((a, i) => (
-              <li
-                key={a.title}
-                className="reveal grid gap-1 border-b border-rule py-5 sm:grid-cols-[7rem_minmax(0,1fr)] sm:items-baseline sm:gap-6"
-                style={{ '--reveal-delay': `${i * 60}ms` } as React.CSSProperties}
-              >
-                {/* An undated entry keeps its empty column so the titles stay aligned */}
-                {a.date ? (
-                  <time dateTime={a.date} className="type-code text-ink-2">
-                    {formatMonth(a.date)}
-                  </time>
-                ) : (
-                  <span aria-hidden="true" className="max-sm:hidden" />
-                )}
-                <span className="type-h4 text-ink">
-                  {a.href ? (
-                    <a href={a.href} className="underline decoration-rule-strong underline-offset-4 hover:decoration-ink">
-                      {a.title}
-                    </a>
-                  ) : (
-                    a.title
-                  )}
-                  {a.issuer && <span className="font-normal text-ink-2">, {a.issuer}</span>}
-                </span>
-              </li>
-            ))}
-          </ul>
         </div>
       </div>
     </Section>

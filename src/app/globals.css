@@ -916,8 +916,13 @@ ul:has(> .stack-card) {
   .stack-card {
     animation: stack-back linear both;
     animation-timeline: var(--next);
-    /* From when the next card is a third of the way up the screen to when it has caught up with this one */
-    animation-range: cover 30vh cover calc(100vh - var(--nav-height) - 3rem);
+    /* From when the next card starts to overlap this one (about a card's height below where it sticks) to when it
+       has caught up and settled just below it */
+    animation-range: cover calc(100vh - var(--nav-height) - 13rem) cover calc(100vh - var(--nav-height) - 2.5rem);
+  }
+  /* The last card has nothing to slide over it; with no timeline, it would otherwise sit in its shrunk state */
+  .stack-card:last-child {
+    animation: none;
   }
 }
 @keyframes stack-back {

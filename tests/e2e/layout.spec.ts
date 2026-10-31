@@ -230,3 +230,13 @@ test('experience splits into professional and volunteer roles', async ({ page })
   expect(await logos.count()).toBeGreaterThan(0);
   for (const img of await logos.all()) expect(await img.evaluate((el: HTMLImageElement) => el.naturalWidth)).toBeGreaterThan(0);
 });
+
+test('experience cards stack as a deck on scroll, and an opened card stops sticking so all of it can be read', async ({
+  page,
+}) => {
+  await page.goto('/?3d=off#experience');
+  const card = page.locator('#experience li[data-role]').nth(1);
+  await expect(card).toHaveCSS('position', 'sticky');
+  await card.locator('summary').click();
+  await expect(card).toHaveCSS('position', 'relative');
+});

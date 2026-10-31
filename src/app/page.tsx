@@ -29,12 +29,7 @@ export default function Home() {
         <Experience entries={content.experience} />
         <Work index={next()} projects={content.projects} />
         <Freelance index={next()} freelance={content.freelance} config={config} />
-        <Education
-          index={next()}
-          education={content.education}
-          achievements={content.achievements}
-          config={config}
-        />
+        <Education index={next()} education={content.education} config={config} />
         <Certifications index={next()} certifications={content.certifications} />
         <Contact index={next()} config={config} profile={profile} />
         <RevealObserver />
