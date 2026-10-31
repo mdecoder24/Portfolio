@@ -34,9 +34,7 @@ function Score({ score }: { score: NonNullable<EducationItem['score']> }) {
       </div>
       <span className="grid gap-0.5">
         <span className="type-ui text-ink">{score.kind === 'cgpa' ? 'CGPA' : 'Percentage'}</span>
-        <span className="type-code text-ink-2">
-          out of {score.outOf}
-        </span>
+        <span className="type-code text-ink-2">out of {score.outOf}</span>
       </span>
     </div>
   );
@@ -71,7 +69,7 @@ export function Education({
                 style={{ '--reveal-delay': `${i * 140}ms` } as CSSProperties}
               >
                 <span aria-hidden="true" className="edu-dot" />
-                <div className="grid h-full content-start gap-5 rounded-md border border-rule bg-paper-veil p-6 shadow-float backdrop-blur-md transition-[border-color] duration-200 hover:border-rule-strong">
+                <div className="flex h-full flex-col gap-5 rounded-md border border-rule bg-paper-veil p-6 shadow-float backdrop-blur-md transition-[border-color] duration-200 hover:border-rule-strong">
                   <SampleRibbon placeholder={e.placeholder} />
                   <p className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 type-code text-ink-2">
                     <span className="text-accent">{e.level}</span>
@@ -88,7 +86,6 @@ export function Education({
                     <h3 className="type-h4 text-ink">{e.degree}</h3>
                     <p className="type-body text-ink-2">{e.institution}</p>
                   </div>
-                  {showScore && e.score && <Score score={e.score} />}
                   {e.coursework.length > 0 && (
                     <p className="max-w-(--measure) type-small text-ink-2">{e.coursework.join(', ')}</p>
                   )}
@@ -99,6 +96,12 @@ export function Education({
                     >
                       {e.finalProject.label}
                     </a>
+                  )}
+                  {/* Pinned to the card's foot, so the scores line up across the row however long the titles run */}
+                  {showScore && e.score && (
+                    <div className="mt-auto border-t border-rule pt-5">
+                      <Score score={e.score} />
+                    </div>
                   )}
                 </div>
               </li>
