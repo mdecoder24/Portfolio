@@ -7,8 +7,8 @@ export const freelance = Freelance.parse({
     'I take each project from the first conversation to launch: working out what the business needs, building it in Next.js and React, and putting it live. Every site I hand over loads fast and works just as well on a phone as on a desktop.',
   ],
   stats: [
-    { value: '3 years', label: 'Freelancing' },
-    { value: '14+', label: 'Projects shipped' },
-    { value: '4', label: 'Countries', detail: 'India, the US, Spain and the UK' },
+    { value: '3', label: 'Years freelancing', stamps: ['Since 2023'] },
+    { value: '14+', label: 'Projects shipped', stamps: ['Shipped'] },
+    { value: '4', label: 'Countries', detail: 'India, USA, Spain and UK', stamps: ['IN', 'US', 'ES', 'UK'] },
   ],
 });

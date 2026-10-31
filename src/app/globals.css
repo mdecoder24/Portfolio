@@ -561,96 +561,83 @@ form:has(option[value='freelance']:checked) .freelance-fields {
 }
 
 /*
- * Cards with a mouse-following light: a soft accent glow inside, and a brighter rim on the edge nearest the pointer.
- * Spotlight.tsx writes --x and --y; until it does, both sit in the centre. Only fine pointers that can hover get it,
- * and it is a change of light, not of place, so reduced motion keeps it.
+ * The freelance cards as boarding passes, since the clients span 4 countries. Scrolled to, each one prints out from the
+ * top like a ticket from a slot, then its stamps land on the stub one by one. With a mouse, the stub peels back a
+ * little at the perforation. All of it waits for RevealObserver, so without JavaScript or under reduced motion the
+ * tickets are simply there, stamped.
  */
-.spot-card {
-  position: relative;
-  isolation: isolate;
-  transition:
-    border-color 200ms ease,
-    transform 500ms var(--ease-out-quint);
+.ticket-stub {
+  transform-origin: 0 0;
+  transition: rotate 400ms var(--ease-out-quint);
 }
-.spot-card::before,
-.spot-card::after {
+/* The two punched holes where the perforation meets the edges */
+.ticket-stub::before,
+.ticket-stub::after {
   content: '';
   position: absolute;
-  border-radius: inherit;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 300ms var(--ease-out-quint);
+  left: -9px;
+  width: 16px;
+  height: 16px;
+  border: 1px solid var(--color-rule);
+  border-radius: 999px;
+  background: var(--color-paper);
 }
-.spot-card::before {
-  inset: 0;
-  z-index: -1;
-  background: radial-gradient(
-    360px circle at var(--x, 50%) var(--y, 50%),
-    color-mix(in oklab, var(--color-accent) 12%, transparent),
-    transparent 70%
-  );
+.ticket-stub::before {
+  top: -9px;
 }
-.spot-card::after {
-  inset: -1px;
-  padding: 1px;
-  background: radial-gradient(
-    220px circle at var(--x, 50%) var(--y, 50%),
-    color-mix(in oklab, var(--color-accent) 70%, transparent),
-    transparent 70%
-  );
-  /* Keeps only the 1px ring between the padding box and the border box */
-  mask:
-    linear-gradient(#000 0 0) content-box exclude,
-    linear-gradient(#000 0 0);
+.ticket-stub::after {
+  bottom: -9px;
+}
+.stamp {
+  rotate: var(--r, -6deg);
 }
 @media (hover: hover) and (pointer: fine) {
-  /* Lifts a little and tips towards the pointer; --tilt is the most it leans, smaller on big cards */
-  .spot-card:hover {
-    border-color: var(--color-rule-strong);
-    transform: perspective(1000px) translateY(-4px) rotateX(calc(var(--py, 0) * var(--tilt, 4deg) * -2))
-      rotateY(calc(var(--px, 0) * var(--tilt, 4deg) * 2));
-  }
-  .spot-card:hover::before,
-  .spot-card:hover::after {
-    opacity: 1;
+  .ticket:hover .ticket-stub {
+    rotate: 3deg;
   }
 }
 
-/*
- * A card's way in when scrolled to: it rises further than a plain reveal, from just below full size and out of a
- * light blur, so it settles into focus. The transform and border keep their own short timing, without the stagger
- * delay, so the hover tilt still answers at once.
- */
-:root[data-reveal] .reveal-card {
-  scale: 0.94;
-  translate: 0 48px;
-  filter: blur(6px);
+:root[data-reveal] .ticket {
+  opacity: 1;
+  translate: 0 -12px;
+  /* Hidden below its top edge; open, the clip reaches past the card so the shadow isn't cut off */
+  clip-path: inset(0 0 100% 0);
   transition:
-    opacity 800ms var(--ease-out-quint),
-    translate 800ms var(--ease-out-quint),
-    scale 800ms var(--ease-out-quint),
-    filter 800ms var(--ease-out-quint),
-    transform 500ms var(--ease-out-quint),
-    border-color 200ms ease;
-  transition-delay:
-    var(--reveal-delay, 0ms),
-    var(--reveal-delay, 0ms),
-    var(--reveal-delay, 0ms),
-    var(--reveal-delay, 0ms),
-    0ms,
-    0ms;
+    clip-path 900ms var(--ease-out-quint),
+    translate 900ms var(--ease-out-quint);
+  transition-delay: var(--reveal-delay, 0ms);
 }
-:root[data-reveal] .reveal-card[data-shown] {
-  scale: 1;
+:root[data-reveal] .ticket[data-shown] {
   translate: 0 0;
-  filter: none;
+  clip-path: inset(-32px -32px -64px -32px);
 }
-/* Reduced motion: no tilt or lift; the glow stays, being light rather than movement */
-@media (prefers-reduced-motion: reduce) {
-  :root:not([data-motion='full']) .spot-card:hover {
-    transform: none;
+:root[data-reveal] .ticket .stamp {
+  opacity: 0;
+}
+/* Each stamp lands after its ticket has printed: pressed in from above, a slight overshoot, then ink settles */
+:root[data-reveal] .ticket[data-shown] .stamp {
+  animation: stamp-in 420ms cubic-bezier(0.2, 0.9, 0.3, 1.25) both;
+  animation-delay: calc(var(--reveal-delay, 0ms) + 750ms + var(--s, 0) * 160ms);
+}
+@keyframes stamp-in {
+  from {
+    opacity: 0;
+    scale: 1.8;
+  }
+  60% {
+    opacity: 1;
+    scale: 0.94;
+  }
+  to {
+    opacity: 1;
+    scale: 1;
   }
 }
-:root[data-motion='reduced'] .spot-card:hover {
-  transform: none;
+@media (prefers-reduced-motion: reduce) {
+  :root:not([data-motion='full']) .ticket:hover .ticket-stub {
+    rotate: 0deg;
+  }
+}
+:root[data-motion='reduced'] .ticket:hover .ticket-stub {
+  rotate: 0deg;
 }

@@ -1,6 +1,5 @@
 import { ArrowUpRight } from 'lucide-react';
 import type { CSSProperties } from 'react';
-import { Spotlight } from '@/components/layout/Spotlight';
 import { Badge } from '@/components/ui/Badge';
 import { CountUp } from '@/components/ui/CountUp';
 import { SampleRibbon } from '@/components/ui/SampleRibbon';
@@ -31,9 +30,9 @@ export function Freelance({ index, freelance, config }: { index: number; freelan
     >
       <div className="grid gap-12 lg:grid-cols-12 lg:gap-8">
         <div className="grid content-start gap-10 lg:col-span-9 lg:col-start-4">
-          {/* The bio and the numbers sit on cards like the contact form's; a glow and a lit edge follow the mouse */}
+          {/* The bio on a card like the contact form's, then the numbers as boarding passes (see .ticket in globals.css) */}
           <div className="grid gap-4">
-            <div className="spot-card reveal reveal-card grid gap-4 [--tilt:2deg] rounded-md border border-rule bg-paper-veil p-6 shadow-float backdrop-blur-md sm:p-8">
+            <div className="reveal grid gap-4 rounded-md border border-rule bg-paper-veil p-6 shadow-float backdrop-blur-md sm:p-8">
               <SampleRibbon placeholder={freelance.placeholder} />
               {freelance.bio.map((p) => (
                 <p key={p} className="max-w-(--measure) type-lead text-ink-2">
@@ -42,24 +41,43 @@ export function Freelance({ index, freelance, config }: { index: number; freelan
               ))}
             </div>
             {freelance.stats.length > 0 && (
-              <ul className="grid gap-4 sm:grid-cols-3">
+              <ul className="grid gap-4 lg:grid-cols-3">
                 {freelance.stats.map((s, i) => (
                   <li
                     key={s.label}
-                    className="spot-card reveal reveal-card grid content-start gap-2 [--tilt:6deg] rounded-md border border-rule bg-paper-veil p-6 shadow-float backdrop-blur-md"
-                    // One after another, behind the bio card
-                    style={{ '--reveal-delay': `${120 + i * 80}ms` } as CSSProperties}
+                    className="ticket reveal grid grid-cols-[minmax(0,1fr)_auto] rounded-md border border-rule bg-paper-veil shadow-float backdrop-blur-md"
+                    // Printed one after another, after the bio card
+                    style={{ '--reveal-delay': `${160 + i * 220}ms` } as CSSProperties}
                   >
-                    <span className="type-h2 text-ink">
-                      <CountUp text={s.value} delay={200 + i * 80} />
-                    </span>
-                    <span className="type-ui text-ink">{s.label}</span>
-                    {s.detail && <span className="type-small text-ink-2">{s.detail}</span>}
+                    <div className="grid content-start gap-2 p-6">
+                      <span className="type-h2 text-ink">
+                        <CountUp text={s.value} delay={500 + i * 220} />
+                      </span>
+                      <span className="type-ui text-ink">{s.label}</span>
+                      {s.detail && <span className="type-small text-ink-2">{s.detail}</span>}
+                    </div>
+                    {s.stamps.length > 0 && (
+                      <div
+                        aria-hidden="true"
+                        className="ticket-stub relative grid place-content-center gap-2 border-l border-dashed border-rule-strong px-4 py-6 data-[many=true]:grid-cols-2"
+                        data-many={s.stamps.length > 2}
+                      >
+                        {s.stamps.map((t, j) => (
+                          <span
+                            key={t}
+                            className="stamp rounded-xs border-[1.5px] border-accent px-1.5 py-0.5 text-center type-code whitespace-nowrap text-accent"
+                            // A slightly different angle per stamp, as if pressed by hand
+                            style={{ '--s': j, '--r': `${[-8, 5, -3, 7][j % 4]}deg` } as CSSProperties}
+                          >
+                            {t}
+                          </span>
+                        ))}
+                      </div>
+                    )}
                   </li>
                 ))}
               </ul>
             )}
-            <Spotlight />
           </div>
 
           {freelance.work.length > 0 && (

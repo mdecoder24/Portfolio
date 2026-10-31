@@ -83,7 +83,14 @@ export const Freelance = z.object({
     .default([]),
   // The headline numbers, one card each; value is counted up from zero, so it leads with its number
   stats: z
-    .array(z.object({ value: z.string().regex(/^\d/), label: z.string(), detail: z.string().optional() }))
+    .array(z.object({
+        value: z.string().regex(/^\d/),
+        label: z.string(),
+        detail: z.string().optional(),
+        // Short words inked on the card's stub; decoration, since the label and detail already say them
+        stamps: z.array(z.string().max(12)).max(4).default([]),
+      }),
+    )
     .max(4)
     .default([]),
   placeholder: z.boolean().default(false),
