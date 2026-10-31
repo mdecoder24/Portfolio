@@ -806,92 +806,133 @@ form:has(option[value='freelance']:checked) .freelance-fields {
 }
 
 /*
- * Experience as a transit line. Where the browser supports scroll-driven animation, the rail fills down to the middle
- * of the screen as the reader scrolls, and each role's station lights as it reaches that line; elsewhere, and under
- * reduced motion, the line is drawn whole with every station lit. A current role's station pulses.
+ * Experience cards and their lighting. Where the browser can tie animation to scrolling, each card turns down a little
+ * onto the page as it comes up the screen. As a card is first shown, a beam of light runs once round its border; a
+ * role still running keeps a faint light circling slowly. With a mouse, a soft sheen sweeps across the card on hover.
+ * The beam waits for RevealObserver, so without JavaScript and under reduced motion the cards are simply there.
  */
-.career {
-  --rail-x: 11px;
+@property --beam {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
 }
-.career-rail,
-.career-fill {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: var(--rail-x);
-  width: 2px;
-  translate: -50% 0;
-}
-.career-rail {
-  background: var(--color-rule);
-}
-.career-fill {
-  background: var(--color-accent);
-  transform-origin: 50% 0;
-}
-.career-stop {
-  position: absolute;
-  z-index: 1;
-  top: 2.6rem;
-  left: calc(var(--rail-x) - 2rem);
-  width: 12px;
-  height: 12px;
-  border: 2px solid var(--color-accent);
-  border-radius: 999px;
-  background: var(--color-accent);
-  translate: -50% -50%;
-  box-shadow: 0 0 0 4px var(--color-accent-soft);
-}
-.career-stop[data-current]::after {
+.passport::before,
+.passport::after {
   content: '';
   position: absolute;
-  inset: -2px;
-  border: 2px solid var(--color-accent);
+  pointer-events: none;
   border-radius: inherit;
-  animation: stop-pulse 2s var(--ease-out-quint) infinite;
 }
-@keyframes stop-pulse {
+/* The beam: a short bright arc of a conic gradient, masked down to the 1px border ring */
+.passport::before {
+  z-index: 1;
+  inset: 0;
+  padding: 1px;
+  background: conic-gradient(
+    from var(--beam),
+    transparent 0 70%,
+    color-mix(in oklab, var(--color-accent) 60%, transparent) 84%,
+    var(--color-ink) 92%,
+    transparent 100%
+  );
+  mask:
+    linear-gradient(#000 0 0) content-box exclude,
+    linear-gradient(#000 0 0);
+  opacity: 0;
+}
+:root[data-reveal] .passport[data-shown]::before {
+  animation: beam-trace 1800ms var(--ease-in-out-quint) calc(var(--reveal-delay, 0ms) + 300ms) both;
+}
+:root[data-reveal] .passport[data-shown][data-current]::before {
+  animation:
+    beam-trace 1800ms var(--ease-in-out-quint) 300ms both,
+    beam-orbit 9s linear 2100ms infinite;
+}
+@keyframes beam-trace {
   from {
-    opacity: 0.8;
-    scale: 1;
+    --beam: 0deg;
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
   }
   to {
+    --beam: 360deg;
     opacity: 0;
-    scale: 2.6;
   }
+}
+@keyframes beam-orbit {
+  from {
+    --beam: 0deg;
+    opacity: 0.45;
+  }
+  to {
+    --beam: 360deg;
+    opacity: 0.45;
+  }
+}
+/* The sheen: a soft diagonal band of light, parked off the card's left edge until hover */
+.passport::after {
+  z-index: -1;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 30%,
+    color-mix(in oklab, var(--color-ink) 14%, transparent) 50%,
+    transparent 70%
+  );
+  translate: -100% 0;
+}
+@media (hover: hover) and (pointer: fine) {
+  .passport:hover::after {
+    translate: 100% 0;
+    transition: translate 900ms var(--ease-out-quint);
+  }
+  .passport:hover {
+    border-color: var(--color-rule-strong);
+  }
+}
+/*
+ * Experience cards stack as a deck on scroll: each one sticks just under the nav, a little lower than the card before
+ * so a sliver of every earlier card shows, and the next card slides up over it. Where the browser can tie animation to
+ * scrolling, a card shrinks back and dims as the next one covers it, on the next card's own view timeline. An opened
+ * card stops sticking, so all of it can be read. Native scrolling throughout; under reduced motion the cards still
+ * stack but don't shrink.
+ */
+.stack-card {
+  position: sticky;
+  top: calc(var(--nav-height) + 1.5rem + var(--i, 0) * 12px);
+  transform-origin: 50% 0;
+  view-timeline-name: var(--self);
+}
+.stack-card:has(details[open]) {
+  position: relative;
+  top: auto;
+}
+ul:has(> .stack-card) {
+  timeline-scope: var(--deck);
 }
 @supports (animation-timeline: view()) {
-  /* The timeline's view is shrunk to a line across the middle of the screen, so progress is "how much has passed it" */
-  .career-fill {
-    animation: rail-fill linear both;
-    animation-timeline: view(block 50% 50%);
-  }
-  .career-stop {
-    animation: stop-lit linear both;
-    animation-timeline: view(block 50% 50%);
+  .stack-card {
+    animation: stack-back linear both;
+    animation-timeline: var(--next);
+    /* From when the next card is a third of the way up the screen to when it has caught up with this one */
+    animation-range: cover 30vh cover calc(100vh - var(--nav-height) - 3rem);
   }
 }
-@keyframes rail-fill {
-  from {
-    scale: 1 0;
-  }
-}
-@keyframes stop-lit {
-  from {
-    background: var(--color-paper);
-    border-color: var(--color-rule-strong);
-    box-shadow: 0 0 0 0 transparent;
+@keyframes stack-back {
+  to {
+    scale: 0.94;
+    filter: brightness(0.55);
   }
 }
 
-/* Reduced motion: the globe stands still, and the career line is drawn whole */
+/* Reduced motion: the globe stands still, and the passport pages lie flat */
 @media (prefers-reduced-motion: reduce) {
-  :root:not([data-motion='full']) :is(.globe-spin, .globe-orbit, .career-fill, .career-stop),
-  :root:not([data-motion='full']) .career-stop::after {
+  :root:not([data-motion='full']) :is(.globe-spin, .globe-orbit, .stack-card) {
     animation: none;
   }
 }
-:root[data-motion='reduced'] :is(.globe-spin, .globe-orbit, .career-fill, .career-stop),
-:root[data-motion='reduced'] .career-stop::after {
+:root[data-motion='reduced'] :is(.globe-spin, .globe-orbit, .stack-card) {
   animation: none;
 }

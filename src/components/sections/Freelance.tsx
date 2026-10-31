@@ -94,7 +94,7 @@ export function Freelance({
                 {freelance.stats.map((s, i) => (
                   <li
                     key={s.label}
-                    className="ticket reveal grid grid-cols-[minmax(0,1fr)_auto] rounded-md border border-rule bg-paper-veil shadow-float backdrop-blur-md"
+                    className="ticket reveal grid grid-cols-[minmax(0,1fr)_auto] [overflow-x:clip] rounded-md border border-rule bg-paper-veil shadow-float backdrop-blur-md"
                     // Printed one after another, after the bio card
                     style={{ '--reveal-delay': `${160 + i * 220}ms` } as CSSProperties}
                   >
