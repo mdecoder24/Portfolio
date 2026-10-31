@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/Badge';
 import { CountUp } from '@/components/ui/CountUp';
 import { SampleRibbon } from '@/components/ui/SampleRibbon';
 import { Section } from '@/components/ui/SectionHeader';
+import { TravelGlobe } from './TravelGlobe';
 import type { Config, Freelance as FreelanceContent } from '@/content/schema';
 
 /** A bio paragraph with its ==marked== phrases as highlights; each knows its place, so they sweep in one by one */
@@ -26,7 +27,15 @@ const AVAILABILITY: Record<Config['availability']['freelance'], string> = {
 };
 
 /** Client work, kept apart from the personal projects above it: a short bio, then one row per job. */
-export function Freelance({ index, freelance, config }: { index: number; freelance: FreelanceContent; config: Config }) {
+export function Freelance({
+  index,
+  freelance,
+  config,
+}: {
+  index: number;
+  freelance: FreelanceContent;
+  config: Config;
+}) {
   const { availability } = config;
   return (
     <Section
@@ -36,13 +45,22 @@ export function Freelance({ index, freelance, config }: { index: number; freelan
       title="Freelance and client work"
       aside={
         <div className="flex flex-wrap items-center gap-3">
-          <Badge tone={availability.freelance}>{availability.freelanceLabel ?? AVAILABILITY[availability.freelance]}</Badge>
+          <Badge tone={availability.freelance}>
+            {availability.freelanceLabel ?? AVAILABILITY[availability.freelance]}
+          </Badge>
           <span className="type-small text-ink-2">Replies {availability.replyTime}</span>
         </div>
       }
     >
       <div className="grid gap-12 lg:grid-cols-12 lg:gap-8">
-        <div className="grid content-start gap-10 lg:col-span-9 lg:col-start-4">
+        {/* In the empty rail under the section label on wide screens; above the letter on narrow ones */}
+        <div className="reveal grid justify-items-center gap-4 lg:sticky lg:top-32 lg:col-span-3 lg:row-start-1 lg:self-start lg:justify-items-start">
+          <TravelGlobe />
+          <p aria-hidden="true" className="type-code text-ink-2">
+            Clients in 4 countries
+          </p>
+        </div>
+        <div className="grid content-start gap-10 lg:col-span-9 lg:col-start-4 lg:row-start-1">
           {/* The bio on a card like the contact form's, then the numbers as boarding passes (see .ticket in globals.css) */}
           <div className="grid gap-4">
             <div className="letter reveal relative grid gap-4 overflow-hidden rounded-md border border-rule bg-paper-veil p-6 pt-8 shadow-float backdrop-blur-md sm:p-8 sm:pt-10 sm:pr-40">
@@ -63,7 +81,9 @@ export function Freelance({ index, freelance, config }: { index: number; freelan
                 >
                   <Marked
                     text={p}
-                    from={freelance.bio.slice(0, i).reduce((n, t) => n + (t.match(/==(.+?)==/g)?.length ?? 0), 0)}
+                    from={freelance.bio
+                      .slice(0, i)
+                      .reduce((n, t) => n + (t.match(/==(.+?)==/g)?.length ?? 0), 0)}
                   />
                 </p>
               ))}

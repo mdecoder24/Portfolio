@@ -67,51 +67,58 @@ function Roles({ title, entries }: { title: string; entries: ExperienceEntry[] }
           {entries.length} {entries.length === 1 ? 'role' : 'roles'}
         </span>
       </h3>
-      <ul>
-        {entries.map((e, i) => (
-          <li
-            key={e.id}
-            className="reveal border-b border-rule"
-            style={{ '--reveal-delay': `${i * 80}ms` } as React.CSSProperties}
-          >
-            {e.points.length === 0 ? (
-              <div className="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-x-6 gap-y-1 py-6 lg:grid-cols-12 lg:gap-x-8">
-                <Head e={e} />
-              </div>
-            ) : (
-              <details className="group">
-                <summary className="role-row relative isolate grid cursor-pointer list-none grid-cols-[minmax(0,1fr)_auto] items-baseline gap-x-6 gap-y-1 py-6 transition-colors duration-200 hover:text-ink-hover focus-visible:outline-none focus-visible:shadow-focus lg:grid-cols-12 lg:gap-x-8 [&::-webkit-details-marker]:hidden">
-                  {/* Light behind the row: a sweep when it first shows, and a pool by the toggle on hover */}
-                  <span
-                    aria-hidden="true"
-                    className="role-light pointer-events-none absolute inset-0 -z-10 overflow-hidden"
-                  >
-                    <span className="role-sweep" />
-                  </span>
+      {/* A transit line down the left: it fills as the reader scrolls, and each role's station lights on reaching the
+          middle of the screen (see .career in globals.css) */}
+      <div className="career relative pl-8">
+        <span aria-hidden="true" className="career-rail" />
+        <span aria-hidden="true" className="career-fill" />
+        <ul>
+          {entries.map((e, i) => (
+            <li
+              key={e.id}
+              className="reveal relative border-b border-rule"
+              style={{ '--reveal-delay': `${i * 80}ms` } as React.CSSProperties}
+            >
+              <span aria-hidden="true" className="career-stop" data-current={e.current || undefined} />
+              {e.points.length === 0 ? (
+                <div className="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-x-6 gap-y-1 py-6 lg:grid-cols-12 lg:gap-x-8">
                   <Head e={e} />
-                  <span className="role-toggle grid size-10 place-items-center self-center rounded-full border border-rule text-ink-2 transition-[rotate,border-color,color,box-shadow] duration-200 ease-out group-hover:border-accent group-hover:text-accent group-open:rotate-180 lg:col-span-1 lg:justify-self-end">
-                    <ChevronDown aria-hidden="true" strokeWidth={1.75} className="size-4" />
-                  </span>
-                </summary>
-                <div className="grid gap-4 pb-8 lg:grid-cols-12 lg:gap-x-8">
-                  <div className="grid gap-5 lg:col-span-8 lg:col-start-4">
-                    <SampleRibbon placeholder={e.placeholder} />
-                    <ul className="grid max-w-(--measure) gap-3 type-body text-ink">
-                      {e.points.map((p) => (
-                        <li key={p} className="grid grid-cols-[1.25rem_minmax(0,1fr)]">
-                          <span aria-hidden="true" className="mt-[0.8em] h-px w-2.5 bg-ink-2" />
-                          {p}
-                        </li>
-                      ))}
-                    </ul>
-                    {e.stack.length > 0 && <p className="type-code text-ink-2">{e.stack.join(', ')}</p>}
-                  </div>
                 </div>
-              </details>
-            )}
-          </li>
-        ))}
-      </ul>
+              ) : (
+                <details className="group">
+                  <summary className="role-row relative isolate grid cursor-pointer list-none grid-cols-[minmax(0,1fr)_auto] items-baseline gap-x-6 gap-y-1 py-6 transition-colors duration-200 hover:text-ink-hover focus-visible:outline-none focus-visible:shadow-focus lg:grid-cols-12 lg:gap-x-8 [&::-webkit-details-marker]:hidden">
+                    {/* Light behind the row: a sweep when it first shows, and a pool by the toggle on hover */}
+                    <span
+                      aria-hidden="true"
+                      className="role-light pointer-events-none absolute inset-0 -z-10 overflow-hidden"
+                    >
+                      <span className="role-sweep" />
+                    </span>
+                    <Head e={e} />
+                    <span className="role-toggle grid size-10 place-items-center self-center rounded-full border border-rule text-ink-2 transition-[rotate,border-color,color,box-shadow] duration-200 ease-out group-hover:border-accent group-hover:text-accent group-open:rotate-180 lg:col-span-1 lg:justify-self-end">
+                      <ChevronDown aria-hidden="true" strokeWidth={1.75} className="size-4" />
+                    </span>
+                  </summary>
+                  <div className="grid gap-4 pb-8 lg:grid-cols-12 lg:gap-x-8">
+                    <div className="grid gap-5 lg:col-span-8 lg:col-start-4">
+                      <SampleRibbon placeholder={e.placeholder} />
+                      <ul className="grid max-w-(--measure) gap-3 type-body text-ink">
+                        {e.points.map((p) => (
+                          <li key={p} className="grid grid-cols-[1.25rem_minmax(0,1fr)]">
+                            <span aria-hidden="true" className="mt-[0.8em] h-px w-2.5 bg-ink-2" />
+                            {p}
+                          </li>
+                        ))}
+                      </ul>
+                      {e.stack.length > 0 && <p className="type-code text-ink-2">{e.stack.join(', ')}</p>}
+                    </div>
+                  </div>
+                </details>
+              )}
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }
