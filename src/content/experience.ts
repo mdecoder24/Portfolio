@@ -1,7 +1,23 @@
 import { Experience } from './schema.ts';
 
-// Follows the résumé point for point (Oct 2026 version in public/resume)
+// Follows the résumé point for point (Oct 2026 version in public/resume). Points it doesn't cover come from
+// Kushwant's LinkedIn posts and roles, krudex.in, and his GitHub repositories (read 31 Oct 2026)
 export const experience = Experience.array().parse([
+  {
+    id: 'krudex',
+    role: 'Founder',
+    org: 'Krudex Technologies',
+    logo: '/media/logos/krudex.png',
+    start: '2025-09',
+    current: true,
+    // From krudex.in and the company's LinkedIn page
+    points: [
+      'Founded Krudex Technologies, a remote-first studio in Hyderabad that builds SaaS products, web and mobile apps, and AI features',
+      'Run each build through one process: a scoping call, an architecture document and statement of work, a senior-led build, then launch with a 30-day warranty',
+      'Hand clients 100% of the source code and IP at the end of every project',
+      'Also offer Google Ads and digital marketing, and student training with NovaSkill Hub',
+    ],
+  },
   {
     id: 'knowvation',
     role: 'Associate Software Engineer',
@@ -14,17 +30,12 @@ export const experience = Experience.array().parse([
       'Cut API latency by 40% through relational database indexing and better-structured APIs',
       'Owned UI/UX design and built reusable React and TypeScript components, reaching 78% UI consistency',
       'Served as Product Researcher, using user research and competitive analysis to shape the product roadmap',
-      'Worked in Agile sprints with cross-functional product and engineering teams, reviewed code, and mentored junior developers on clean code and Git workflows. Recognised as Best Intern',
+      'Worked in Agile sprints with cross-functional product and engineering teams, reviewed code, and mentored junior developers on clean code and Git workflows',
+      // From LinkedIn posts
+      'Helped organise TechKnow 1.0 at T-Hub, a tech summit for 400+ attendees, and TechKnow 2.0, and mentored 40+ teams at a 24-hour national hackathon at Draper Startup House',
+      'Named Best Intern at TechKnow 1.0, then Best Employee at TechKnow 2.0',
     ],
     stack: ['React', 'TypeScript', 'SQL', 'UI/UX design', 'Agile'],
-    current: true,
-  },
-  {
-    id: 'krudex',
-    role: 'Founder',
-    org: 'Krudex Technologies',
-    logo: '/media/logos/krudex.png',
-    start: '2025-09',
     current: true,
   },
   {
@@ -50,6 +61,11 @@ export const experience = Experience.array().parse([
     logo: '/media/logos/cisco-thingqbator.png',
     start: '2023-10',
     end: '2024-01',
+    // From his LinkedIn post on finishing the internship
+    points: [
+      'Designed the interfaces for "Where is my Bus?", a project that gives riders transit information',
+      'Worked with the project team through a 10-week internship, focused on making the app easy to use',
+    ],
   },
   // Volunteer roles: the résumé's achievements, with dates and the roles it leaves out from LinkedIn (31 Oct 2026)
   {
@@ -63,8 +79,8 @@ export const experience = Experience.array().parse([
     start: '2024-05',
     current: true,
     points: [
-      'Volunteered at 2 DevFest Hyderabad events',
-      'On the organising team of Agentathon, a Guinness World Record hackathon',
+      'I volunteered at 2 editions of DevFest Hyderabad, the annual developer conference run by GDG Hyderabad.',
+      'I was part of the organising team for Agentathon, a hackathon that set a Guinness World Record.',
     ],
   },
   {
@@ -76,7 +92,11 @@ export const experience = Experience.array().parse([
     // LinkedIn calls this role Technical Lead
     start: '2025-08',
     end: '2026-04',
-    points: ['Built 4 event websites for the club'],
+    points: [
+      "Led the tech for MLRIT's literary club, which runs TEDxMLRIT, Model United Nations conferences and the annual literary festival",
+      'Built 4 event websites for the club events which includes admin portals, registration and ticketing',
+    ],
+    stack: ['Next.js', 'TypeScript', 'Tailwind CSS', 'shadcn/ui', 'Vercel'],
   },
   {
     id: 'gdg-on-campus',
@@ -87,7 +107,12 @@ export const experience = Experience.array().parse([
     // Set by Kushwant on 31 Oct 2026, covering the co-lead year LinkedIn lists separately
     start: '2024-09',
     end: '2026-10',
-    points: ['Led a team of 35', 'A community of 600+ members'],
+    // The rest from his LinkedIn post on becoming Lead
+    points: [
+      'Led a team of 35, for a campus community of 600+ members',
+      'Co-Lead in 2024–25, as Google Developer Student Clubs became Google Developer Groups on Campus, then Lead',
+      'Organised workshops and community events that took students from their first steps in tech to their first projects',
+    ],
   },
   {
     id: 'club-literati-senior-web',
@@ -97,6 +122,12 @@ export const experience = Experience.array().parse([
     logo: '/media/logos/club-literati.png',
     start: '2024-08',
     end: '2025-08',
+    // From the TEDx-MLRIT repository; TEDxMLRIT is the club's flagship event
+    points: [
+      "Built the TEDx MLRIT website for the club's flagship event: speakers, past editions, sponsors, the team and a blog",
+      'Added ticket registration, speaker nomination and sponsorship forms, and deployed it on Vercel',
+    ],
+    stack: ['React', 'TypeScript', 'Vite', 'Tailwind CSS', 'Vercel'],
   },
   {
     id: 'gdsc-wow-hyderabad',
@@ -106,7 +137,10 @@ export const experience = Experience.array().parse([
     logo: '/media/logos/gdsc-wow-hyderabad.png',
     start: '2024-03',
     end: '2024-04',
-    points: ['Volunteered at GDSC WoW Hyderabad 2024, an event that brought together 500+ student developers'],
+    points: [
+      'On the operations team for GDSC WoW Hyderabad 2024, hosted at MLR Institute of Technology',
+      'The event brought together 500+ student developers',
+    ],
   },
   {
     id: 'club-literati-web',
@@ -116,5 +150,9 @@ export const experience = Experience.array().parse([
     logo: '/media/logos/club-literati.png',
     start: '2023-08',
     end: '2024-08',
+    // From the club's LinkedIn page; Kushwant hasn't described this role yet
+    points: [
+      "Joined the web team of MLRIT's literary club, which runs TEDxMLRIT, Model United Nations conferences and the annual literary festival",
+    ],
   },
 ]);

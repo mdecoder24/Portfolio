@@ -154,7 +154,7 @@ export const Experience = z.object({
   start: month.optional(),
   end: month.optional(),
   // Empty when LinkedIn gives no detail; the row then has nothing to open
-  points: z.array(z.string()).max(5).default([]),
+  points: z.array(z.string()).max(7).default([]),
   stack: z.array(z.string()).max(5).default([]),
   current: z.boolean().default(false),
   placeholder: z.boolean().default(false),
