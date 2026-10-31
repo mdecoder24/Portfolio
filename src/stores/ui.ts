@@ -18,7 +18,7 @@ type UiState = {
 // Versioned so a reset can start everyone fresh: v2 dropped choices saved before 30 Oct 2026, which left some browsers
 // stuck on 3D off without anyone remembering choosing it
 const KEY = { motion: 'kr-motion-v2', quality: 'kr-3d-v2' } as const;
-const RETIRED_KEYS = ['kr-motion', 'kr-3d'];
+const RETIRED_KEYS = ['kr-motion', 'kr-3d', 'kr-theme'];
 
 function read<T extends string>(key: string, allowed: readonly T[], fallback: T): T {
   try {

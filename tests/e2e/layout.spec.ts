@@ -123,13 +123,21 @@ test('choices saved under the retired keys are cleared, so the footer starts at 
   await page.addInitScript(() => {
     localStorage.setItem('kr-3d', 'off');
     localStorage.setItem('kr-motion', 'reduced');
+    localStorage.setItem('kr-theme', 'light');
   });
   await page.goto('/');
   const footer = page.locator('footer');
   await expect(footer.getByRole('radio', { name: 'Auto' })).toHaveCount(2);
   for (const radio of await footer.getByRole('radio', { name: 'Auto' }).all()) await expect(radio).toBeChecked();
   await expect(page.locator('html')).not.toHaveAttribute('data-motion', 'reduced');
-  expect(await page.evaluate(() => [localStorage.getItem('kr-3d'), localStorage.getItem('kr-motion')])).toEqual([null, null]);
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+  expect(
+    await page.evaluate(() => [
+      localStorage.getItem('kr-3d'),
+      localStorage.getItem('kr-motion'),
+      localStorage.getItem('kr-theme'),
+    ]),
+  ).toEqual([null, null, null]);
 });
 
 test('the hero links to GitHub, LinkedIn, LeetCode and email, each named for screen readers', async ({ page }) => {

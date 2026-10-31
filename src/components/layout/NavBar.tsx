@@ -7,7 +7,6 @@ import { cn } from '@/lib/cn';
 import { useUi } from '@/stores/ui';
 import { NAV_ITEMS, RESUME_HREF } from './navItems';
 import { Monogram } from './Monogram';
-import { ThemeToggle } from './ThemeToggle';
 
 export function NavBar({ socials, onHome }: { socials: { label: string; href: string }[]; onHome: boolean }) {
   const active = useUi((s) => s.activeSection);
@@ -105,7 +104,6 @@ export function NavBar({ socials, onHome }: { socials: { label: string; href: st
             Résumé
             <ArrowUpRight className="size-4" strokeWidth={1.75} aria-hidden="true" />
           </a>
-          <ThemeToggle />
           <button
             type="button"
             aria-label="Open menu"

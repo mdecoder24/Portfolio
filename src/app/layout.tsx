@@ -19,19 +19,16 @@ export const metadata: Metadata = {
   twitter: { card: 'summary_large_image' },
 };
 
-// Theme colours for the browser chrome, read from the tokens rather than repeated here
+// Theme colour for the browser chrome, read from the tokens rather than repeated here
 const paper = tokens.color.tokens.find((t) => t.name === 'paper')?.value ?? { light: '', dark: '' };
 export const viewport: Viewport = {
-  themeColor: [
-    { media: '(prefers-color-scheme: dark)', color: paper.dark },
-    { media: '(prefers-color-scheme: light)', color: paper.light },
-  ],
+  themeColor: paper.dark,
   viewportFit: 'cover',
 };
 
-// Applies saved theme and motion preferences before first paint, so neither flashes, and skips the home intro when it
+// Applies saved motion preference before first paint, so it never flashes, and skips the home intro when it
 // has already played this session or the visitor followed a link straight to a section
-const prefScript = `try{var d=document.documentElement,t=localStorage.getItem('kr-theme');if(t==='dark'||t==='light')d.dataset.theme=t;var m=localStorage.getItem('kr-motion-v2');if(m)d.dataset.motion=m;if(location.hash||sessionStorage.getItem('kr-intro'))d.dataset.introSeen=''}catch(e){}`;
+const prefScript = `try{var d=document.documentElement,m=localStorage.getItem('kr-motion-v2');if(m)d.dataset.motion=m;if(location.hash||sessionStorage.getItem('kr-intro'))d.dataset.introSeen=''}catch(e){}`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

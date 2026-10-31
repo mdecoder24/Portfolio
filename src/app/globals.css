@@ -239,9 +239,6 @@
     --gutter: max(16px, env(safe-area-inset-left));
     --section-pad: var(--space-8);
   }
-  :root[data-theme='light'] {
-    --depth-2: #9a9ea6;
-  }
   @media (min-width: 640px) {
     :root {
       --gutter: 32px;
