@@ -86,7 +86,7 @@ function MoreCertifications({ certs }: { certs: Certification[] }) {
     <div className="reveal flex justify-center">
       <button type="button" popoverTarget="more-certifications" className={buttonClasses({ variant: 'secondary' })}>
         View more certifications
-        <span className="grid min-w-6 place-items-center rounded-pill bg-plate px-1.5 type-code text-ink-2">
+        <span className="grid min-w-6 place-items-center rounded-control bg-plate px-1.5 type-code text-ink-2">
           {certs.length}
         </span>
       </button>
