@@ -33,7 +33,7 @@ export function Freelance({ index, freelance, config }: { index: number; freelan
         <div className="grid content-start gap-10 lg:col-span-9 lg:col-start-4">
           {/* The bio and the numbers sit on cards like the contact form's; a glow and a lit edge follow the mouse */}
           <div className="grid gap-4">
-            <div className="spot-card reveal grid gap-4 rounded-md border border-rule bg-paper-veil p-6 shadow-float backdrop-blur-md sm:p-8">
+            <div className="spot-card reveal reveal-card grid gap-4 [--tilt:2deg] rounded-md border border-rule bg-paper-veil p-6 shadow-float backdrop-blur-md sm:p-8">
               <SampleRibbon placeholder={freelance.placeholder} />
               {freelance.bio.map((p) => (
                 <p key={p} className="max-w-(--measure) type-lead text-ink-2">
@@ -46,7 +46,7 @@ export function Freelance({ index, freelance, config }: { index: number; freelan
                 {freelance.stats.map((s, i) => (
                   <li
                     key={s.label}
-                    className="spot-card reveal grid content-start gap-2 rounded-md border border-rule bg-paper-veil p-6 shadow-float backdrop-blur-md"
+                    className="spot-card reveal reveal-card grid content-start gap-2 [--tilt:6deg] rounded-md border border-rule bg-paper-veil p-6 shadow-float backdrop-blur-md"
                     // One after another, behind the bio card
                     style={{ '--reveal-delay': `${120 + i * 80}ms` } as CSSProperties}
                   >

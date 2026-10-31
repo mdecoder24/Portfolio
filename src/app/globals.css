@@ -568,7 +568,9 @@ form:has(option[value='freelance']:checked) .freelance-fields {
 .spot-card {
   position: relative;
   isolation: isolate;
-  transition: border-color 200ms ease;
+  transition:
+    border-color 200ms ease,
+    transform 500ms var(--ease-out-quint);
 }
 .spot-card::before,
 .spot-card::after {
@@ -602,11 +604,53 @@ form:has(option[value='freelance']:checked) .freelance-fields {
     linear-gradient(#000 0 0);
 }
 @media (hover: hover) and (pointer: fine) {
+  /* Lifts a little and tips towards the pointer; --tilt is the most it leans, smaller on big cards */
   .spot-card:hover {
     border-color: var(--color-rule-strong);
+    transform: perspective(1000px) translateY(-4px) rotateX(calc(var(--py, 0) * var(--tilt, 4deg) * -2))
+      rotateY(calc(var(--px, 0) * var(--tilt, 4deg) * 2));
   }
   .spot-card:hover::before,
   .spot-card:hover::after {
     opacity: 1;
   }
+}
+
+/*
+ * A card's way in when scrolled to: it rises further than a plain reveal, from just below full size and out of a
+ * light blur, so it settles into focus. The transform and border keep their own short timing, without the stagger
+ * delay, so the hover tilt still answers at once.
+ */
+:root[data-reveal] .reveal-card {
+  scale: 0.94;
+  translate: 0 48px;
+  filter: blur(6px);
+  transition:
+    opacity 800ms var(--ease-out-quint),
+    translate 800ms var(--ease-out-quint),
+    scale 800ms var(--ease-out-quint),
+    filter 800ms var(--ease-out-quint),
+    transform 500ms var(--ease-out-quint),
+    border-color 200ms ease;
+  transition-delay:
+    var(--reveal-delay, 0ms),
+    var(--reveal-delay, 0ms),
+    var(--reveal-delay, 0ms),
+    var(--reveal-delay, 0ms),
+    0ms,
+    0ms;
+}
+:root[data-reveal] .reveal-card[data-shown] {
+  scale: 1;
+  translate: 0 0;
+  filter: none;
+}
+/* Reduced motion: no tilt or lift; the glow stays, being light rather than movement */
+@media (prefers-reduced-motion: reduce) {
+  :root:not([data-motion='full']) .spot-card:hover {
+    transform: none;
+  }
+}
+:root[data-motion='reduced'] .spot-card:hover {
+  transform: none;
 }
