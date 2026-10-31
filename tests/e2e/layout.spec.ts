@@ -271,6 +271,7 @@ test('experience cards stack as a deck on scroll, and an opened card stops stick
 
 test('View more projects opens a panel of the other projects, with the same links and README', async ({ page }) => {
   await page.goto('/?3d=off#work');
+  await expect(page.locator('#work').getByText('Want to see more projects I’ve worked on?')).toBeVisible();
   const open = page.locator('#work').getByRole('button', { name: /^View more projects/ });
   await expect(open).toContainText('2');
   await open.click();
