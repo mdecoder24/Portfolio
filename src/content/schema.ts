@@ -33,6 +33,8 @@ export const CaseStudy = z.object({
     poster: z.string().optional(),
   }),
   links: z.array(z.object({ label: z.string(), href: z.url() })).default([]),
+  // Why there is no code link, for client work; the GitHub button then opens this note instead of a repository
+  privateCode: z.string().optional(),
   // Case-study body, following the PRD's template
   body: z.object({
     problem: z.string(),
@@ -56,7 +58,7 @@ export const CaseStudy = z.object({
       overview: z.string().max(240),
       features: z.array(z.string().max(90)).min(1).max(5),
       tech: z.array(z.string()).min(1).max(10),
-      run: z.array(z.string()).min(1).max(4), // shell commands, in order
+      run: z.array(z.string()).min(1).max(4).optional(), // shell commands, in order; left out when the code isn't public
       needs: z.string().optional(), // finishes the sentence "Needs …": what to set up before the commands work
     })
     .optional(),

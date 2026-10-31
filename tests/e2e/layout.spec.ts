@@ -160,16 +160,11 @@ test('project cards link out to GitHub and the live site, and their titles open 
   await expect(card.getByRole('link', { name: /^Live site/ })).toHaveAttribute('href', 'https://mlritmun.vercel.app/');
   await expect(card.getByRole('link', { name: 'MLRIT MUN 2025 website', exact: true })).toHaveAttribute('href', '/projects/mun-website');
   await expect(page.locator('#work').getByText('Read the case study')).toHaveCount(0);
-  // The main grid holds the featured four, Kemplast first and MUN third; the rest wait in the more-projects panel
-  await expect(main).toHaveCount(4);
-  await expect(main.first()).toContainText('Kemplast Process Solutions website');
-  await expect(main.first().getByRole('link', { name: /^Live site/ })).toHaveAttribute('href', 'https://www.kemplast.in/');
-  await expect(main.first().getByRole('link', { name: /^GitHub/ })).toHaveAttribute(
-    'href',
-    'https://github.com/Kemplast-main/v0-kemplast-website-redesign',
-  );
-  await expect(main.nth(2)).toContainText('MLRIT MUN 2025 website');
-  const sensai = main.nth(3);
+  // The main grid holds the featured three; the rest wait in the more-projects panel
+  await expect(main).toHaveCount(3);
+  await expect(main.first()).toContainText('Sign language recognition');
+  await expect(main.nth(1)).toContainText('MLRIT MUN 2025 website');
+  const sensai = main.nth(2);
   await expect(sensai).toContainText('SENSAI, AI career coach');
   await expect(sensai.getByRole('link', { name: /^GitHub/ })).toHaveAttribute('href', 'https://github.com/mdeocder24/sensai');
   await expect(sensai.getByRole('link', { name: /^Live site/ })).toHaveAttribute('href', 'https://ai-career-coach-mu.vercel.app/');
@@ -211,7 +206,7 @@ test('certifications follow education, each linking to its certificate', async (
 test('each project card opens a short README from View details, and Escape closes it', async ({ page }) => {
   await page.goto('/?3d=off#work');
   const cards = page.locator('#work article:not(#more-projects article)');
-  await expect(cards.getByRole('button', { name: /^View details/ })).toHaveCount(4);
+  await expect(cards.getByRole('button', { name: /^View details/ })).toHaveCount(3);
   const open = cards.getByRole('button', { name: /^View details.*MLRIT MUN 2025 website/ });
   await open.click();
   const panel = page.getByRole('dialog', { name: 'MLRIT MUN 2025 website' });
@@ -251,11 +246,22 @@ test('experience cards stack as a deck on scroll, and an opened card stops stick
 test('View more projects opens a panel of the other projects, with the same links and README', async ({ page }) => {
   await page.goto('/?3d=off#work');
   const open = page.locator('#work').getByRole('button', { name: /^View more projects/ });
-  await expect(open).toContainText('2');
+  await expect(open).toContainText('3');
   await open.click();
   const panel = page.getByRole('dialog', { name: 'More things I’ve built' });
   await expect(panel).toBeVisible();
-  await expect(panel.locator('article').first()).toContainText('TEDx MLRIT website');
+  // Kemplast leads the panel; its code is the client's, so GitHub opens a note instead of a repository
+  const kemplast = panel.locator('article').first();
+  await expect(kemplast).toContainText('Kemplast Process Solutions website');
+  await expect(kemplast.getByRole('link', { name: /^Live site/ })).toHaveAttribute('href', 'https://www.kemplast.in/');
+  await expect(kemplast.getByRole('link', { name: /^GitHub/ })).toHaveCount(0);
+  await kemplast.getByRole('button', { name: /^GitHub/ }).click();
+  const note = page.getByRole('dialog', { name: 'Private repository' });
+  await expect(note).toContainText("I can't share the GitHub link");
+  await page.keyboard.press('Escape');
+  await expect(note).toBeHidden();
+  await expect(panel).toBeVisible();
+  await expect(panel.locator('article').nth(1)).toContainText('TEDx MLRIT website');
   const tedx = panel.locator('article').filter({ hasText: 'TEDx MLRIT website' });
   await expect(tedx.getByRole('link', { name: /^GitHub/ })).toHaveAttribute('href', 'https://github.com/mdecoder24/TEDx-MLRIT');
   await expect(tedx.getByRole('link', { name: /^Live site/ })).toHaveAttribute('href', 'https://tedxmlrit.vercel.app/');

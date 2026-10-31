@@ -1,6 +1,6 @@
 import { CaseStudy } from '../schema.ts';
 
-// From kemplast.in, the Kemplast role in experience.ts, and the repository's README and package.json (31 Oct 2026)
+// From kemplast.in, the Kemplast role in experience.ts, and the client repository's README (31 Oct 2026)
 export const kemplast = CaseStudy.parse({
   slug: 'kemplast',
   kind: 'work',
@@ -14,11 +14,12 @@ export const kemplast = CaseStudy.parse({
   end: '2026-02',
   stack: ['Next.js', 'React 19', 'TypeScript', 'Supabase', 'Vercel'],
   categories: ['full-stack'],
-  links: [
-    { label: 'GitHub', href: 'https://github.com/Kemplast-main/v0-kemplast-website-redesign' },
-    { label: 'Live', href: 'https://www.kemplast.in/' },
-  ],
-  featured: true,
+  // The code belongs to the client, so the GitHub button explains that instead of linking to it (31 Oct 2026)
+  links: [{ label: 'Live', href: 'https://www.kemplast.in/' }],
+  privateCode:
+    "This is a client's project, so I'm sorry, I can't share the GitHub link. You can see the site live at kemplast.in.",
+  // Shown under "View more projects" rather than in the main grid
+  featured: false,
   media: {
     src: '/media/kemplast/screen.jpg',
     screen: '/media/kemplast/phone.jpg',
@@ -44,8 +45,6 @@ export const kemplast = CaseStudy.parse({
       'Supabase',
       'Resend',
     ],
-    run: ['npm install', 'npm run dev'],
-    needs: 'a Resend API key in a .env.local file',
   },
   body: {
     problem:

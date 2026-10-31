@@ -1,4 +1,4 @@
-import { ArrowUpRight, X } from 'lucide-react';
+import { ArrowUpRight, Lock, X } from 'lucide-react';
 import Link from 'next/link';
 import type { CSSProperties, ReactNode } from 'react';
 import { Button, buttonClasses } from '@/components/ui/Button';
@@ -20,20 +20,68 @@ function GitHubMark() {
   );
 }
 
-/** One way out of a project card; until its link is added to the content it shows, unavailable, in the same place */
+/**
+ * One way out of a project card. Client work whose code can't be shared has a note instead of a link: the button opens
+ * it in a small card (a popover, so it needs no JavaScript). Otherwise, until a link is added to the content, the
+ * button shows, unavailable, in the same place.
+ */
 function ProjectLink({
   href,
   label,
   title,
   icon,
   variant,
+  note,
+  noteId,
 }: {
   href?: string;
   label: string;
   title: string;
   icon?: ReactNode;
   variant: 'primary' | 'secondary';
+  note?: string;
+  noteId?: string;
 }) {
+  if (!href && note && noteId)
+    return (
+      <>
+        <button type="button" popoverTarget={noteId} className={buttonClasses({ variant })}>
+          {icon}
+          {label}
+          <Lock className="size-4" strokeWidth={1.75} aria-hidden="true" />
+          <span className="sr-only">: private, {title}</span>
+        </button>
+        <div
+          id={noteId}
+          popover="auto"
+          role="dialog"
+          aria-labelledby={`${noteId}-title`}
+          className="readme m-auto w-[min(26rem,calc(100%-2rem))] rounded-md border border-rule-strong bg-paper p-6 text-ink shadow-float backdrop:bg-paper-veil"
+        >
+          <div className="flex items-start gap-4">
+            <span className="grid size-10 shrink-0 place-items-center rounded-full border border-rule text-accent">
+              <Lock className="size-5" strokeWidth={1.75} aria-hidden="true" />
+            </span>
+            <div className="grid gap-2">
+              <p id={`${noteId}-title`} className="type-h4 text-ink">
+                Private repository
+              </p>
+              <p className="type-body text-ink-2">{note}</p>
+            </div>
+          </div>
+          <div className="mt-6 flex justify-end">
+            <button
+              type="button"
+              popoverTarget={noteId}
+              popoverTargetAction="hide"
+              className={buttonClasses({ variant: 'secondary', size: 'sm' })}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </>
+    );
   if (!href)
     return (
       <Button variant={variant} icon={icon} disabled aria-disabled="true">
@@ -83,6 +131,8 @@ function Details({ study, n, compact = false }: { study: CaseStudy; n: number; c
           title={study.title}
           icon={<GitHubMark />}
           variant="primary"
+          note={study.privateCode}
+          noteId={`private-${study.slug}`}
         />
         <ProjectLink
           href={study.links.find((l) => l.label === 'Live')?.href}

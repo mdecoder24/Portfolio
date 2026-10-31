@@ -65,12 +65,14 @@ export function ProjectReadme({ study }: { study: CaseStudy }) {
           <Part title="Tech stack">
             <p className="type-body text-ink-2">{readme.tech.join(', ')}</p>
           </Part>
-          <Part title="Run it locally">
-            {readme.needs && <p className="type-body text-ink-2">Needs {readme.needs}.</p>}
-            <pre className="overflow-x-auto rounded-sm border border-rule bg-plate p-4 type-code text-ink">
-              <code>{readme.run.join('\n')}</code>
-            </pre>
-          </Part>
+          {readme.run && (
+            <Part title="Run it locally">
+              {readme.needs && <p className="type-body text-ink-2">Needs {readme.needs}.</p>}
+              <pre className="overflow-x-auto rounded-sm border border-rule bg-plate p-4 type-code text-ink">
+                <code>{readme.run.join('\n')}</code>
+              </pre>
+            </Part>
+          )}
         </div>
       </div>
     </>

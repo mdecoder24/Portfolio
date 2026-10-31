@@ -16,6 +16,6 @@ export { freelance } from './freelance.ts';
 export { certifications } from './certifications.ts';
 
 // Featured projects show in the main grid, in this order; the rest open from "View more projects"
-export const projects: CaseStudy[] = [kemplast, signLanguageRecognition, munWebsite, sensai, tedxMlrit, billfold];
+export const projects: CaseStudy[] = [signLanguageRecognition, munWebsite, sensai, kemplast, tedxMlrit, billfold];
 
 export const caseStudyHref = (c: CaseStudy) => `/projects/${c.slug}`;
