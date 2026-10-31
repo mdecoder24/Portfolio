@@ -14,6 +14,7 @@ for (const s of caseStudies) {
   if (s.client?.named && !s.client.permission) errors.push(`${s.slug}: client named without permission`);
 }
 if (!c.projects.some((p) => p.featured)) errors.push('No featured project');
+if (!c.certifications.some((cert) => cert.featured)) errors.push('No featured certification');
 
 for (const g of new Set(c.skills.map((s) => s.group)))
   if (!c.skills.some((s) => s.group === g && s.evidence.length > 0)) errors.push(`Skill group "${g}" has no evidence link`);

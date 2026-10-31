@@ -201,7 +201,9 @@ test('a freelance section sits between the projects and education, and the nav l
   await expect(page.locator('#freelance').getByRole('listitem').nth(2)).toContainText('India, USA, UAE, Spain and UK');
 });
 
-test('certifications follow education, each linking to its certificate', async ({ page }) => {
+test('certifications follow education, each linking to its certificate, and View more certifications opens the rest', async ({
+  page,
+}) => {
   await page.goto('/?3d=off');
   const ids = await page.locator('main section[id]').evaluateAll((sections) => sections.map((s) => s.id));
   expect(ids.indexOf('certifications')).toBe(ids.indexOf('education') + 1);
@@ -212,6 +214,19 @@ test('certifications follow education, each linking to its certificate', async (
     await expect(link).toHaveAttribute('href', /^https:\/\/drive\.google\.com\/file\/d\//);
     await expect(link).toHaveAttribute('rel', 'noopener noreferrer');
   }
+  const open = page.locator('#certifications').getByRole('button', { name: /^View more certifications/ });
+  await expect(open).toContainText('10');
+  await open.click();
+  const panel = page.getByRole('dialog', { name: 'More certifications' });
+  await expect(panel).toBeVisible();
+  const moreLinks = panel.getByRole('link');
+  await expect(moreLinks).toHaveCount(10);
+  for (const link of await moreLinks.all()) {
+    await expect(link).toHaveAttribute('href', /^https:\/\/drive\.google\.com\/file\/d\//);
+    await expect(link).toHaveAttribute('rel', 'noopener noreferrer');
+  }
+  await panel.getByRole('button', { name: 'Close' }).click();
+  await expect(panel).toBeHidden();
 });
 
 test('each project card opens a short README from View details, and Escape closes it', async ({ page }) => {

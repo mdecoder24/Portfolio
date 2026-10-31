@@ -1,12 +1,13 @@
 import { Certification } from './schema.ts';
 
-// From the résumé, in its order; each link is the certificate it points to there
+// Featured certificates show in the main grid; the rest open from "View more certifications"
 export const certifications = Certification.array().parse([
   {
     title: 'AWS Cloud Solutions Architect',
     issuer: 'Coursera',
     provider: 'AWS',
     icon: 'cloud',
+    featured: true,
     href: 'https://drive.google.com/file/d/1yke9b8EFH1ZPGIDtIS9gLN8YElCfSQbW/view?usp=drive_link',
   },
   {
@@ -14,6 +15,7 @@ export const certifications = Certification.array().parse([
     issuer: 'Coursera',
     provider: 'AWS',
     icon: 'support',
+    featured: true,
     href: 'https://drive.google.com/file/d/1zHVOrlQLDMJrFoWcOYUJMSy3i9vGuXHY/view?usp=sharing',
   },
   {
@@ -21,6 +23,7 @@ export const certifications = Certification.array().parse([
     issuer: 'Coursera',
     provider: 'Meta',
     icon: 'frontend',
+    featured: true,
     href: 'https://drive.google.com/file/d/1JuxGt9WbaJs-pcjq8UktE1u81wXVx1EY/view?usp=sharing',
   },
   {
@@ -28,6 +31,83 @@ export const certifications = Certification.array().parse([
     issuer: 'Coursera',
     provider: 'Meta',
     icon: 'backend',
+    featured: true,
     href: 'https://drive.google.com/file/d/1hab2CxijwjI9r5yDxG5WO6NajfBDV8fQ/view?usp=sharing',
+  },
+  {
+    title: 'Oracle Cloud Infrastructure 2023 AI Certified Foundations Associate',
+    issuer: 'Oracle University',
+    provider: 'Oracle',
+    subtitle: 'Foundations associate',
+    icon: 'ai',
+    href: 'https://drive.google.com/file/d/1JwSkvFumxJ23Fq2Ii3Z_138sKRdZXNik/view?usp=drive_link',
+  },
+  {
+    title: 'Oracle Fusion Cloud Applications HCM Certified Foundations Associate',
+    issuer: 'Oracle University',
+    provider: 'Oracle',
+    subtitle: 'Foundations associate',
+    icon: 'cloud',
+    href: 'https://drive.google.com/file/d/1epsC2IEEFuLEmlAFPjyexGgLd7X2i6AA/view?usp=drive_link',
+  },
+  {
+    title: 'Machine Learning with Python',
+    issuer: 'Coursera',
+    provider: 'IBM',
+    subtitle: 'Course certificate',
+    icon: 'ai',
+    href: 'https://drive.google.com/file/d/1coltD0pUbq43D3WW5_qtg3rJlwWd-gq9/view?usp=drive_link',
+  },
+  {
+    title: 'AI For Everyone',
+    issuer: 'Coursera',
+    provider: 'DeepLearning.AI',
+    subtitle: 'Course certificate',
+    icon: 'ai',
+    href: 'https://drive.google.com/file/d/1aPKkzyhKSIxEK6ah5-cszMFO2sy-P6y8/view?usp=drive_link',
+  },
+  {
+    title: 'Object Oriented Programming in Java',
+    issuer: 'Coursera',
+    provider: 'UC San Diego',
+    subtitle: 'Course certificate',
+    icon: 'code',
+    href: 'https://drive.google.com/file/d/1LKRkTbE-Xd2ZTyNqyeo5naltb-arG_9Q/view?usp=drive_link',
+  },
+  {
+    title: 'Business Analysis & Process Management',
+    issuer: 'Coursera',
+    subtitle: 'Project certificate',
+    icon: 'business',
+    href: 'https://drive.google.com/file/d/1rpsnLxZWrEsJjbON1bsypATB9N6fG-Py/view?usp=drive_link',
+  },
+  {
+    title: 'CISSP - Certified Information Systems Security Professional',
+    issuer: 'Udemy',
+    subtitle: 'Certificate of completion',
+    icon: 'security',
+    href: 'https://drive.google.com/file/d/1TaUsCHNSy-2R5XgLry5toSRKnwCzs5jg/view?usp=drive_link',
+  },
+  {
+    title: 'Salesforce Certified Data Cloud Consultant',
+    issuer: 'Udemy',
+    provider: 'Salesforce',
+    subtitle: 'Certificate of completion',
+    icon: 'database',
+    href: 'https://drive.google.com/file/d/1Q5eh3xpRykTrT7Aau2BwQrPGdGRgv6Ce/view?usp=drive_link',
+  },
+  {
+    title: 'Problem Solving with C++',
+    issuer: 'Udemy',
+    subtitle: 'Certificate of completion',
+    icon: 'code',
+    href: 'https://drive.google.com/file/d/1339RojWvJCItc9Nmp7IgzTmSAIh16hbd/view?usp=drive_link',
+  },
+  {
+    title: 'TCS CodeVita Season 13',
+    issuer: 'TCS',
+    subtitle: 'Rank certificate · Global rank 2055',
+    icon: 'award',
+    href: 'https://drive.google.com/file/d/1oZw1JDR_7GxuO87hSmorBt7iZ6axyjAX/view?usp=drive_link',
   },
 ]);
