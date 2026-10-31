@@ -89,8 +89,9 @@ export const experience = Experience.array().parse([
     role: 'Technical Head',
     org: 'Club Literati, MLRIT',
     logo: '/media/logos/club-literati.png',
-    // LinkedIn calls this role Technical Lead
-    start: '2025-08',
+    // LinkedIn calls this role Technical Lead. The dates cover the Web Developer and Senior Web Developer years
+    // before it, which Kushwant folded into this role on 31 Oct 2026
+    start: '2023-08',
     end: '2026-04',
     points: [
       "Led the tech for MLRIT's literary club, which runs TEDxMLRIT, Model United Nations conferences and the annual literary festival",
@@ -115,21 +116,6 @@ export const experience = Experience.array().parse([
     ],
   },
   {
-    id: 'club-literati-senior-web',
-    kind: 'volunteer',
-    role: 'Senior Web Developer',
-    org: 'Club Literati, MLRIT',
-    logo: '/media/logos/club-literati.png',
-    start: '2024-08',
-    end: '2025-08',
-    // From the TEDx-MLRIT repository; TEDxMLRIT is the club's flagship event
-    points: [
-      "Built the TEDx MLRIT website for the club's flagship event: speakers, past editions, sponsors, the team and a blog",
-      'Added ticket registration, speaker nomination and sponsorship forms, and deployed it on Vercel',
-    ],
-    stack: ['React', 'TypeScript', 'Vite', 'Tailwind CSS', 'Vercel'],
-  },
-  {
     id: 'gdsc-wow-hyderabad',
     kind: 'volunteer',
     role: 'Operations Team Member',
@@ -140,19 +126,6 @@ export const experience = Experience.array().parse([
     points: [
       'On the operations team for GDSC WoW Hyderabad 2024, hosted at MLR Institute of Technology',
       'The event brought together 500+ student developers',
-    ],
-  },
-  {
-    id: 'club-literati-web',
-    kind: 'volunteer',
-    role: 'Web Developer',
-    org: 'Club Literati, MLRIT',
-    logo: '/media/logos/club-literati.png',
-    start: '2023-08',
-    end: '2024-08',
-    // From the club's LinkedIn page; Kushwant hasn't described this role yet
-    points: [
-      "Joined the web team of MLRIT's literary club, which runs TEDxMLRIT, Model United Nations conferences and the annual literary festival",
     ],
   },
 ]);
