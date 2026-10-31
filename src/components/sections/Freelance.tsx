@@ -1,6 +1,7 @@
 import { ArrowUpRight } from 'lucide-react';
 import type { CSSProperties } from 'react';
 import { Badge } from '@/components/ui/Badge';
+import { Button } from '@/components/ui/Button';
 import { CountUp } from '@/components/ui/CountUp';
 import { SampleRibbon } from '@/components/ui/SampleRibbon';
 import { Section } from '@/components/ui/SectionHeader';
@@ -125,6 +126,16 @@ export function Freelance({
                   </li>
                 ))}
               </ul>
+            )}
+            {freelance.cta && (
+              <div className="reveal flex flex-wrap items-center justify-between gap-x-8 gap-y-4 rounded-md border border-rule bg-paper-veil p-6 backdrop-blur-md sm:p-8">
+                <p className="max-w-[44ch] type-lead text-ink">{freelance.cta.text}</p>
+                <Button href={freelance.cta.href} target="_blank" rel="noopener noreferrer">
+                  {freelance.cta.label}
+                  <ArrowUpRight className="size-4" strokeWidth={1.75} aria-hidden="true" />
+                  <span className="sr-only">: at Krudex Technologies, in a new tab</span>
+                </Button>
+              </div>
             )}
           </div>
 

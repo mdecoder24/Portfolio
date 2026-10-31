@@ -93,6 +93,8 @@ export const Freelance = z.object({
     )
     .max(4)
     .default([]),
+  // Where someone who wants a build is sent; the label comes from the design system's interface copy
+  cta: z.object({ text: z.string(), label: z.string(), href: z.url() }).optional(),
   placeholder: z.boolean().default(false),
 });
 

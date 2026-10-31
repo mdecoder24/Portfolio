@@ -17,4 +17,10 @@ export const freelance = Freelance.parse({
       stamps: ['IN', 'US', 'AE', 'ES', 'UK'],
     },
   ],
+  // New builds go through Kushwant's studio (31 Oct 2026), so the button leaves the site rather than opening Contact
+  cta: {
+    text: 'Want something built? I take on new projects through my studio, Krudex Technologies.',
+    label: 'Start a project',
+    href: 'https://krudex.in/',
+  },
 });

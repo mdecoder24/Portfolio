@@ -180,6 +180,11 @@ test('a freelance section sits between the projects and education, and the nav l
   await expect(page.locator('#freelance').getByText(/shipped 14\+ projects/)).toBeVisible();
   // The numbers sit on their own cards, each named for screen readers by its label
   await expect(page.locator('#freelance').getByRole('listitem')).toHaveCount(3);
+  // New builds are sent to the studio's site, in a new tab
+  const cta = page.locator('#freelance').getByRole('link', { name: /^Start a project/ });
+  await expect(cta).toHaveAttribute('href', 'https://krudex.in/');
+  await expect(cta).toHaveAttribute('target', '_blank');
+  await expect(cta).toHaveAttribute('rel', 'noopener noreferrer');
   await expect(page.locator('#freelance').getByRole('listitem').nth(2)).toContainText('India, USA, UAE, Spain and UK');
 });
 
