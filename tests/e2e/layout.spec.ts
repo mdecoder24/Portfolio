@@ -175,10 +175,9 @@ test('a freelance section sits between the projects and education, and the nav l
   expect(ids.indexOf('education')).toBe(ids.indexOf('freelance') + 1);
   await expect(page.getByRole('heading', { level: 2, name: 'Freelance and client work' })).toBeAttached();
   await expect(page.locator('footer').getByRole('link', { name: 'Freelance' })).toHaveAttribute('href', /#freelance$/);
-  await expect(page.locator('#freelance').getByRole('link', { name: 'Kemplast Process Solutions website' })).toHaveAttribute(
-    'href',
-    'https://www.kemplast.in/',
-  );
+  // Only the bio shows, on its card; no client list
+  await expect(page.locator('#freelance').getByRole('list', { name: 'Client work' })).toHaveCount(0);
+  await expect(page.locator('#freelance').getByText(/4\+ freelance projects/)).toBeVisible();
 });
 
 test('certifications follow education, each linking to its certificate', async ({ page }) => {

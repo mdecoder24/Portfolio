@@ -29,7 +29,8 @@ export function Freelance({ index, freelance, config }: { index: number; freelan
     >
       <div className="grid gap-12 lg:grid-cols-12 lg:gap-8">
         <div className="grid content-start gap-10 lg:col-span-9 lg:col-start-4">
-          <div className="reveal grid gap-4">
+          {/* The bio sits on a card like the contact form's; its edge and fill brighten under the pointer */}
+          <div className="reveal grid gap-4 rounded-md border border-rule bg-paper-veil p-6 shadow-float backdrop-blur-md transition-[border-color,background-color] duration-200 ease-out sm:p-8 [@media(hover:hover)_and_(pointer:fine)]:hover:border-rule-strong [@media(hover:hover)_and_(pointer:fine)]:hover:bg-plate-hover">
             <SampleRibbon placeholder={freelance.placeholder} />
             {freelance.bio.map((p) => (
               <p key={p} className="max-w-(--measure) type-lead text-ink-2">
