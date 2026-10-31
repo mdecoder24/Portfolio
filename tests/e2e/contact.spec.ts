@@ -18,6 +18,7 @@ test('choosing Freelance project reveals budget and timeline', async ({ page }) 
 
 test('Start a project preselects Freelance project', async ({ page }) => {
   await page.goto('/?3d=off');
-  await page.getByRole('link', { name: 'Start a project' }).first().click();
+  // The Contact section's own button; Freelance has one with the same label that leaves for krudex.in
+  await page.locator('#contact').getByRole('link', { name: 'Start a project' }).click();
   await expect(page.getByLabel("What's this about?")).toHaveValue('freelance');
 });
