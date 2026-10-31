@@ -13,7 +13,8 @@ export const tedxMlrit = CaseStudy.parse({
     { label: 'GitHub', href: 'https://github.com/mdecoder24/TEDx-MLRIT' },
     { label: 'Live', href: 'https://tedxmlrit.vercel.app/' },
   ],
-  featured: true,
+  // Shown under "View more projects" rather than in the main grid
+  featured: false,
   media: {
     src: '/media/tedx-mlrit/screen.jpg',
     screen: '/media/tedx-mlrit/phone.jpg',
