@@ -105,8 +105,12 @@ export const Certification = z.object({
   title: z.string(),
   issuer: z.string(), // the platform that issued it, such as Coursera
   provider: z.string().optional(), // whose programme it is, such as AWS or Meta
+  subtitle: z.string().default('Professional certificate'),
   // The card's mark: a plain icon for the subject, since provider logos are trademarks
-  icon: z.enum(['cloud', 'support', 'frontend', 'backend']).default('cloud'),
+  icon: z
+    .enum(['cloud', 'support', 'frontend', 'backend', 'ai', 'security', 'code', 'business', 'database', 'award'])
+    .default('cloud'),
+  featured: z.boolean().default(false),
   href: z.url(),
   placeholder: z.boolean().default(false),
 });
