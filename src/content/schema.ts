@@ -183,11 +183,14 @@ export const Skill = z.object({
 });
 
 export const EducationItem = z.object({
+  level: z.string(), // "Graduation", "Higher secondary"
   degree: z.string(),
   institution: z.string(),
-  start: z.number().int(),
+  // Left out when the stage is a single year, such as a board exam
+  start: z.number().int().optional(),
   end: z.number().int(),
-  cgpa: z.string().optional(),
+  // Drawn as a ring, filled to value / outOf; a CGPA is hidden when config.flags.showCgpa is off
+  score: z.object({ kind: z.enum(['cgpa', 'percent']), value: z.number(), outOf: z.number() }).optional(),
   coursework: z.array(z.string()).default([]),
   finalProject: z.object({ label: z.string(), href }).optional(),
   placeholder: z.boolean().default(false),

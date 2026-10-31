@@ -161,7 +161,8 @@ test('project cards link out to GitHub and the live site, and their titles open 
   await expect(page.locator('#work').getByText('Read the case study')).toHaveCount(0);
   // The MUN site leads the list
   await expect(page.locator('#work article').first()).toContainText('MLRIT MUN 2025 website');
-  await expect(page.locator('#work article')).toHaveCount(4);
+  // The main grid holds the featured four; the rest wait in the more-projects panel
+  await expect(page.locator('#work article:not(#more-projects article)')).toHaveCount(4);
   const sensai = page.locator('#work article').nth(3);
   await expect(sensai).toContainText('SENSAI, AI career coach');
   await expect(sensai.getByRole('link', { name: /^GitHub/ })).toHaveAttribute('href', 'https://github.com/mdeocder24/sensai');
@@ -239,4 +240,35 @@ test('experience cards stack as a deck on scroll, and an opened card stops stick
   await expect(card).toHaveCSS('position', 'sticky');
   await card.locator('summary').click();
   await expect(card).toHaveCSS('position', 'relative');
+});
+
+test('View more projects opens a panel of the other projects, with the same links and README', async ({ page }) => {
+  await page.goto('/?3d=off#work');
+  const open = page.locator('#work').getByRole('button', { name: /^View more projects/ });
+  await expect(open).toContainText('1');
+  await open.click();
+  const panel = page.getByRole('dialog', { name: 'More things I’ve built' });
+  await expect(panel).toBeVisible();
+  const card = panel.locator('article').filter({ hasText: 'Billfold, GST invoice maker' });
+  await expect(card.getByRole('link', { name: /^GitHub/ })).toHaveAttribute('href', 'https://github.com/mdecoder24/BillFold');
+  await expect(card.getByRole('link', { name: /^Live site/ })).toHaveAttribute('href', 'https://billifold.netlify.app/');
+  // The README opens on top of the panel, and Escape closes only the README
+  await card.getByRole('button', { name: /^View details/ }).click();
+  await expect(page.getByRole('dialog', { name: 'Billfold, GST invoice maker' })).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(page.getByRole('dialog', { name: 'Billfold, GST invoice maker' })).toBeHidden();
+  await expect(panel).toBeVisible();
+  await panel.getByRole('button', { name: 'Close' }).first().click();
+  await expect(panel).toBeHidden();
+});
+
+test('education reads as a path, oldest first, with each score written out beside its ring', async ({ page }) => {
+  await page.goto('/?3d=off#education');
+  const stages = page.locator('#education ol > li');
+  await expect(stages).toHaveCount(3);
+  await expect(stages.locator('h3')).toHaveText(['Secondary school, General', 'High school, PCM', 'B.Tech, Computer Science (AI & ML)']);
+  await expect(stages.nth(0)).toContainText('74.5%');
+  await expect(stages.nth(1)).toContainText('87.5%');
+  await expect(stages.nth(2)).toContainText('7.64');
+  await expect(stages.nth(2)).toContainText('CGPA');
 });

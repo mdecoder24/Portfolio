@@ -1,7 +1,7 @@
-import { ArrowUpRight } from 'lucide-react';
+import { ArrowUpRight, X } from 'lucide-react';
 import Link from 'next/link';
 import type { CSSProperties, ReactNode } from 'react';
-import { Button } from '@/components/ui/Button';
+import { Button, buttonClasses } from '@/components/ui/Button';
 import { CountUp } from '@/components/ui/CountUp';
 import { SampleRibbon } from '@/components/ui/SampleRibbon';
 import { Section } from '@/components/ui/SectionHeader';
@@ -72,7 +72,8 @@ function Details({ study, n, compact = false }: { study: CaseStudy; n: number; c
       <p className="max-w-[48ch] type-body text-ink-2">
         <span className="text-ink">
           <CountUp text={study.outcome} />
-        </span> {!compact && study.body.built}
+        </span>{' '}
+        {!compact && study.body.built}
       </p>
       <p className="type-code text-ink-2">{study.stack.join(', ')}</p>
       <div className="flex flex-wrap gap-3 pt-1">
@@ -113,10 +114,26 @@ function Row({ study, n, flip }: { study: CaseStudy; n: number; flip: boolean })
   );
 }
 
-/** A personal project: picture on top, a shorter write-up below; two to a row so the section ends sooner */
-function Card({ study, n, column }: { study: CaseStudy; n: number; column: number }) {
+/**
+ * A personal project: picture on top, a shorter write-up below; two to a row so the section ends sooner. In the
+ * more-projects panel it skips the scroll reveal, since the panel's own entrance already brings it in.
+ */
+function Card({
+  study,
+  n,
+  column,
+  inPanel = false,
+}: {
+  study: CaseStudy;
+  n: number;
+  column: number;
+  inPanel?: boolean;
+}) {
   return (
-    <article className="reveal grid content-start gap-5" style={{ '--reveal-delay': `${column * 80}ms` } as CSSProperties}>
+    <article
+      className={cn('grid content-start gap-5', !inPanel && 'reveal')}
+      style={{ '--reveal-delay': `${column * 80}ms` } as CSSProperties}
+    >
       <DeviceStage study={study} />
       <div className="grid content-start gap-4">
         <Details study={study} n={n} compact />
@@ -160,7 +177,61 @@ function Group({
   );
 }
 
+/**
+ * The projects beyond the main grid: a button under it opens a panel with the same cards, two to a row. Built on the
+ * popover attribute like the README panel, so it opens, closes on Escape or an outside click, and works without
+ * JavaScript; a card's own README opens on top of it. New projects only need featured: false in their content file.
+ */
+function MoreProjects({ studies, offset }: { studies: CaseStudy[]; offset: number }) {
+  if (studies.length === 0) return null;
+  return (
+    <div className="reveal flex justify-center">
+      <button type="button" popoverTarget="more-projects" className={buttonClasses({ variant: 'secondary' })}>
+        View more projects
+        <span className="grid min-w-6 place-items-center rounded-pill bg-plate px-1.5 type-code text-ink-2">
+          {studies.length}
+        </span>
+      </button>
+      <div
+        id="more-projects"
+        popover="auto"
+        role="dialog"
+        aria-labelledby="more-projects-title"
+        className="more-panel m-auto max-h-[88dvh] w-[min(72rem,calc(100%-2rem))] overflow-y-auto overscroll-contain rounded-lg border border-rule-strong bg-paper text-ink shadow-float backdrop:bg-paper-veil"
+      >
+        {/* The heading and close button stay in reach while the cards scroll beneath them */}
+        <div className="sticky top-0 z-10 flex items-center justify-between gap-4 border-b border-rule bg-paper px-6 py-4 sm:px-10">
+          <div className="grid gap-0.5">
+            <p className="type-code text-ink-2">
+              {studies.length} more {studies.length === 1 ? 'project' : 'projects'}
+            </p>
+            <h3 id="more-projects-title" className="type-h3 text-ink">
+              More things I&rsquo;ve built
+            </h3>
+          </div>
+          <button
+            type="button"
+            popoverTarget="more-projects"
+            popoverTargetAction="hide"
+            aria-label="Close"
+            className="inline-flex size-10 shrink-0 items-center justify-center rounded-full border border-rule hover:bg-plate-hover focus-visible:outline-none focus-visible:shadow-focus"
+          >
+            <X className="size-5" strokeWidth={1.75} aria-hidden="true" />
+          </button>
+        </div>
+        <div className="grid gap-x-8 gap-y-16 p-6 sm:p-10 md:grid-cols-2">
+          {studies.map((s, i) => (
+            <Card key={s.slug} study={s} n={offset + i + 1} column={i % 2} inPanel />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function Work({ index, projects }: { index: number; projects: CaseStudy[] }) {
+  const featured = projects.filter((p) => p.featured);
+  const more = projects.filter((p) => !p.featured);
   return (
     <Section
       id="work"
@@ -170,7 +241,8 @@ export function Work({ index, projects }: { index: number; projects: CaseStudy[]
       intro="Each one opens into a short write-up."
     >
       <div className="grid gap-24 lg:gap-32">
-        <Group title="My projects" studies={projects} offset={0} compact />
+        <Group title="My projects" studies={featured} offset={0} compact />
+        <MoreProjects studies={more} offset={featured.length} />
       </div>
     </Section>
   );

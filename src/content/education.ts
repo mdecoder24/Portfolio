@@ -1,12 +1,29 @@
 import { Achievement, EducationItem } from './schema.ts';
 
+// Oldest first, so the page reads as a path; set by Kushwant on 31 Oct 2026
 export const education = EducationItem.array().parse([
   {
+    level: 'Secondary school',
+    degree: 'Secondary school, General',
+    institution: 'Air Force School',
+    end: 2020,
+    score: { kind: 'percent', value: 74.5, outOf: 100 },
+  },
+  {
+    level: 'Higher secondary',
+    degree: 'High school, PCM',
+    institution: 'Sri Chaitanya Jr College',
+    start: 2020,
+    end: 2022,
+    score: { kind: 'percent', value: 87.5, outOf: 100 },
+  },
+  {
+    level: 'Graduation',
     degree: 'B.Tech, Computer Science (AI & ML)',
     institution: 'MLR Institute of Technology, Hyderabad',
     start: 2022,
     end: 2026,
-    cgpa: '7.64/10',
+    score: { kind: 'cgpa', value: 7.64, outOf: 10 },
   },
 ]);
 

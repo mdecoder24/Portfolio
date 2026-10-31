@@ -520,12 +520,12 @@ form:has(option[value='freelance']:checked) .freelance-fields {
 }
 
 /*
- * A project's README panel. It is opened by a click on the card, a few times a visit, so it gets a short entrance:
- * a fade with a settle from just below full size, and the same path out. display and overlay move discretely so the
- * exit can play before the popover leaves the top layer.
+ * A project's README panel and the more-projects panel. Each is opened by a click, a few times a visit, so it gets a
+ * short entrance: a fade with a settle from just below full size, and the same path out. display and overlay move
+ * discretely so the exit can play before the popover leaves the top layer.
  */
-.readme,
-.readme::backdrop {
+:is(.readme, .more-panel),
+:is(.readme, .more-panel)::backdrop {
   opacity: 0;
   transition:
     opacity 200ms var(--ease-out-quint),
@@ -533,30 +533,30 @@ form:has(option[value='freelance']:checked) .freelance-fields {
     display 200ms allow-discrete,
     overlay 200ms allow-discrete;
 }
-.readme {
+:is(.readme, .more-panel) {
   scale: 0.97;
 }
-.readme:popover-open,
-.readme:popover-open::backdrop {
+:is(.readme, .more-panel):popover-open,
+:is(.readme, .more-panel):popover-open::backdrop {
   opacity: 1;
   scale: 1;
 }
 @starting-style {
-  .readme:popover-open,
-  .readme:popover-open::backdrop {
+  :is(.readme, .more-panel):popover-open,
+  :is(.readme, .more-panel):popover-open::backdrop {
     opacity: 0;
   }
-  .readme:popover-open {
+  :is(.readme, .more-panel):popover-open {
     scale: 0.97;
   }
 }
 /* Reduced motion keeps the fade and drops the movement */
 @media (prefers-reduced-motion: reduce) {
-  :root:not([data-motion='full']) .readme {
+  :root:not([data-motion='full']) :is(.readme, .more-panel) {
     scale: 1;
   }
 }
-:root[data-motion='reduced'] .readme {
+:root[data-motion='reduced'] :is(.readme, .more-panel) {
   scale: 1;
 }
 
@@ -939,5 +939,101 @@ ul:has(> .stack-card) {
   }
 }
 :root[data-motion='reduced'] :is(.globe-spin, .globe-orbit, .stack-card) {
+  animation: none;
+}
+
+/*
+ * Education as a path. A rail runs down the left on phones and across the top on wide screens, with a dot for each
+ * stage; where the browser can tie animation to scrolling, an accent line draws along it as the section scrolls past.
+ * Each stage rises in after the one before, its dot pops onto the rail, and its score ring fills. Without JavaScript,
+ * or under reduced motion, the rail is drawn, the dots are in place and the rings are full.
+ */
+.edu-path {
+  --rail: 11px;
+  --fill-from: 1 0;
+}
+.edu-rail {
+  position: absolute;
+  top: 1.75rem;
+  bottom: 1.75rem;
+  left: var(--rail);
+  width: 2px;
+  translate: -50% 0;
+  background: var(--color-rule);
+}
+.edu-rail-fill {
+  background: var(--color-accent);
+  transform-origin: 50% 0;
+}
+.edu-dot {
+  position: absolute;
+  z-index: 1;
+  top: 1.75rem;
+  left: calc(var(--rail) - 2rem);
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  background: var(--color-accent);
+  box-shadow: 0 0 0 4px var(--color-accent-soft);
+  translate: -50% -50%;
+}
+@media (width >= 64rem) {
+  .edu-path {
+    --fill-from: 0 1;
+  }
+  .edu-rail {
+    top: 15px;
+    right: 0;
+    bottom: auto;
+    left: 0;
+    width: auto;
+    height: 2px;
+    translate: 0 -50%;
+  }
+  .edu-rail-fill {
+    transform-origin: 0 50%;
+  }
+  .edu-dot {
+    top: -25px;
+    left: 1.5rem;
+  }
+}
+.edu-ring {
+  stroke-dasharray: var(--c);
+  stroke-dashoffset: var(--to);
+}
+@supports (animation-timeline: view()) {
+  .edu-rail-fill {
+    animation: edu-fill linear both;
+    animation-timeline: view();
+    animation-range: entry 30% cover 55%;
+  }
+}
+@keyframes edu-fill {
+  from {
+    scale: var(--fill-from);
+  }
+}
+:root[data-reveal] .edu-stage:not([data-shown]) {
+  translate: 0 40px;
+}
+:root[data-reveal] .edu-stage .edu-dot {
+  transition: scale 500ms var(--ease-out-back) calc(var(--reveal-delay, 0ms) + 250ms);
+}
+:root[data-reveal] .edu-stage:not([data-shown]) .edu-dot {
+  scale: 0;
+}
+:root[data-reveal] .edu-stage .edu-ring {
+  transition: stroke-dashoffset 1400ms var(--ease-out-quint) calc(var(--reveal-delay, 0ms) + 400ms);
+}
+:root[data-reveal] .edu-stage:not([data-shown]) .edu-ring {
+  stroke-dashoffset: var(--c);
+}
+@media (prefers-reduced-motion: reduce) {
+  :root:not([data-motion='full']) .edu-rail-fill {
+    animation: none;
+  }
+}
+:root[data-motion='reduced'] .edu-rail-fill {
   animation: none;
 }
