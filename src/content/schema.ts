@@ -67,7 +67,7 @@ export const CaseStudy = z.object({
 
 // The freelance section: a short bio in first person, then the client work, newest first
 export const Freelance = z.object({
-  bio: z.array(z.string()).min(1), // one string per paragraph
+  bio: z.array(z.string()).min(1), // one string per paragraph; ==phrase== is highlighted
   work: z
     .array(
       z.object({

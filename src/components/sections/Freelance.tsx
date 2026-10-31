@@ -6,6 +6,19 @@ import { SampleRibbon } from '@/components/ui/SampleRibbon';
 import { Section } from '@/components/ui/SectionHeader';
 import type { Config, Freelance as FreelanceContent } from '@/content/schema';
 
+/** A bio paragraph with its ==marked== phrases as highlights; each knows its place, so they sweep in one by one */
+function Marked({ text, from }: { text: string; from: number }) {
+  return text.split(/==(.+?)==/).map((part, i) =>
+    i % 2 === 0 ? (
+      part
+    ) : (
+      <mark key={i} className="highlight text-ink" style={{ '--m': from + (i - 1) / 2 } as CSSProperties}>
+        {part}
+      </mark>
+    ),
+  );
+}
+
 const AVAILABILITY: Record<Config['availability']['freelance'], string> = {
   available: 'Taking on projects',
   limited: 'Limited availability',
@@ -32,11 +45,26 @@ export function Freelance({ index, freelance, config }: { index: number; freelan
         <div className="grid content-start gap-10 lg:col-span-9 lg:col-start-4">
           {/* The bio on a card like the contact form's, then the numbers as boarding passes (see .ticket in globals.css) */}
           <div className="grid gap-4">
-            <div className="reveal grid gap-4 rounded-md border border-rule bg-paper-veil p-6 shadow-float backdrop-blur-md sm:p-8">
+            <div className="letter reveal relative grid gap-4 overflow-hidden rounded-md border border-rule bg-paper-veil p-6 pt-8 shadow-float backdrop-blur-md sm:p-8 sm:pt-10 sm:pr-40">
+              {/* A postmark from where the letters are sent; decoration, like the ticket stamps */}
+              <span
+                aria-hidden="true"
+                className="postmark absolute top-8 right-8 grid size-24 place-content-center rounded-full border-[1.5px] border-accent text-center type-code text-accent max-sm:hidden"
+              >
+                <span className="border-y border-accent px-1 py-0.5">Hyderabad</span>
+                <span className="mt-1">Since 2023</span>
+              </span>
               <SampleRibbon placeholder={freelance.placeholder} />
-              {freelance.bio.map((p) => (
-                <p key={p} className="max-w-(--measure) type-lead text-ink-2">
-                  {p}
+              {freelance.bio.map((p, i) => (
+                <p
+                  key={p}
+                  className="reveal max-w-(--measure) type-lead text-ink-2"
+                  style={{ '--reveal-delay': `${300 + i * 160}ms` } as CSSProperties}
+                >
+                  <Marked
+                    text={p}
+                    from={freelance.bio.slice(0, i).reduce((n, t) => n + (t.match(/==(.+?)==/g)?.length ?? 0), 0)}
+                  />
                 </p>
               ))}
             </div>
