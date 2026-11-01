@@ -19,15 +19,21 @@ test('any key skips the intro', async ({ page }) => {
   // Keys only skip once the intro has hydrated; it marks itself seen for the session at that point
   await expect.poll(() => page.evaluate(() => sessionStorage.getItem('kr-intro'))).toBe('1');
   await page.keyboard.press('Shift');
-  await expect(page.locator('#intro')).toBeHidden({ timeout: 1000 });
+  // The fade replaces the 2.7 s lift, so seeing it proves the skip; a busy machine can start it late, so no tight timer
+  const intro = page.locator('#intro');
+  await expect(intro).toHaveAttribute('data-skip');
+  await expect.poll(() => intro.evaluate((el) => getComputedStyle(el).animationName)).toBe('intro-skip');
+  await expect(intro).toBeHidden();
 });
 
-test('reduced motion and links to a section never show the intro', async ({ page }) => {
+test('reduced motion never shows the intro', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('/?3d=off');
   await expect(page.locator('#intro')).toBeHidden();
-  await page.emulateMedia({ reducedMotion: 'no-preference' });
-  await page.evaluate(() => sessionStorage.clear());
+});
+
+// A fresh page each: going from /?3d=off to /?3d=off#work only changes the hash, so nothing would reload
+test('links to a section never show the intro', async ({ page }) => {
   await page.goto('/?3d=off#work');
   await expect(page.locator('#intro')).toBeHidden();
 });
