@@ -8,6 +8,35 @@ test('no horizontal scroll, and the hero headline is visible in the first viewpo
   await expect(page.getByRole('link', { name: 'Résumé' }).first()).toBeVisible();
 });
 
+test('no page scrolls sideways from a 240 px watch-sized screen up to 4K', async ({ page }) => {
+  for (const path of ['/?3d=off', '/projects/mun-website?3d=off', '/privacy?3d=off']) {
+    await page.goto(path);
+    for (const [width, height] of [[240, 320], [280, 653], [320, 568], [568, 320], [844, 390], [768, 1024], [1024, 768], [3840, 2160]]) {
+      await page.setViewportSize({ width, height });
+      const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+      expect(overflow, `${path} at ${width} x ${height}`).toBe(0);
+    }
+  }
+});
+
+test('the name stays inside the first screen on a phone held sideways', async ({ page }) => {
+  await page.setViewportSize({ width: 568, height: 320 });
+  await page.goto('/?3d=off');
+  const name = page.locator('#hero-title .w').first();
+  await name.evaluate((el) => Promise.all(el.getAnimations().map((anim) => anim.finished)));
+  const box = await name.boundingBox();
+  expect(box && box.y + box.height).toBeLessThanOrEqual(320);
+});
+
+test('on the narrowest screens the résumé moves from the bar into the menu', async ({ page }) => {
+  await page.setViewportSize({ width: 240, height: 320 });
+  await page.goto('/?3d=off');
+  const bar = page.getByRole('navigation', { name: 'Main' });
+  await expect(bar.getByRole('link', { name: 'Résumé' })).toHaveCount(0);
+  await page.getByRole('button', { name: 'Open menu' }).click();
+  await expect(page.getByRole('dialog', { name: 'Menu' }).getByRole('link', { name: 'Résumé' })).toBeVisible();
+});
+
 test('the hero leads with the name, role and key facts', async ({ page }) => {
   await page.goto('/?3d=off');
   const h1 = page.getByRole('heading', { level: 1 });

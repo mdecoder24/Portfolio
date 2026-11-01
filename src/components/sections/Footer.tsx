@@ -4,7 +4,7 @@ import { PreferenceToggles } from '@/components/layout/PreferenceToggles';
 import type { Config } from '@/content/schema';
 
 export function Footer({ config, name }: { config: Config; name: string }) {
-  const link = 'rounded-xs text-ink-2 underline-offset-4 hover:text-ink hover:underline focus-visible:outline-none focus-visible:shadow-focus';
+  const link = 'inline-flex min-h-6 items-center rounded-xs text-ink-2 underline-offset-4 hover:text-ink hover:underline focus-visible:outline-none focus-visible:shadow-focus';
 
   return (
     <footer className="relative z-content border-t border-rule">
@@ -55,7 +55,7 @@ export function Footer({ config, name }: { config: Config; name: string }) {
             </span>
           </p>
         </div>
-        <p aria-hidden="true" className="-mb-[0.14em] select-none whitespace-nowrap text-center text-[clamp(3rem,14.6vw,17.5rem)] leading-[0.86] font-semibold tracking-[-0.065em] text-rule">
+        <p aria-hidden="true" className="-mb-[0.14em] select-none whitespace-nowrap text-center text-[min(14.6vw,17.5rem)] leading-[0.86] font-semibold tracking-[-0.065em] text-rule">
           Kushwant KR
         </p>
       </div>

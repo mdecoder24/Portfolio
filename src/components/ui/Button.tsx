@@ -18,7 +18,7 @@ type AsButton = Common & { href?: undefined } & Omit<ComponentProps<'button'>, '
 
 export function buttonClasses({ variant = 'primary', size = 'md' }: { variant?: Variant; size?: 'md' | 'sm' }) {
   return cn(
-    'btn inline-flex min-h-12 items-center justify-center gap-2 whitespace-nowrap rounded-control px-6 type-ui',
+    'btn inline-flex min-h-12 items-center justify-center gap-2 whitespace-nowrap rounded-control px-6 type-ui max-[20em]:whitespace-normal max-[20em]:text-center',
     // Press feedback is a slight scale; colour changes carry the hover
     'transition-[background-color,color,border-color,scale] duration-160 ease-out focus-visible:outline-none focus-visible:shadow-focus active:scale-[0.97]',
     'aria-disabled:pointer-events-none aria-disabled:opacity-45',

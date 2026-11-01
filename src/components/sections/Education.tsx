@@ -13,7 +13,7 @@ function Score({ score }: { score: NonNullable<EducationItem['score']> }) {
   const text = score.kind === 'percent' ? `${score.value}%` : String(score.value);
   const share = Math.min(1, score.value / score.outOf);
   return (
-    <div className="flex items-center gap-4">
+    <div className="flex flex-wrap items-center gap-4">
       <div className="relative grid size-20 shrink-0 place-items-center">
         <svg viewBox="0 0 80 80" aria-hidden="true" className="absolute inset-0 -rotate-90">
           <circle cx="40" cy="40" r={R} fill="none" strokeWidth="5" className="stroke-rule" />

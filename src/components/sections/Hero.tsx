@@ -19,7 +19,7 @@ import type { Config, Profile } from '@/content/schema';
 function Portrait({ src }: { src?: string }) {
   // Sized by the screen's height as well as its width, so the photo, name and actions share one screen
   const frame =
-    'group/portrait relative block aspect-[4/5] w-[min(92vw,clamp(16rem,52svh,24rem))] lg:w-[clamp(22rem,60svh,36rem)]';
+    'group/portrait relative block aspect-[4/5] w-[min(92vw,clamp(11rem,52svh,24rem))] lg:w-[clamp(22rem,60svh,36rem)]';
   const fade =
     'transition-opacity duration-500 group-data-[mosaic=diffusing]/portrait:opacity-0 group-data-[mosaic=pixel]/portrait:opacity-0';
   if (src)
@@ -51,8 +51,9 @@ function Portrait({ src }: { src?: string }) {
  */
 export function Hero({ profile, config }: { profile: Profile; config: Config }) {
   const fullName = profile.name.trim().replace(/\s+/g, ' ');
+  // The name holds one line, so on the narrowest screens its size follows the width: it runs about 10.8 em long
   const word =
-    'type-display whitespace-nowrap text-[length:clamp(1.75rem,7vw,3.25rem)] lg:text-[length:clamp(3rem,4.6vw,4.5rem)] leading-none [&_.w]:mr-[0.14em] [&_.w:last-child]:mr-0 [&_.w]:pb-[0.06em]';
+    'type-display whitespace-nowrap text-[length:min(clamp(1.75rem,7vw,3.25rem),calc((100vw-2*var(--gutter))/10.8))] lg:text-[length:clamp(3rem,4.6vw,4.5rem)] leading-none [&_.w]:mr-[0.14em] [&_.w:last-child]:mr-0 [&_.w]:pb-[0.06em]';
 
   return (
     <section
@@ -76,14 +77,14 @@ export function Hero({ profile, config }: { profile: Profile; config: Config }) 
 
           {/* Pulled up in front of the portrait's faded lower half. On wide screens the actions flank the name, level
               with the role line, so the photo keeps the centre to itself */}
-          <div className="relative -mt-28 grid w-full justify-items-center gap-6 sm:-mt-36 lg:-mt-44 lg:grid-cols-[1fr_auto_1fr] lg:items-end">
+          <div className="relative -mt-28 grid w-full justify-items-center gap-6 sm:-mt-36 max-lg:[@media(max-height:480px)]:-mt-20 lg:-mt-44 lg:grid-cols-[1fr_auto_1fr] lg:items-end">
             <h1 id="hero-title" className="grid justify-items-center gap-2 sm:gap-3 lg:col-start-2 lg:row-start-1">
               <MetalTitle as="span" text={fullName} entrance="load" className={`${word} [--rise-delay:80ms]`} />
               <span className="sr-only">, </span>
               <span className="rise type-h3 font-medium text-ink [--rise-delay:240ms]">Full-stack &amp; AI engineer</span>
             </h1>
 
-            <div className="flex justify-center gap-3 lg:contents">
+            <div className="flex flex-wrap justify-center gap-3 lg:contents">
               <Button
                 href="#work"
                 size="sm"

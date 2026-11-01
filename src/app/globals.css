@@ -241,13 +241,14 @@
   }
   @media (min-width: 640px) {
     :root {
-      --gutter: 32px;
+      /* The inset matters here too: a phone held sideways is this wide, with its notch at the side */
+      --gutter: max(32px, env(safe-area-inset-left));
       --section-pad: var(--space-9);
     }
   }
   @media (min-width: 1024px) {
     :root {
-      --gutter: 48px;
+      --gutter: max(48px, env(safe-area-inset-left));
       --section-pad: var(--space-10);
     }
   }
@@ -264,6 +265,8 @@
     caret-color: var(--accent);
     -webkit-font-smoothing: antialiased;
     -webkit-tap-highlight-color: transparent;
+    /* A long word or email breaks rather than pushing the page sideways on a narrow screen or with large text */
+    overflow-wrap: anywhere;
   }
   ::selection {
     background: var(--accent);

@@ -27,7 +27,7 @@ export function SocialLinks({ links, className }: { links: Config['links']; clas
     { label: 'Email', href: `mailto:${links.email}`, icon: <Mail className="size-5" strokeWidth={1.75} aria-hidden="true" /> },
   ];
   return (
-    <ul className={cn('flex items-center gap-2', className)} aria-label="Social links">
+    <ul className={cn('flex flex-wrap items-center gap-2', className)} aria-label="Social links">
       {items.map((s) => {
         const external = s.href.startsWith('http');
         return (

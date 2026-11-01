@@ -14,7 +14,7 @@ export function CopyEmail({ email }: { email: string }) {
   return (
     <button
       type="button"
-      className="inline-flex items-center gap-1.5 type-small text-ink-2 transition-colors hover:text-ink"
+      className="inline-flex min-h-6 items-center gap-1.5 type-small text-ink-2 transition-colors hover:text-ink"
       onClick={() =>
         navigator.clipboard.writeText(email).then(
           () => setCopied(true),
