@@ -31,7 +31,7 @@ export default function Home() {
         <Freelance index={next()} freelance={content.freelance} config={config} />
         <Education index={next()} education={content.education} config={config} />
         <Certifications index={next()} certifications={content.certifications} />
-        <Contact index={next()} config={config} profile={profile} />
+        <Contact index={next()} config={config} profile={profile} projectHref={content.freelance.cta?.href} />
         <RevealObserver />
       </SiteChrome>
     </>

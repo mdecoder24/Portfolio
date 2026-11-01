@@ -1,24 +1,10 @@
 import { expect, test } from './fixtures';
 
-test('invalid fields show their errors and focus the first one', async ({ page }) => {
+test('contact offers email and the studio, with no message form', async ({ page }) => {
   await page.goto('/?3d=off#contact');
-  await page.getByRole('button', { name: 'Send message' }).click();
-  await expect(page.getByText('Enter your name.')).toBeVisible();
-  await expect(page.getByText('Enter an email address like name@example.com.')).toBeVisible();
-  await expect(page.getByLabel('Name')).toBeFocused();
-  await expect(page.getByLabel('Name')).toHaveAttribute('aria-invalid', 'true');
-});
-
-test('choosing Freelance project reveals budget and timeline', async ({ page }) => {
-  await page.goto('/?3d=off#contact');
-  await expect(page.getByLabel('Budget (optional)')).toBeHidden();
-  await page.getByLabel("What's this about?").selectOption('freelance');
-  await expect(page.getByLabel('Budget (optional)')).toBeVisible();
-});
-
-test('Start a project preselects Freelance project', async ({ page }) => {
-  await page.goto('/?3d=off');
-  // The Contact section's own button; Freelance has one with the same label that leaves for krudex.in
-  await page.locator('#contact').getByRole('link', { name: 'Start a project' }).click();
-  await expect(page.getByLabel("What's this about?")).toHaveValue('freelance');
+  const contact = page.locator('#contact');
+  await expect(contact.locator('form')).toHaveCount(0);
+  await expect(contact.getByText('Or leave a message here')).toHaveCount(0);
+  await expect(contact.getByRole('link', { name: 'Send an email' })).toHaveAttribute('href', /^mailto:/);
+  await expect(contact.getByRole('link', { name: 'Start a project' })).toHaveAttribute('href', 'https://krudex.in/');
 });

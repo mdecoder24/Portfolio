@@ -2,10 +2,19 @@ import { ArrowUpRight, Mail } from 'lucide-react';
 import { SmokeMount } from '@/components/layout/SmokeMount';
 import { Button } from '@/components/ui/Button';
 import type { Config, Profile } from '@/content/schema';
-import { ContactForm } from './ContactForm';
 import { CopyEmail, LocalTime } from './ContactAside';
 
-export function Contact({ index, config, profile }: { index: number; config: Config; profile: Profile }) {
+export function Contact({
+  index,
+  config,
+  profile,
+  projectHref,
+}: {
+  index: number;
+  config: Config;
+  profile: Profile;
+  projectHref?: string;
+}) {
   const { links, availability } = config;
   const rows: { label: string; value: React.ReactNode }[] = [
     {
@@ -78,16 +87,18 @@ export function Contact({ index, config, profile }: { index: number; config: Con
                 Send an email
                 <Mail className="size-4" strokeWidth={1.75} aria-hidden="true" />
               </Button>
-              <Button href="#contact-form" variant="secondary" data-topic="freelance" className="bg-paper-veil">
-                Start a project
-                <ArrowUpRight className="size-4" strokeWidth={1.75} aria-hidden="true" />
-              </Button>
+              {projectHref && (
+                <Button href={projectHref} variant="secondary" className="bg-paper-veil">
+                  Start a project
+                  <ArrowUpRight className="size-4" strokeWidth={1.75} aria-hidden="true" />
+                </Button>
+              )}
             </div>
           </div>
         </div>
 
         <div className="grid gap-8 lg:grid-cols-12 lg:gap-8">
-          <dl className="reveal self-start overflow-hidden rounded-md border border-rule bg-paper-veil backdrop-blur-md lg:col-span-5 lg:col-start-1">
+          <dl className="reveal self-start overflow-hidden rounded-md border border-rule bg-paper-veil backdrop-blur-md lg:col-span-9 lg:col-start-4">
             {rows.map((r) => (
               <div key={r.label} className="grid gap-1.5 border-b border-rule px-6 py-5 last:border-b-0">
                 <dt className="type-code text-ink-2">{r.label}</dt>
@@ -95,13 +106,6 @@ export function Contact({ index, config, profile }: { index: number; config: Con
               </div>
             ))}
           </dl>
-          <div id="contact-form" className="reveal grid scroll-mt-(--nav-height) gap-6 rounded-md border border-rule bg-paper-veil p-6 backdrop-blur-md sm:p-8 lg:col-span-7">
-            <div className="grid gap-2">
-              <h3 className="type-h4 text-ink">Or leave a message here</h3>
-              <p className="type-small text-ink-2">It comes straight to my inbox. Choose “Freelance project” to add a budget and timeline.</p>
-            </div>
-            <ContactForm email={links.email} />
-          </div>
         </div>
       </div>
     </section>
