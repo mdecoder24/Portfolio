@@ -32,7 +32,7 @@ function Logo({ name, index }: { name: string; index: number }) {
 
 /**
  * An exploded view of the stack: one tilted plate per layer carrying its tools' marks. It repeats the list beside it as
- * a picture, so it is hidden from assistive technology; the plates sit apart unless motion is on, then open once.
+ * a picture, so it is hidden from assistive technology; the plates sit apart unless motion is on, then open on each visit.
  */
 export function StackTeardown({ skills, className }: { skills: Skill[]; className?: string }) {
   return (

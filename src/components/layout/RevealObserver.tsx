@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import { watchScrollReplay } from '@/lib/scroll-replay';
 import { prefersReducedMotion } from '@/stores/ui';
 
 /**
@@ -12,32 +13,35 @@ export function RevealObserver() {
   useEffect(() => {
     // Opt in only when motion is allowed, so content is never hidden without JavaScript. Deferred by one frame so
     // PageObserver, which mounts after the page in the same commit, has loaded the saved motion preference.
-    const observers: IntersectionObserver[] = [];
+    const stops: (() => void)[] = [];
     const watch = (selector: string, rootMargin: string) => {
-      const io = new IntersectionObserver(
-        (entries) => {
-          for (const e of entries)
-            if (e.isIntersecting) {
-              (e.target as HTMLElement).dataset.shown = '';
-              io.unobserve(e.target);
-            }
-        },
-        { rootMargin },
+      stops.push(
+        watchScrollReplay(
+          document.querySelectorAll(selector),
+          rootMargin,
+          (el) => {
+            (el as HTMLElement).dataset.shown = '';
+          },
+          (el) => {
+            delete (el as HTMLElement).dataset.shown;
+            // Jump to the hidden state, or a quick return would catch the reverse transition and lose the entrance.
+            // Only transitions: scroll-driven and looping animations here cannot be finished
+            for (const a of el.getAnimations({ subtree: true })) if (a instanceof CSSTransition) a.finish();
+          },
+        ),
       );
-      document.querySelectorAll(selector).forEach((el) => io.observe(el));
-      observers.push(io);
     };
     const raf = requestAnimationFrame(() => {
       if (prefersReducedMotion()) return;
       document.documentElement.dataset.reveal = '';
-      watch('.reveal, .reveal-words', '0px 0px -8% 0px');
+      watch('.reveal, .reveal-words, .ticket-slot', '0px 0px -8% 0px');
       // Set pieces that play a longer motion wait until they are well on screen, or the reader catches only the end
       watch('.reveal-late', '0px 0px -30% 0px');
     });
 
     return () => {
       cancelAnimationFrame(raf);
-      observers.forEach((io) => io.disconnect());
+      stops.forEach((stop) => stop());
       delete document.documentElement.dataset.reveal;
       document.querySelectorAll('[data-shown]').forEach((el) => delete (el as HTMLElement).dataset.shown);
     };

@@ -318,6 +318,49 @@ test('the more-projects invitation traces its border on reveal, and stays still 
   expect(await card.evaluate(beam)).toBe('none');
 });
 
+test('scroll animations play again on every return, without flickering while off screen', async ({ page }) => {
+  const beam = (el: Element) => getComputedStyle(el, '::before').animationName;
+  const card = page.locator('#work .invite');
+  const reveal = card.locator('xpath=ancestor-or-self::*[contains(concat(" ", @class, " "), " reveal ")][1]');
+  const count = page.locator('#education ol > li .tabular').first();
+  const away = () => page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
+
+  await page.goto('/?3d=off');
+  for (let visit = 0; visit < 2; visit++) {
+    await card.scrollIntoViewIfNeeded();
+    await expect.poll(() => card.evaluate(beam)).toBe('beam-trace');
+    await count.scrollIntoViewIfNeeded();
+    await expect(count).toContainText('7.64');
+
+    await away();
+    await expect(reveal).not.toHaveAttribute('data-shown');
+    await expect.poll(() => card.evaluate(beam)).toBe('none');
+    await expect(count).not.toContainText('7.64');
+  }
+
+  // Coming back up, a ticket must print as soon as any of it is in view, not only once its clipped top edge is
+  const slot = page.locator('#freelance .ticket-slot').first();
+  await page.evaluate(() => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'instant' }));
+  await expect(slot).not.toHaveAttribute('data-shown');
+  await slot.evaluate((el) => window.scrollBy({ top: el.getBoundingClientRect().top + 40, behavior: 'instant' }));
+  await expect(slot).toHaveAttribute('data-shown');
+
+  // A hidden card sits lower than a shown one, so resetting at the viewport edge would loop between the two states
+  await card.scrollIntoViewIfNeeded();
+  await expect(reveal).toHaveAttribute('data-shown');
+  const changes = await reveal.evaluate(async (el) => {
+    let seen = 0;
+    const log = new MutationObserver((records) => (seen += records.length));
+    log.observe(el, { attributes: true, attributeFilter: ['data-shown'] });
+    // Just past the top of the viewport, where the 16px hidden offset could carry it back into view
+    window.scrollBy({ top: el.getBoundingClientRect().bottom + 8, behavior: 'instant' });
+    await new Promise((done) => setTimeout(done, 800));
+    log.disconnect();
+    return seen;
+  });
+  expect(changes).toBe(0);
+});
+
 test('education reads as a path, newest first, with each score written out beside its ring', async ({ page }) => {
   await page.goto('/?3d=off#education');
   const stages = page.locator('#education ol > li');

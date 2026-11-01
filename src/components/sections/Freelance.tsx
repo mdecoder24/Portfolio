@@ -94,35 +94,39 @@ export function Freelance({
                 {freelance.stats.map((s, i) => (
                   <li
                     key={s.label}
-                    className="ticket reveal grid grid-cols-[minmax(0,1fr)_auto] [overflow-x:clip] rounded-md border border-rule bg-paper-veil shadow-float backdrop-blur-md"
+                    // The observer watches this unclipped slot: a hidden ticket measures as only its clipped top edge, so
+                    // coming back up the page it would stay blank until that edge was on screen
+                    className="ticket-slot grid"
                     // Printed one after another, after the bio card
                     style={{ '--reveal-delay': `${160 + i * 220}ms` } as CSSProperties}
                   >
-                    <div className="grid content-start gap-2 p-6">
-                      <span className="type-h2 text-ink">
-                        <CountUp text={s.value} delay={500 + i * 220} />
-                      </span>
-                      <span className="type-ui text-ink">{s.label}</span>
-                      {s.detail && <span className="type-small text-ink-2">{s.detail}</span>}
-                    </div>
-                    {s.stamps.length > 0 && (
-                      <div
-                        aria-hidden="true"
-                        className="ticket-stub relative grid place-content-center gap-2 border-l border-dashed border-rule-strong px-4 py-6 data-[many=true]:grid-cols-2"
-                        data-many={s.stamps.length > 2}
-                      >
-                        {s.stamps.map((t, j) => (
-                          <span
-                            key={t}
-                            className="stamp rounded-xs border-[1.5px] border-accent px-1.5 py-0.5 text-center type-code whitespace-nowrap text-accent"
-                            // A slightly different angle per stamp, as if pressed by hand
-                            style={{ '--s': j, '--r': `${[-8, 5, -3, 7, -5][j % 5]}deg` } as CSSProperties}
-                          >
-                            {t}
-                          </span>
-                        ))}
+                    <div className="ticket grid grid-cols-[minmax(0,1fr)_auto] [overflow-x:clip] rounded-md border border-rule bg-paper-veil shadow-float backdrop-blur-md">
+                      <div className="grid content-start gap-2 p-6">
+                        <span className="type-h2 text-ink">
+                          <CountUp text={s.value} delay={500 + i * 220} />
+                        </span>
+                        <span className="type-ui text-ink">{s.label}</span>
+                        {s.detail && <span className="type-small text-ink-2">{s.detail}</span>}
                       </div>
-                    )}
+                      {s.stamps.length > 0 && (
+                        <div
+                          aria-hidden="true"
+                          className="ticket-stub relative grid place-content-center gap-2 border-l border-dashed border-rule-strong px-4 py-6 data-[many=true]:grid-cols-2"
+                          data-many={s.stamps.length > 2}
+                        >
+                          {s.stamps.map((t, j) => (
+                            <span
+                              key={t}
+                              className="stamp rounded-xs border-[1.5px] border-accent px-1.5 py-0.5 text-center type-code whitespace-nowrap text-accent"
+                              // A slightly different angle per stamp, as if pressed by hand
+                              style={{ '--s': j, '--r': `${[-8, 5, -3, 7, -5][j % 5]}deg` } as CSSProperties}
+                            >
+                              {t}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
                   </li>
                 ))}
               </ul>

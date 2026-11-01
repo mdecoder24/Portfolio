@@ -2,12 +2,13 @@
 
 import { useEffect, useRef } from 'react';
 import { formatCount, splitCount } from '@/lib/format';
+import { watchScrollReplay } from '@/lib/scroll-replay';
 import { prefersReducedMotion } from '@/stores/ui';
 
 const COUNT_MS = 1200;
 
 /**
- * A fact whose number counts up from zero the first time it scrolls into view. The server renders the final text, so
+ * A fact whose number counts up from zero each time it scrolls into view. The server renders the final text, so
  * it reads correctly without JavaScript and under reduced motion; screen readers only ever get the final text.
  */
 export function CountUp({ text, delay = 0 }: { text: string; delay?: number }) {
@@ -33,14 +34,20 @@ export function CountUp({ text, delay = 0 }: { text: string; delay?: number }) {
       };
       raf = requestAnimationFrame(tick);
     };
-    const io = new IntersectionObserver(([e]) => {
-      if (!e.isIntersecting) return;
-      io.disconnect();
-      timer = window.setTimeout(run, delay);
-    });
-    io.observe(el);
+    const stop = watchScrollReplay(
+      [el],
+      '0px',
+      () => {
+        timer = window.setTimeout(run, delay);
+      },
+      () => {
+        clearTimeout(timer);
+        cancelAnimationFrame(raf);
+        write(0);
+      },
+    );
     return () => {
-      io.disconnect();
+      stop();
       clearTimeout(timer);
       cancelAnimationFrame(raf);
       el.textContent = text;
