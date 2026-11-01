@@ -33,10 +33,12 @@ export function Contact({
     {
       label: 'Elsewhere',
       value: (
-        <span className="flex gap-3">
+        <span className="flex flex-wrap gap-3">
           {[
             ['LinkedIn', links.linkedin],
             ['GitHub', links.github],
+            ['LeetCode', links.leetcode],
+            ['Email', `mailto:${links.email}`],
           ].map(([name, href]) => (
             <a
               key={name}
