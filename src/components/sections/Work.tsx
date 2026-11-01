@@ -148,7 +148,7 @@ function Details({ study, n, compact = false }: { study: CaseStudy; n: number; c
 
 function Row({ study, n, flip }: { study: CaseStudy; n: number; flip: boolean }) {
   return (
-    <article className="grid items-center gap-8 lg:grid-cols-12 lg:gap-8">
+    <article className="project-card relative isolate grid items-center gap-8 rounded-md border border-rule bg-paper-veil p-4 sm:p-6 lg:grid-cols-12 lg:gap-8 lg:p-8">
       <div className={cn('reveal lg:col-span-7', flip && 'lg:order-2 lg:col-start-6')}>
         <DeviceStage study={study} />
       </div>
@@ -181,7 +181,10 @@ function Card({
 }) {
   return (
     <article
-      className={cn('grid content-start gap-5', !inPanel && 'reveal')}
+      className={cn(
+        'project-card relative isolate grid content-start gap-5 rounded-md border border-rule bg-paper-veil p-4 sm:p-6',
+        !inPanel && 'reveal',
+      )}
       style={{ '--reveal-delay': `${column * 80}ms` } as CSSProperties}
     >
       <DeviceStage study={study} />

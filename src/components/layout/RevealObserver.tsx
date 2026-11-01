@@ -34,7 +34,7 @@ export function RevealObserver() {
     const raf = requestAnimationFrame(() => {
       if (prefersReducedMotion()) return;
       document.documentElement.dataset.reveal = '';
-      watch('.reveal, .reveal-words, .ticket-slot', '0px 0px -8% 0px');
+      watch('.reveal, .reveal-words, .ticket-slot, .project-card', '0px 0px -8% 0px');
       // Set pieces that play a longer motion wait until they are well on screen, or the reader catches only the end
       watch('.reveal-late', '0px 0px -30% 0px');
     });

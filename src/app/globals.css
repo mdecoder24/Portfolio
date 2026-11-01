@@ -1096,6 +1096,64 @@ ul:has(> .stack-card) {
 }
 
 /*
+ * Project cards: a beam of light traces the border each time a card is shown, then circles it while the card is hovered
+ * or holds keyboard focus. Without JavaScript or under reduced motion the plain border stays, and hover only brightens it.
+ */
+.project-card {
+  transition: border-color 200ms ease;
+}
+.project-card::before {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  /* Over the 1px border itself, so the light replaces the line instead of running beside it */
+  inset: -1px;
+  padding: 1px;
+  pointer-events: none;
+  border-radius: inherit;
+  background: conic-gradient(
+    from var(--beam),
+    transparent 0 70%,
+    color-mix(in oklab, var(--color-accent) 60%, transparent) 84%,
+    var(--color-ink) 92%,
+    transparent 100%
+  );
+  mask:
+    linear-gradient(#000 0 0) content-box exclude,
+    linear-gradient(#000 0 0);
+  opacity: 0;
+}
+:root[data-reveal] .project-card[data-shown]::before {
+  animation: beam-trace 1800ms var(--ease-in-out-quint) calc(var(--reveal-delay, 0ms) + 300ms) both;
+}
+.project-card:has(:focus-visible) {
+  border-color: var(--color-rule-strong);
+}
+.project-card:has(:focus-visible)::before,
+:root[data-reveal] .project-card[data-shown]:has(:focus-visible)::before {
+  animation: project-orbit 4s linear infinite;
+}
+@media (hover: hover) and (pointer: fine) {
+  .project-card:hover {
+    border-color: var(--color-rule-strong);
+  }
+  .project-card:hover::before,
+  :root[data-reveal] .project-card[data-shown]:hover::before {
+    animation: project-orbit 4s linear infinite;
+  }
+}
+@keyframes project-orbit {
+  from {
+    --beam: 0deg;
+    opacity: 1;
+  }
+  to {
+    --beam: 360deg;
+    opacity: 1;
+  }
+}
+
+/*
  * The more-projects invitation: on reveal its lines rise in turn while the passport beam traces the border once, then
  * hover lifts the card and sweeps a sheen across it. The entrance sits behind data-reveal, so it never runs without
  * JavaScript or under reduced motion, where the card simply doesn't move.

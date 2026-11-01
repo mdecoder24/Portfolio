@@ -361,6 +361,26 @@ test('scroll animations play again on every return, without flickering while off
   expect(changes).toBe(0);
 });
 
+test('project cards trace their border on each reveal, circle it on focus, and stay still under reduced motion', async ({ page }) => {
+  const beam = (el: Element) => getComputedStyle(el, '::before').animationName;
+  const card = page.locator('#work .project-card').first();
+  await page.goto('/?3d=off');
+  await card.scrollIntoViewIfNeeded();
+  await expect.poll(() => card.evaluate(beam)).toBe('beam-trace');
+  await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
+  await expect.poll(() => card.evaluate(beam)).toBe('none');
+  await card.scrollIntoViewIfNeeded();
+  await expect.poll(() => card.evaluate(beam)).toBe('beam-trace');
+  await card.getByRole('link').first().focus();
+  await page.keyboard.press('Tab');
+  await expect.poll(() => card.evaluate(beam)).toBe('project-orbit');
+
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/?3d=off');
+  await card.scrollIntoViewIfNeeded();
+  expect(await card.evaluate(beam)).toBe('none');
+});
+
 test('education reads as a path, newest first, with each score written out beside its ring', async ({ page }) => {
   await page.goto('/?3d=off#education');
   const stages = page.locator('#education ol > li');
