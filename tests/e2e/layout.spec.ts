@@ -312,7 +312,8 @@ test('the more-projects invitation traces its border on reveal, and stays still 
   await expect(card.getByRole('button', { name: 'View more projects' })).toBeVisible();
 
   await page.emulateMedia({ reducedMotion: 'reduce' });
-  await page.goto('/?3d=off#work');
+  // Without the hash: the same URL again would not give the fresh load this needs
+  await page.goto('/?3d=off');
   await card.scrollIntoViewIfNeeded();
   await expect(card.getByRole('button', { name: 'View more projects' })).toBeVisible();
   expect(await card.evaluate(beam)).toBe('none');
