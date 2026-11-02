@@ -172,16 +172,19 @@
 }
 
 /*
- * The home intro (StickyIntro). Blank for 300 ms, then a note slaps on every 400 ms: it drops in slightly large and
- * turned, lands at its own tilt, and its words write in from the left just after. At 2.7 s the sheet lifts up and away
- * over 600 ms. The hero's entrance waits for it (--intro-wait). A skip fades it out in 240 ms; once seen this session,
- * or under reduced motion, it never shows.
+ * The home intro (StickyIntro). With WebGL the storm draws it all on a canvas (src/scene/Storm.tsx), fading in over the flat
+ * layers below, which play from first paint and stay as its fallback: lightning at 200 ms and 1.5 s, the screen lighting up faintly with each, and logo
+ * bubbles that pop in and bob. The greeting rises in either way. At 3.2 s the sheet lifts up and away over 600 ms. The
+ * hero's entrance waits for it (--intro-wait). A skip fades it out in 240 ms; under reduced motion, or on a link to a
+ * section, it never shows.
+ *
+ * Single flashes spaced like this stay inside WCAG 2.3.1's limit of three a second: do not add flickers.
  */
 :root:not([data-intro-seen]):has(#intro) {
-  --intro-wait: 2.9s;
+  --intro-wait: 3.4s;
 }
 .intro {
-  animation: intro-lift 600ms var(--ease-in-out-quint) 2.7s forwards;
+  animation: intro-lift 600ms var(--ease-in-out-quint) 3.2s forwards;
 }
 .intro[data-skip] {
   animation: intro-skip 240ms var(--ease-out-quint) forwards;
@@ -189,27 +192,89 @@
 :root[data-intro-seen] .intro:not([data-skip]) {
   display: none;
 }
-.intro-note {
-  rotate: var(--tilt);
-  animation: intro-slap 360ms var(--ease-out-quint) both;
-  animation-delay: calc(300ms + var(--i) * 400ms);
+:root[data-intro-gl] :is(.intro-flash, .intro-bolt, .intro-bubble) {
+  visibility: hidden;
 }
-.intro-write {
-  clip-path: inset(0 100% 0 0);
-  animation: intro-write 450ms linear forwards;
-  animation-delay: calc(500ms + var(--i) * 400ms);
+.intro-flash {
+  opacity: 0;
+  animation:
+    intro-flash 500ms var(--ease-out-quint) 200ms,
+    intro-flash 500ms var(--ease-out-quint) 1500ms;
 }
-@keyframes intro-slap {
+.intro-bolt {
+  opacity: 0;
+  stroke-width: 2px;
+  filter: drop-shadow(0 0 6px var(--storm-bolt)) drop-shadow(0 0 22px var(--storm-glow));
+  animation: intro-strike 620ms linear var(--strike) both;
+}
+.intro-bolt path {
+  stroke-dasharray: 1 1;
+  stroke-dashoffset: 1;
+  animation: intro-bolt-draw 620ms linear var(--strike) both;
+}
+.intro-bubble {
+  animation: intro-bubble 480ms var(--ease-out-back) calc(250ms + var(--i) * 70ms) both;
+}
+.intro-float {
+  /* An uneven beat per bubble, so they drift apart rather than bobbing in step */
+  animation: intro-float calc(1800ms + var(--i) * 130ms) ease-in-out calc(var(--i) * -170ms) infinite alternate;
+}
+.intro-glass {
+  color: var(--logo);
+  border: 1px solid color-mix(in oklab, var(--logo) 55%, transparent);
+  background: radial-gradient(circle at 35% 28%, color-mix(in oklab, var(--logo) 30%, transparent), var(--paper-veil) 70%);
+  box-shadow: 0 0 24px color-mix(in oklab, var(--logo) 35%, transparent);
+}
+.intro-greeting {
+  animation: rise 700ms var(--ease-out-quint) 420ms both;
+}
+/* The words catch each strike's light, a beat after it lands */
+.intro-title {
+  animation:
+    intro-lit 700ms var(--ease-out-quint) 440ms,
+    intro-lit 700ms var(--ease-out-quint) 1640ms,
+    intro-lit 700ms var(--ease-out-quint) 2690ms;
+}
+.intro-hint {
+  animation: rise 500ms var(--ease-out-quint) 1200ms both;
+}
+@keyframes intro-lit {
   from {
-    opacity: 0;
-    scale: 1.25;
-    rotate: calc(var(--tilt) + 8deg);
-    translate: 0 -12px;
+    text-shadow: 0 0 36px var(--storm-bolt);
   }
 }
-@keyframes intro-write {
+@keyframes intro-flash {
+  from {
+    opacity: 0.14;
+  }
   to {
-    clip-path: inset(0 0 0 0);
+    opacity: 0;
+  }
+}
+@keyframes intro-strike {
+  1%,
+  35% {
+    opacity: 1;
+  }
+}
+@keyframes intro-bolt-draw {
+  0% {
+    stroke-dashoffset: 1;
+  }
+  14%,
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes intro-bubble {
+  from {
+    opacity: 0;
+    scale: 0.6;
+  }
+}
+@keyframes intro-float {
+  to {
+    translate: 0 -10px;
   }
 }
 @keyframes intro-lift {
@@ -726,7 +791,8 @@ form:has(option[value='freelance']:checked) .freelance-fields {
  * plane on a tilted orbit. Only transform animates, so it stays on the compositor.
  */
 .globe {
-  --globe-r: 4.5rem;
+  /* Its orbit and pin labels stand well outside the sphere, so on the narrowest screens the sphere gives way */
+  --globe-r: min(4.5rem, 22vw);
   position: relative;
   width: calc(var(--globe-r) * 2);
   height: calc(var(--globe-r) * 2);

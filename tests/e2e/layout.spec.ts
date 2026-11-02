@@ -13,7 +13,15 @@ test('no page scrolls sideways from a 240 px watch-sized screen up to 4K', async
     await page.goto(path);
     for (const [width, height] of [[240, 320], [280, 653], [320, 568], [568, 320], [844, 390], [768, 1024], [1024, 768], [3840, 2160]]) {
       await page.setViewportSize({ width, height });
-      const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+      // The worst over 30 frames: a turning 3D part can widen the page only for moments at a time
+      const overflow = await page.evaluate(async () => {
+        let worst = 0;
+        for (let frame = 0; frame < 30; frame++) {
+          await new Promise(requestAnimationFrame);
+          worst = Math.max(worst, document.documentElement.scrollWidth - document.documentElement.clientWidth);
+        }
+        return worst;
+      });
       expect(overflow, `${path} at ${width} x ${height}`).toBe(0);
     }
   }

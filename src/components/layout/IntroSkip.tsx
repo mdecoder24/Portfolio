@@ -2,11 +2,9 @@
 
 import { useEffect } from 'react';
 
-const SEEN = 'kr-intro';
-
 /**
- * The intro's behaviour: marks it seen for this session, skips it on the first click, key or scroll, and takes it out
- * of the page (and out of the 3D scene's timing, which waits for [data-stage]) once it has lifted.
+ * The intro's behaviour: skips it on the first click, key or scroll, and takes it out of the page (and out of the 3D
+ * scene's timing, which waits for [data-stage]) once it has lifted.
  */
 export function IntroSkip() {
   useEffect(() => {
@@ -22,9 +20,7 @@ export function IntroSkip() {
       done();
       return;
     }
-    try {
-      sessionStorage.setItem(SEEN, '1');
-    } catch {}
+    intro.dataset.ready = '';
     const skip = () => {
       intro.dataset.skip = '';
       root.dataset.introSeen = '';

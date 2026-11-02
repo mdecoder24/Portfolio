@@ -44,6 +44,9 @@ export function Freelance({
       index={index}
       label="Freelance"
       title="Freelance and client work"
+      // The globe's orbit swings out past its box as it turns, and would widen the page in those moments.
+      // clip rather than hidden: it makes no scroll container, so the rail below can still stick
+      className="[overflow-x:clip]"
       aside={
         <div className="flex flex-wrap items-center gap-3">
           <Badge tone={availability.freelance}>

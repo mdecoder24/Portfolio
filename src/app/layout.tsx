@@ -26,9 +26,9 @@ export const viewport: Viewport = {
   viewportFit: 'cover',
 };
 
-// Applies saved motion preference before first paint, so it never flashes, and skips the home intro when it
-// has already played this session or the visitor followed a link straight to a section
-const prefScript = `try{var d=document.documentElement,m=localStorage.getItem('kr-motion-v2');if(m)d.dataset.motion=m;if(location.hash||sessionStorage.getItem('kr-intro'))d.dataset.introSeen=''}catch(e){}`;
+// Applies saved motion preference before first paint, so it never flashes, and skips the home intro when the visitor
+// followed a link straight to a section (kr-e2e-skip-intro is set only by the e2e fixtures, so tests can start past it)
+const prefScript = `try{var d=document.documentElement,m=localStorage.getItem('kr-motion-v2');if(m)d.dataset.motion=m;if(location.hash||sessionStorage.getItem('kr-e2e-skip-intro'))d.dataset.introSeen=''}catch(e){}`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

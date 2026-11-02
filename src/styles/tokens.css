@@ -31,6 +31,19 @@
   --scene-ink: #f3f3f1;
   --scene-accent: #ff5c3d;
   --scene-paper: var(--paper);
+  --storm-sky: #141a45;
+  --storm-bolt: #b7c6ff;
+  --storm-glow: #7c5cff;
+  --logo-react: #61dafb;
+  --logo-typescript: #4d9be6;
+  --logo-nextjs: #f3f3f1;
+  --logo-python: #ffd43b;
+  --logo-nodejs: #6cc24a;
+  --logo-javascript: #f7df1e;
+  --logo-pytorch: #ee4c2c;
+  --logo-tailwind: #38bdf8;
+  --logo-firebase: #ffa611;
+  --logo-github: #f3f3f1;
   --nacre-shadow-float: 0 20px 50px #00000080, 0 2px 8px #00000066;
   --nacre-shadow-focus: 0 0 0 2px #0a0a0b, 0 0 0 4px #ff5c3d;
 }
@@ -129,6 +142,19 @@
   --color-scene-ink: var(--scene-ink);
   --color-scene-accent: var(--scene-accent);
   --color-scene-paper: var(--scene-paper);
+  --color-storm-sky: var(--storm-sky);
+  --color-storm-bolt: var(--storm-bolt);
+  --color-storm-glow: var(--storm-glow);
+  --color-logo-react: var(--logo-react);
+  --color-logo-typescript: var(--logo-typescript);
+  --color-logo-nextjs: var(--logo-nextjs);
+  --color-logo-python: var(--logo-python);
+  --color-logo-nodejs: var(--logo-nodejs);
+  --color-logo-javascript: var(--logo-javascript);
+  --color-logo-pytorch: var(--logo-pytorch);
+  --color-logo-tailwind: var(--logo-tailwind);
+  --color-logo-firebase: var(--logo-firebase);
+  --color-logo-github: var(--logo-github);
   --shadow-float: var(--nacre-shadow-float);
   --shadow-focus: var(--nacre-shadow-focus);
 }

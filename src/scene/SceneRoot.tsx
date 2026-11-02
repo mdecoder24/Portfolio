@@ -14,8 +14,8 @@ export default function SceneRoot({ tier, still }: { tier: 1 | 2 | 3; still: boo
   const [colors, setColors] = useState(sceneColors);
   const [inView, setInView] = useState(true);
   const host = useRef<HTMLDivElement>(null);
-  // Wait for the intro card to lift before the monogram assembles
-  const [delay] = useState(() => (document.querySelector('[data-stage]') ? 2.6 : 0.2));
+  // SceneMount already held this back for most of the intro; this covers the last of the sheet's lift
+  const [delay] = useState(() => (document.querySelector('[data-stage]') ? 0.5 : 0.2));
 
   useEffect(() => {
     const mo = new MutationObserver(() => setColors(sceneColors()));

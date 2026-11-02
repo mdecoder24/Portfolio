@@ -65,9 +65,16 @@ export function SceneMount() {
     };
     // Wait for the page to settle: the headline paints and hydrates first
     const ric = window.requestIdleCallback ?? ((cb: () => void) => setTimeout(cb, 200));
-    const id = ric(() => void run(), { timeout: 2000 });
+    let id = 0;
+    // Parsing three.js would stall the intro's storm, which draws on the main thread, so it waits until the sheet lifts
+    const intro = document.querySelector<HTMLElement>('#intro[data-stage]');
+    const wait = intro && getComputedStyle(intro).display !== 'none' ? 3000 : 0;
+    const timer = setTimeout(() => {
+      id = ric(() => void run(), { timeout: 2000 });
+    }, wait);
     return () => {
       cancelled = true;
+      clearTimeout(timer);
       (window.cancelIdleCallback ?? clearTimeout)(id);
     };
   }, [qualityPref, motionPref]);

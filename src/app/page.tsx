@@ -20,7 +20,7 @@ export default function Home() {
   const next = () => ++count;
   return (
     <>
-      <StickyIntro profile={profile} />
+      <StickyIntro />
       <BackdropMount />
       <SiteChrome onHome>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(personLd()) }} />
