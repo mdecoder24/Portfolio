@@ -89,14 +89,14 @@ vec3 bolts(vec3 ro, vec3 rd) {
 vec3 rain(vec2 uv) {
   float total = 0.0;
   for (int i = 0; i < 2; i++) {
-    float scale = i == 0 ? 42.0 : 78.0;
+    float scale = i == 0 ? 90.0 : 170.0;
     vec2 p = vec2((uv.x + uv.y * 0.1) * scale, uv.y * (i == 0 ? 1.6 : 2.6) + uTime * (i == 0 ? 3.4 : 2.3));
     vec2 cell = floor(p);
     float seed = hash(vec2(cell.x, float(i)));
     float y = fract(p.y + seed * 7.0);
-    total += step(0.72, seed) * smoothstep(0.82, 1.0, y) * smoothstep(0.5, 0.2, abs(fract(p.x) - 0.5));
+    total += step(0.72, seed) * smoothstep(0.82, 1.0, y) * smoothstep(0.16, 0.04, abs(fract(p.x) - 0.5));
   }
-  return uBoltC * total * (0.045 + uFlash * 0.3);
+  return uBoltC * total * (0.05 + uFlash * 0.14);
 }
 
 vec3 sphere(vec3 ro, vec3 rd, vec3 p, vec3 c, float r, int i) {
@@ -349,11 +349,12 @@ export default function Storm({ onFail }: { onFail: () => void }) {
 
     let aspect = 1;
     let radius = 0.1;
+    let sharpness = 1;
     const resize = () => {
       const w = el.clientWidth;
       const h = el.clientHeight;
       // Keeps the per-pixel work bounded: a storm has few hard edges, so it can spare the very sharpest pixels
-      const scale = Math.min(window.devicePixelRatio || 1, 1.5, Math.sqrt(1_800_000 / Math.max(1, w * h)));
+      const scale = Math.min(window.devicePixelRatio || 1, 1.5, Math.sqrt(1_800_000 / Math.max(1, w * h))) * sharpness;
       el.width = Math.max(1, Math.floor(w * scale));
       el.height = Math.max(1, Math.floor(h * scale));
       gl.viewport(0, 0, el.width, el.height);
@@ -375,7 +376,8 @@ export default function Storm({ onFail }: { onFail: () => void }) {
     let raf = 0;
     let stopped = false;
     let drawn = false;
-    let handover = 0;
+    let slow = 0;
+    let last = 0;
 
     const release = () => {
       stopped = true;
@@ -386,7 +388,6 @@ export default function Storm({ onFail }: { onFail: () => void }) {
     const onLost = (e: Event) => {
       e.preventDefault();
       if (stopped) return;
-      window.clearTimeout(handover);
       delete document.documentElement.dataset.introGl;
       onFail();
     };
@@ -396,6 +397,12 @@ export default function Storm({ onFail }: { onFail: () => void }) {
       // Both clocks run from the navigation, so the storm stays in step with the CSS sheet however late this loaded
       const t = performance.now() / 1000;
       if (intro.hidden || t > LIFETIME) return release();
+      // A phone that can't keep up trades sharpness for smoothness, once
+      if (sharpness === 1 && last && t - last > 0.04 && ++slow > 8) {
+        sharpness = 0.6;
+        resize();
+      }
+      last = t;
 
       let flash = 0;
       let flashX = 0;
@@ -444,10 +451,8 @@ export default function Storm({ onFail }: { onFail: () => void }) {
       if (!drawn) {
         drawn = true;
         el.dataset.ready = '';
-        // The flat layers only give way once the canvas has faded in over them, so nothing blinks out in between
-        handover = window.setTimeout(() => {
-          document.documentElement.dataset.introGl = '';
-        }, 300);
+        // The flat layers go at once: left under the fade, their bubbles would show as doubles of the spheres
+        document.documentElement.dataset.introGl = '';
       }
       raf = requestAnimationFrame(frame);
     };
@@ -455,10 +460,9 @@ export default function Storm({ onFail }: { onFail: () => void }) {
 
     return () => {
       el.removeEventListener('webglcontextlost', onLost);
-      window.clearTimeout(handover);
       if (!stopped) release();
     };
   }, [onFail]);
 
-  return <canvas ref={canvas} aria-hidden="true" className="absolute inset-0 size-full opacity-0 transition-opacity duration-300 data-ready:opacity-100" />;
+  return <canvas ref={canvas} aria-hidden="true" className="absolute inset-0 size-full opacity-0 transition-opacity duration-200 data-ready:opacity-100" />;
 }
