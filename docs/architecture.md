@@ -156,7 +156,7 @@ kushwant-portfolio/
 │  ├─ static-files.ts             writes public/llms.txt and public/humans.txt from content
 │  └─ knowledge.ts                content and MDX → Pearl's knowledge base (src/lib/pearl/knowledge.generated.ts)
 ├─ public/
-│  ├─ resume/Kushwant-KR-Resume.pdf
+│  ├─ resume/Kushwant-KR-Resume.pdf, Kushwant-KR-Resume.png (preview image)
 │  ├─ media/<slug>/               case-study screenshots (AVIF) and clips (MP4, under 2 MB)
 │  └─ gpu-benchmarks/             detect-gpu data, self-hosted so tiering works offline and under CSP
 ├─ src/
@@ -225,7 +225,7 @@ Every page is prerendered at build time from typed content; only Pearl's route a
 | OG images | Static at build | `opengraph-image.tsx` per route | `ImageResponse` from `next/og`, 1200 × 630, Anek Latin loaded as a font file |
 | `/sitemap.xml`, `/robots.txt` | Static | `sitemap.ts`, `robots.ts` |  |
 | `/llms.txt`, `/humans.txt` | Files in `public/` | `scripts/static-files.ts` (prebuild) | Regenerated on every build |
-| `/resume` | Redirect | `next.config.ts` | To `/resume/Kushwant-KR-Resume.pdf` |
+| `/resume` | Static | `src/app/resume/page.tsx` | Image preview and download of `/resume/Kushwant-KR-Resume.pdf`. After replacing the PDF, regenerate the image: `pdftoppm -png -r 200 -singlefile public/resume/Kushwant-KR-Resume.pdf public/resume/Kushwant-KR-Resume` |
 | `POST /api/chat` | Per request, Node runtime, streaming | `lib/pearl` | Rate-limited; see Chatbot architecture |
 | Contact | Server action | `actions/contact.ts` | Works without JavaScript |
 
@@ -551,9 +551,6 @@ const nextConfig: NextConfig = {
   reactCompiler: true,
   experimental: { viewTransition: false }, // flip on for P1 page transitions
   images: { formats: ['image/avif', 'image/webp'] },
-  async redirects() {
-    return [{ source: '/resume', destination: '/resume/Kushwant-KR-Resume.pdf', permanent: false }];
-  },
 };
 
 export default nextConfig;

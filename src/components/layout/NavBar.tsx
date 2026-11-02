@@ -96,14 +96,13 @@ export function NavBar({ socials, onHome }: { socials: { label: string; href: st
           />
         </ul>
         <div className="ml-auto flex items-center gap-2 min-[900px]:ml-2">
-          <a
+          <Link
             href={RESUME_HREF}
-            download="Kushwant-KR-Resume.pdf"
             className="btn inline-flex min-h-10 items-center max-[20em]:hidden gap-1.5 rounded-control bg-cream px-4 type-small font-medium text-on-cream transition-[background-color,scale] duration-150 hover:bg-ink-hover focus-visible:outline-none focus-visible:shadow-focus active:scale-[0.97]"
           >
             Résumé
             <ArrowUpRight className="size-4" strokeWidth={1.75} aria-hidden="true" />
-          </a>
+          </Link>
           <button
             type="button"
             aria-label="Open menu"
@@ -155,13 +154,13 @@ export function NavBar({ socials, onHome }: { socials: { label: string; href: st
         </ul>
         <div className="container-kit mt-auto flex flex-wrap gap-6 pb-[max(32px,env(safe-area-inset-bottom))]">
           {/* The bar has no room for it below 20em (em, so large browser text counts), and it must stay reachable */}
-          <a
+          <Link
             href={RESUME_HREF}
-            download="Kushwant-KR-Resume.pdf"
+            onClick={close}
             className="inline-flex min-h-11 items-center type-ui text-ink-2 hover:text-ink"
           >
             Résumé
-          </a>
+          </Link>
           {socials.map((s) => (
             <a key={s.label} href={s.href} className="inline-flex min-h-11 items-center type-ui text-ink-2 hover:text-ink">
               {s.label}

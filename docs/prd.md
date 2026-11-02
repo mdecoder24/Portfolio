@@ -74,7 +74,7 @@ The hero carries name, role, employer, and availability, so a recruiter can deci
 
 1. Opens Pearl and pastes the job description.
 2. Pearl returns a fit summary: matched requirements with links to evidence, honest gaps, and a suggested next step.
-3. One click to download the résumé, email, or book a call.
+3. One click to preview the résumé (with its download button), email, or book a call.
 
 **Hiring engineer, 5 minutes**
 
@@ -143,7 +143,7 @@ The home page runs in order of credibility: employment, then paid client work, t
 ### Navigation (P0)
 
 - Sticky bar, transparent over the hero; gains a surface and blur after 80 px of scroll.
-- Left: "KR" monogram (back to top). Links: About, Experience, Freelance, Projects, Contact. Right: Résumé (download) and "Ask Pearl".
+- Left: "KR" monogram (back to top). Links: About, Experience, Freelance, Projects, Contact. Right: Résumé (opens the preview page, which has the download) and "Ask Pearl".
 - The active section is highlighted and marked `aria-current`.
 - Mobile: menu button opens a full-screen sheet with links, résumé, Pearl, and socials. Focus is trapped; Esc closes.
 - First focusable element is a "Skip to content" link.
@@ -336,7 +336,7 @@ These features cut across sections. The one hard rule: content first, so there i
 
 | Feature | Behaviour | Priority |
 | --- | --- | --- |
-| Résumé | Static PDF with a stable short link (`/resume`), in the navigation and in Pearl; downloads are tracked | P0 |
+| Résumé | Static preview page at `/resume` with a PDF download, in the navigation and in Pearl; downloads are tracked | P0 |
 | Motion and 3D controls | Footer toggles: Motion (Auto / Reduced) and 3D (Auto / Low / Off); default follows the OS setting; choice remembered on the device; `?3d=off` works for testing | P0 |
 | Share previews | A generated Open Graph image per page (name, title, pearl visual) | P0 |
 | 404 page | "Lost at sea" page with the pearl, links home and to Pearl | P0 |
@@ -419,7 +419,7 @@ The launch gate is the one that matters: nothing ships with sample content, and 
 - [ ] Pearl: eval suite at 90%+; rate limit and daily cap tested; offline mode tested
 - [ ] Contact: works without JavaScript; email and instant notification arrive; spam checks on
 - [ ] Share previews checked in LinkedIn, WhatsApp, and X
-- [ ] Domain, HTTPS, `/resume` redirect, sitemap submitted to Google Search Console
+- [ ] Domain, HTTPS, `/resume` page, sitemap submitted to Google Search Console
 - [ ] Privacy page live; analytics events firing; résumé PDF is the latest version
 
 ## Risks, assumptions & open questions

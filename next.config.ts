@@ -32,7 +32,6 @@ const nextConfig: NextConfig = {
   images: { formats: ['image/avif', 'image/webp'] },
   async redirects() {
     return [
-      { source: '/resume', destination: '/resume/Kushwant-KR-Resume.pdf', permanent: false },
       // Sample projects replaced by the résumé's; their slugs were public, so they land on the work list
       ...['documind', 'pulse', 'orbit', 'codelens'].map((slug) => ({
         source: `/projects/${slug}`,

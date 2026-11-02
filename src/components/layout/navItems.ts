@@ -8,4 +8,5 @@ export const NAV_ITEMS = [
   { id: 'contact', label: 'Contact' },
 ] as const;
 
-export const RESUME_HREF = '/resume/Kushwant-KR-Resume.pdf';
+export const RESUME_HREF = '/resume';
+export const RESUME_PDF_HREF = '/resume/Kushwant-KR-Resume.pdf';

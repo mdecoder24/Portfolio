@@ -10,6 +10,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: config.site.lastUpdated,
       priority: 0.8,
     })),
+    { url: `${url}/resume`, lastModified: config.site.lastUpdated, priority: 0.6 },
     { url: `${url}/privacy`, lastModified: config.site.lastUpdated, priority: 0.2 },
   ];
 }
