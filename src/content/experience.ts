@@ -1,6 +1,6 @@
 import { Experience } from './schema.ts';
 
-// Follows the résumé point for point (Oct 2026 version in public/resume). Points it doesn't cover come from
+// Follows the résumé point for point (Nov 2026 version in public/resume). Points it doesn't cover come from
 // Kushwant's LinkedIn posts and roles, krudex.in, and his GitHub repositories (read 31 Oct 2026)
 export const experience = Experience.array().parse([
   {
@@ -23,7 +23,7 @@ export const experience = Experience.array().parse([
     role: 'Associate Software Engineer',
     org: 'Knowvation Learnings Pvt Ltd',
     logo: '/media/logos/knowvation.png',
-    // Set by Kushwant on 31 Oct 2026; the résumé gives a later start
+    // Set by Kushwant on 31 Oct 2026
     start: '2023-08',
     points: [
       'Managed the Knowvation Learnings website and its client-facing web platforms end to end as a full-stack developer',
