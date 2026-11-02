@@ -12,13 +12,17 @@ const CAMERA_Z = 3;
 
 // Seconds after navigation. Each strike lights the sky once, and any one second holds at most 2: WCAG 2.3.1 allows 3.
 // Only the thin bolt itself restrikes, which is too small an area to count as a flash
-const STRIKES = [
+const STRIKES: { at: number; x: number; drawing?: number }[] = [
   { at: 0.35, x: 0.17 },
   { at: 1.55, x: 0.82 },
   { at: 2.6, x: 0.1 },
+  // The texture holds 3 drawings, so the last two strikes reuse the first two
+  { at: 3.7, x: 0.82, drawing: 1 },
+  { at: 4.55, x: 0.17, drawing: 0 },
 ];
+const DRAWINGS = 3;
 const LEADER = 0.09; // the bolt feels its way down, dim, before the bright return stroke
-const LIFETIME = 5; // past the intro's end, whatever happens to it
+const LIFETIME = 7; // past the intro's end, whatever happens to it
 
 const VERT = `#version 300 es
 in vec2 p;
@@ -242,7 +246,7 @@ function drawBolts(aspect: number, roomy: boolean) {
   // Stops above the greeting unless the screen has the room for the bolts to pass beside it
   const reach = roomy ? 0.78 : 0.3;
   const unit = Math.max(W, H) / 1024;
-  STRIKES.forEach(({ x }, channel) => {
+  STRIKES.slice(0, DRAWINGS).forEach(({ x }, channel) => {
     const main = jag([x * W, 0], [(x + (Math.random() - 0.5) * 0.14) * W, reach * H], 0.16 * H);
     stroke(ctx, main, 4.5 * unit, 0.35, channel);
     stroke(ctx, main, 1.8 * unit, 1, channel);
@@ -407,11 +411,17 @@ export default function Storm({ onFail }: { onFail: () => void }) {
       let flash = 0;
       let flashX = 0;
       let thunder = 0;
-      STRIKES.forEach(({ at, x }, i) => {
+      bolt.fill(0);
+      STRIKES.forEach(({ at, x, drawing }, n) => {
         const age = t - at;
-        reveal[i] = age > 0 ? Math.min(1, age / LEADER) : 0;
-        if (age <= 0) return (bolt[i] = 0);
-        if (age < LEADER) return (bolt[i] = 0.45);
+        if (age <= 0) return;
+        const i = drawing ?? n;
+        // A later strike on the same drawing takes over its channel; by then the earlier one has died away
+        reveal[i] = Math.min(1, age / LEADER);
+        if (age < LEADER) {
+          bolt[i] = 0.45;
+          return;
+        }
         const after = age - LEADER;
         bolt[i] = 1.5 * Math.exp(-after * 8) + (after > 0.11 ? 0.8 * Math.exp(-(after - 0.11) * 14) : 0);
         const sky = Math.exp(-after * 6);

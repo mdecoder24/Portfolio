@@ -8,8 +8,10 @@ test('with 3D off, flat lightning and logo bubbles greet the visitor, then lift 
   await expect(intro.getByText(/Come in and look around/)).toBeVisible();
   await expect(intro.locator('.intro-bubble path')).toHaveCount(10);
   for (const logo of await intro.locator('.intro-bubble path').all()) await expect(logo).toHaveAttribute('d', /^M/);
-  await expect(intro.locator('.intro-bolt')).toHaveCount(2);
-  await expect(intro).toBeHidden({ timeout: 6000 });
+  await expect(intro.locator('.intro-bolt')).toHaveCount(4);
+  // Holds for at least 5 seconds before it starts to lift
+  expect(await intro.evaluate((el) => getComputedStyle(el).animationDelay)).toBe('5s');
+  await expect(intro).toBeHidden({ timeout: 10_000 });
   await expect(page.getByRole('heading', { level: 1 })).toBeInViewport();
   // A reload plays it again
   await page.reload();
@@ -26,7 +28,7 @@ test('with WebGL the storm draws on its own canvas in place of the flat layers, 
   await expect(page.locator('html')).toHaveAttribute('data-intro-gl');
   await expect(intro.locator('.intro-bubble').first()).toBeHidden();
   await expect(intro.getByText('Welcome, curious mind')).toBeVisible();
-  await expect(intro).toBeHidden({ timeout: 15_000 });
+  await expect(intro).toBeHidden({ timeout: 20_000 });
   await expect(page.getByRole('heading', { level: 1 })).toBeInViewport();
   expect(errors).toEqual([]);
 });
@@ -37,7 +39,7 @@ test('any key skips the intro', async ({ page }) => {
   // Keys only skip once the intro has hydrated
   await expect(page.locator('#intro')).toHaveAttribute('data-ready');
   await page.keyboard.press('Shift');
-  // The fade replaces the 3.2 s lift, so seeing it proves the skip; a busy machine can start it late, so no tight timer
+  // The fade replaces the 5 s lift, so seeing it proves the skip; a busy machine can start it late, so no tight timer
   const intro = page.locator('#intro');
   await expect(intro).toHaveAttribute('data-skip');
   await expect.poll(() => intro.evaluate((el) => getComputedStyle(el).animationName)).toBe('intro-skip');

@@ -41,6 +41,8 @@ export function StickyIntro() {
       {[
         { left: '14%', delay: '200ms', flip: false },
         { left: '70%', delay: '1500ms', flip: true },
+        { left: '24%', delay: '3000ms', flip: true },
+        { left: '78%', delay: '4200ms', flip: false },
       ].map((b) => (
         <svg
           key={b.left}

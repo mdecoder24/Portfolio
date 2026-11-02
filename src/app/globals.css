@@ -173,18 +173,18 @@
 
 /*
  * The home intro (StickyIntro). With WebGL the storm draws it all on a canvas (src/scene/Storm.tsx), fading in over the flat
- * layers below, which play from first paint and stay as its fallback: lightning at 200 ms and 1.5 s, the screen lighting up faintly with each, and logo
- * bubbles that pop in and bob. The greeting rises in either way. At 3.2 s the sheet lifts up and away over 600 ms. The
+ * layers below, which play from first paint and stay as its fallback: lightning at 200 ms, 1.5 s, 3 s and 4.2 s, the screen lighting up faintly with each, and logo
+ * bubbles that pop in and bob. The greeting rises in either way. At 5 s the sheet lifts up and away over 600 ms. The
  * hero's entrance waits for it (--intro-wait). A skip fades it out in 240 ms; under reduced motion, or on a link to a
  * section, it never shows.
  *
  * Single flashes spaced like this stay inside WCAG 2.3.1's limit of three a second: do not add flickers.
  */
 :root:not([data-intro-seen]):has(#intro) {
-  --intro-wait: 3.4s;
+  --intro-wait: 5.2s;
 }
 .intro {
-  animation: intro-lift 600ms var(--ease-in-out-quint) 3.2s forwards;
+  animation: intro-lift 600ms var(--ease-in-out-quint) 5s forwards;
 }
 .intro[data-skip] {
   animation: intro-skip 240ms var(--ease-out-quint) forwards;
@@ -199,7 +199,9 @@
   opacity: 0;
   animation:
     intro-flash 500ms var(--ease-out-quint) 200ms,
-    intro-flash 500ms var(--ease-out-quint) 1500ms;
+    intro-flash 500ms var(--ease-out-quint) 1500ms,
+    intro-flash 500ms var(--ease-out-quint) 3000ms,
+    intro-flash 500ms var(--ease-out-quint) 4200ms;
 }
 .intro-bolt {
   opacity: 0;
@@ -233,7 +235,9 @@
   animation:
     intro-lit 700ms var(--ease-out-quint) 440ms,
     intro-lit 700ms var(--ease-out-quint) 1640ms,
-    intro-lit 700ms var(--ease-out-quint) 2690ms;
+    intro-lit 700ms var(--ease-out-quint) 2690ms,
+    intro-lit 700ms var(--ease-out-quint) 3790ms,
+    intro-lit 700ms var(--ease-out-quint) 4640ms;
 }
 .intro-hint {
   animation: rise 500ms var(--ease-out-quint) 1200ms both;
