@@ -18,6 +18,9 @@ if (typeof window !== 'undefined') {
   };
 }
 
+// If the scene never delivers (a failed download, say), the flat photo comes back rather than leaving the frame empty
+const PENDING_LIMIT_MS = 8000;
+
 const TIER_QUERY: Record<string, Tier> = { high: 3, medium: 2, low: 1, off: 0 };
 
 function hasWebGL2() {
@@ -56,25 +59,48 @@ export function SceneMount() {
 
   useEffect(() => {
     let cancelled = false;
+    let limit = 0;
+    const frame = document.getElementById('hero-portrait');
+    const showFlat = () => {
+      if (frame?.dataset.mosaic === 'pending') delete frame.dataset.mosaic;
+    };
     const run = async () => {
       const choice = await chooseTier(qualityPref);
       if (cancelled) return;
       useScene.getState().setTier(choice.tier, choice.reason);
       setStill(prefersReducedMotion());
       setDecided(true);
+      if (choice.tier === 0) showFlat();
+      else limit = window.setTimeout(showFlat, PENDING_LIMIT_MS);
     };
     // Wait for the page to settle: the headline paints and hydrates first
     const ric = window.requestIdleCallback ?? ((cb: () => void) => setTimeout(cb, 200));
     let id = 0;
     // Parsing three.js would stall the intro's storm, which draws on the main thread, so it waits until the sheet lifts
     const intro = document.querySelector<HTMLElement>('#intro[data-stage]');
-    const wait = intro && getComputedStyle(intro).display !== 'none' ? 4800 : 0;
-    const timer = setTimeout(() => {
-      id = ric(() => void run(), { timeout: 2000 });
-    }, wait);
+    const showing = !!intro && getComputedStyle(intro).display !== 'none';
+    // The sheet covers this, so the visitor goes from the welcome straight to the pixels, never past a sharp photo first
+    if (showing && frame) frame.dataset.mosaic = 'pending';
+    const timer = setTimeout(
+      () => {
+        id = ric(() => void run(), { timeout: 2000 });
+      },
+      showing ? 4800 : 0,
+    );
+    // A visitor who skips has nothing left to stall, and is looking at the hero now
+    const onIntroEnd = (e: AnimationEvent) => {
+      // The bubbles and bolts inside the sheet finish animations too, and this event bubbles
+      if (e.target !== intro) return;
+      intro?.removeEventListener('animationend', onIntroEnd);
+      clearTimeout(timer);
+      void run();
+    };
+    if (showing) intro.addEventListener('animationend', onIntroEnd);
     return () => {
       cancelled = true;
       clearTimeout(timer);
+      clearTimeout(limit);
+      intro?.removeEventListener('animationend', onIntroEnd);
       (window.cancelIdleCallback ?? clearTimeout)(id);
     };
   }, [qualityPref, motionPref]);

@@ -46,6 +46,28 @@ test('any key skips the intro', async ({ page }) => {
   await expect(intro).toBeHidden();
 });
 
+test('skipping goes straight to the assembling pixels, with no sharp photo first', async ({ page }) => {
+  await page.goto('/?tier=low');
+  const intro = page.locator('#intro');
+  const frame = page.locator('#hero-portrait');
+  await expect(intro).toHaveAttribute('data-ready');
+  await expect(frame).toHaveAttribute('data-mosaic', 'pending');
+  await page.keyboard.press('Shift');
+  await expect(intro).toBeHidden();
+  await expect(frame.locator('img')).toHaveCSS('opacity', '0');
+  // The scene waits 4.8 s from load for an unskipped intro, so this only passes if the skip started it
+  await expect(frame).toHaveAttribute('data-mosaic', 'diffusing', { timeout: 2500 });
+});
+
+test('with 3D off the flat photo shows once the intro has gone', async ({ page }) => {
+  await page.goto('/?3d=off');
+  const intro = page.locator('#intro');
+  await expect(intro).toHaveAttribute('data-ready');
+  await page.keyboard.press('Shift');
+  await expect(intro).toBeHidden();
+  await expect(page.locator('#hero-portrait img')).toHaveCSS('opacity', '1');
+});
+
 test('reduced motion never shows the intro', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('/?3d=off');

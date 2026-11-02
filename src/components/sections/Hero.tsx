@@ -13,15 +13,16 @@ import type { Config, Profile } from '@/content/schema';
  * its contents as a pixel mosaic that assembles on load: the photo named in data-src, or the KR monogram when there is
  * no photo yet. The flat image (or a flat KR) hides while the mosaic assembles and whenever it is pixels
  * (data-mosaic="pixel": scrolling away diffuses it into dust, the cursor parts it); at rest (data-mosaic="clear") the
- * sharp photo fades back in over the cells. The monogram stays as pixels. It stays flat when 3D is off or motion is
- * reduced.
+ * sharp photo fades back in over the cells. The monogram stays as pixels. While the home intro plays the flat photo waits
+ * too (data-mosaic="pending"), so the welcome hands straight to the assembling pixels. It stays flat when 3D is off or
+ * motion is reduced.
  */
 function Portrait({ src }: { src?: string }) {
   // Sized by the screen's height as well as its width, so the photo, name and actions share one screen
   const frame =
     'group/portrait relative block aspect-[4/5] w-[min(92vw,clamp(11rem,52svh,24rem))] lg:w-[clamp(22rem,60svh,36rem)]';
   const fade =
-    'transition-opacity duration-500 group-data-[mosaic=diffusing]/portrait:opacity-0 group-data-[mosaic=pixel]/portrait:opacity-0';
+    'transition-opacity duration-500 group-data-[mosaic=pending]/portrait:opacity-0 group-data-[mosaic=diffusing]/portrait:opacity-0 group-data-[mosaic=pixel]/portrait:opacity-0';
   if (src)
     return (
       <span id="hero-portrait" data-src={src} className={frame}>
