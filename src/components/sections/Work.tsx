@@ -4,11 +4,13 @@ import type { CSSProperties, ReactNode } from 'react';
 import { Button, buttonClasses } from '@/components/ui/Button';
 import { CountUp } from '@/components/ui/CountUp';
 import { SampleRibbon } from '@/components/ui/SampleRibbon';
+import { ScrollCue } from '@/components/ui/ScrollCue';
 import { Section } from '@/components/ui/SectionHeader';
 import { caseStudyHref } from '@/content';
 import type { CaseStudy } from '@/content/schema';
 import { cn } from '@/lib/cn';
 import { DeviceStage } from './DeviceStage';
+import { ProjectRail } from './ProjectRail';
 import { ProjectReadme } from './ProjectReadme';
 import { BRAND_PATHS } from './stack-logos';
 
@@ -182,7 +184,7 @@ function Card({
   return (
     <article
       className={cn(
-        'project-card relative isolate grid content-start gap-5 rounded-md border border-rule bg-paper-veil p-4 sm:p-6',
+        'project-card relative isolate grid h-full content-start gap-5 rounded-md border border-rule bg-paper-veil p-4 sm:p-6',
         !inPanel && 'reveal',
       )}
       style={{ '--reveal-delay': `${column * 80}ms` } as CSSProperties}
@@ -214,11 +216,14 @@ function Group({
         <span className="type-code text-ink-2">{studies.length} projects</span>
       </h3>
       {compact ? (
-        <div className="grid gap-x-8 gap-y-16 md:grid-cols-2 lg:gap-y-20">
+        // Each card is a little under half the row, so the next one peeks in and the row reads as scrollable
+        <ProjectRail label={title}>
           {studies.map((s, i) => (
-            <Card key={s.slug} study={s} n={offset + i + 1} column={i % 2} />
+            <li key={s.slug} className="w-[85%] shrink-0 snap-start md:w-[46%]">
+              <Card study={s} n={offset + i + 1} column={i % 2} />
+            </li>
           ))}
-        </div>
+        </ProjectRail>
       ) : (
         <div className="grid gap-20 lg:gap-28">
           {studies.map((s, i) => (
@@ -257,7 +262,7 @@ function MoreProjects({ studies, offset }: { studies: CaseStudy[]; offset: numbe
         popover="auto"
         role="dialog"
         aria-labelledby="more-projects-title"
-        className="more-panel m-auto max-h-[88dvh] w-[min(72rem,calc(100%-2rem))] overflow-y-auto overscroll-contain rounded-lg border border-rule-strong bg-paper text-ink shadow-float backdrop:bg-paper-veil"
+        className="more-panel scroll-visible m-auto max-h-[88dvh] w-[min(72rem,calc(100%-2rem))] overflow-y-auto overscroll-contain rounded-lg border border-rule-strong bg-paper text-ink shadow-float backdrop:bg-paper-veil"
       >
         {/* The heading and close button stay in reach while the cards scroll beneath them */}
         <div className="sticky top-0 z-10 flex items-center justify-between gap-4 border-b border-rule bg-paper px-6 py-4 sm:px-10">
@@ -284,6 +289,7 @@ function MoreProjects({ studies, offset }: { studies: CaseStudy[]; offset: numbe
             <Card key={s.slug} study={s} n={offset + i + 1} column={i % 2} inPanel />
           ))}
         </div>
+        <ScrollCue />
       </div>
     </div>
   );

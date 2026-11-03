@@ -266,6 +266,24 @@ test('certifications follow education, each linking to its certificate, and View
   await expect(panel).toBeHidden();
 });
 
+test('both view-more panels show a lit "Scroll for more" cue, which stays still under reduced motion', async ({ page }) => {
+  const beam = (el: Element) => getComputedStyle(el, '::before').animationName;
+  for (const motion of ['no-preference', 'reduce'] as const) {
+    await page.emulateMedia({ reducedMotion: motion });
+    for (const [section, button, panelId] of [
+      ['#work', /^View more projects/, '#more-projects'],
+      ['#certifications', /^View more certifications/, '#more-certifications'],
+    ] as const) {
+      await page.goto(`/?3d=off${section}`);
+      await page.locator(section).getByRole('button', { name: button }).click();
+      const pill = page.locator(`${panelId} .scroll-cue-pill`);
+      await expect(pill).toBeVisible();
+      await expect(pill).toHaveText('Scroll for more');
+      expect(await pill.evaluate(beam)).toBe(motion === 'reduce' ? 'none' : 'project-orbit');
+    }
+  }
+});
+
 test('each project card opens a short README from View details, and Escape closes it', async ({ page }) => {
   await page.goto('/?3d=off#work');
   const cards = page.locator('#work article:not(#more-projects article)');
@@ -306,6 +324,23 @@ test('experience cards stack as a deck on scroll, and an opened card stops stick
   await expect(card).toHaveCSS('position', 'relative');
 });
 
+test('the featured projects scroll sideways, by the arrows or the row itself', async ({ page }) => {
+  await page.goto('/?3d=off#work');
+  const row = page.locator('#work').getByRole('list', { name: 'My projects' });
+  await expect(row.getByRole('listitem')).toHaveCount(4);
+  await expect(row).toHaveCSS('overflow-x', 'auto');
+  const prev = page.locator('#work').getByRole('button', { name: 'Previous project' });
+  const next = page.locator('#work').getByRole('button', { name: 'Next project' });
+  await expect(prev).toBeDisabled();
+  await expect(next).toBeEnabled();
+  await next.click();
+  await expect.poll(() => row.evaluate((el) => el.scrollLeft)).toBeGreaterThan(0);
+  await expect(prev).toBeEnabled();
+  // At the far end the next arrow switches off
+  await row.evaluate((el) => el.scrollTo({ left: el.scrollWidth, behavior: 'instant' }));
+  await expect(next).toBeDisabled();
+});
+
 test('View more projects opens a panel of the other projects, with the same links and README', async ({ page }) => {
   await page.goto('/?3d=off#work');
   await expect(page.locator('#work').getByText('Want to see more projects I’ve worked on?')).toBeVisible();
@@ -326,7 +361,16 @@ test('View more projects opens a panel of the other projects, with the same link
   await page.keyboard.press('Escape');
   await expect(note).toBeHidden();
   await expect(panel).toBeVisible();
-  await expect(panel.locator('article').nth(1)).toContainText('Billfold, GST invoice maker');
+  // Krudex comes next; its repository is private too, so GitHub opens the same note
+  const krudex = panel.locator('article').nth(1);
+  await expect(krudex).toContainText('Krudex Global website');
+  await expect(krudex.getByRole('link', { name: /^Live site/ })).toHaveAttribute('href', 'https://krudex.in/');
+  await expect(krudex.getByRole('link', { name: /^GitHub/ })).toHaveCount(0);
+  await krudex.getByRole('button', { name: /^GitHub/ }).click();
+  await expect(note).toContainText("I can't share the GitHub link");
+  await page.keyboard.press('Escape');
+  await expect(note).toBeHidden();
+  await expect(panel.locator('article').nth(2)).toContainText('Billfold, GST invoice maker');
   const card = panel.locator('article').filter({ hasText: 'Billfold, GST invoice maker' });
   await expect(card.getByRole('link', { name: /^GitHub/ })).toHaveAttribute('href', 'https://github.com/mdecoder24/BillFold');
   await expect(card.getByRole('link', { name: /^Live site/ })).toHaveAttribute('href', 'https://billifold.netlify.app/');

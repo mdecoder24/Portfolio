@@ -1,6 +1,7 @@
 // The single content entry point: pages import from here and pass typed props down.
 import { billfold } from './projects/billfold.ts';
 import { kemplast } from './projects/kemplast.ts';
+import { krudex } from './projects/krudex.ts';
 import { munWebsite } from './projects/mun-website.ts';
 import { sensai } from './projects/sensai.ts';
 import { signLanguageRecognition } from './projects/sign-language-recognition.ts';
@@ -16,6 +17,6 @@ export { freelance } from './freelance.ts';
 export { certifications } from './certifications.ts';
 
 // Featured projects show in the main grid, in this order; the rest open from "View more projects"
-export const projects: CaseStudy[] = [signLanguageRecognition, munWebsite, sensai, tedxMlrit, kemplast, billfold];
+export const projects: CaseStudy[] = [signLanguageRecognition, munWebsite, sensai, tedxMlrit, kemplast, krudex, billfold];
 
 export const caseStudyHref = (c: CaseStudy) => `/projects/${c.slug}`;

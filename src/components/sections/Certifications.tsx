@@ -17,6 +17,7 @@ import type { CSSProperties } from 'react';
 import { buttonClasses } from '@/components/ui/Button';
 import { SampleRibbon } from '@/components/ui/SampleRibbon';
 import { Section } from '@/components/ui/SectionHeader';
+import { ScrollCue } from '@/components/ui/ScrollCue';
 import type { Certification } from '@/content/schema';
 
 const ICONS = {
@@ -95,7 +96,7 @@ function MoreCertifications({ certs }: { certs: Certification[] }) {
         popover="auto"
         role="dialog"
         aria-labelledby="more-certifications-title"
-        className="more-panel m-auto max-h-[88dvh] w-[min(72rem,calc(100%-2rem))] overflow-y-auto overscroll-contain rounded-lg border border-rule-strong bg-paper text-ink shadow-float backdrop:bg-paper-veil"
+        className="more-panel scroll-visible m-auto max-h-[88dvh] w-[min(72rem,calc(100%-2rem))] overflow-y-auto overscroll-contain rounded-lg border border-rule-strong bg-paper text-ink shadow-float backdrop:bg-paper-veil"
       >
         <div className="sticky top-0 z-10 flex items-center justify-between gap-4 border-b border-rule bg-paper px-6 py-4 sm:px-10">
           <div className="grid gap-0.5">
@@ -123,6 +124,7 @@ function MoreCertifications({ certs }: { certs: Certification[] }) {
             </li>
           ))}
         </ul>
+        <ScrollCue />
       </div>
     </div>
   );

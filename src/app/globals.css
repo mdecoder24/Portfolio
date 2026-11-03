@@ -1303,3 +1303,107 @@ ul:has(> .stack-card) {
 :root[data-motion='reduced'] .invite:hover {
   translate: none;
 }
+
+/*
+ * Scrollbars that stay on screen, for the project row and the more-projects panel, so it is clear they scroll. macOS
+ * hides overlay scrollbars until you scroll; Chrome and Safari keep a styled ::-webkit-scrollbar visible, and only
+ * when no scrollbar-color is set (the page's is inherited, so it is reset here). Firefox gets a thin standard bar.
+ */
+.scroll-visible {
+  scrollbar-color: auto;
+}
+.scroll-visible::-webkit-scrollbar {
+  width: var(--space-2);
+  height: var(--space-2);
+}
+.scroll-visible::-webkit-scrollbar-track {
+  background: var(--plate);
+  border-radius: var(--radius-control);
+}
+.scroll-visible::-webkit-scrollbar-thumb {
+  background: var(--rule-strong);
+  border-radius: var(--radius-control);
+}
+.scroll-visible::-webkit-scrollbar-thumb:hover {
+  background: var(--ink-2);
+}
+@supports not selector(::-webkit-scrollbar) {
+  .scroll-visible {
+    scrollbar-width: thin;
+    scrollbar-color: var(--rule-strong) var(--plate);
+  }
+}
+
+/* A panel's "Scroll for more" cue fades out over the last stretch of scrolling, tied to the scroll position */
+@supports (animation-timeline: scroll()) {
+  .scroll-cue {
+    animation: scroll-cue-out linear both;
+    animation-timeline: scroll(nearest block);
+    animation-range: 80% 100%;
+  }
+}
+@keyframes scroll-cue-out {
+  to {
+    opacity: 0;
+  }
+}
+
+/*
+ * The cue is lit: a beam circles its border, the same light as the project cards, while a soft accent glow breathes
+ * behind it and the arrow nudges down. Under reduced motion the beam, glow and nudge all stop and the plain pill stays.
+ */
+.scroll-cue-pill::before,
+.scroll-cue-pill::after {
+  content: '';
+  position: absolute;
+  pointer-events: none;
+  border-radius: inherit;
+}
+.scroll-cue-pill::before {
+  inset: -1px;
+  padding: 1px;
+  background: conic-gradient(
+    from var(--beam),
+    transparent 0 60%,
+    color-mix(in oklab, var(--color-accent) 70%, transparent) 80%,
+    var(--color-ink) 90%,
+    transparent 100%
+  );
+  mask:
+    linear-gradient(#000 0 0) content-box exclude,
+    linear-gradient(#000 0 0);
+  animation: project-orbit 2.4s linear infinite;
+}
+.scroll-cue-pill::after {
+  z-index: -1;
+  inset: -6px;
+  background: color-mix(in oklab, var(--color-accent) 35%, transparent);
+  filter: blur(10px);
+  opacity: 0.35;
+  animation: scroll-cue-glow 2.4s ease-in-out infinite;
+}
+.scroll-cue-arrow {
+  animation: scroll-cue-nudge 1.6s var(--ease-in-out-quint) infinite;
+}
+@keyframes scroll-cue-glow {
+  50% {
+    opacity: 0.8;
+  }
+}
+@keyframes scroll-cue-nudge {
+  50% {
+    translate: 0 2px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  :root:not([data-motion='full']) .scroll-cue-pill::before,
+  :root:not([data-motion='full']) .scroll-cue-pill::after,
+  :root:not([data-motion='full']) .scroll-cue-arrow {
+    animation: none;
+  }
+}
+:root[data-motion='reduced'] .scroll-cue-pill::before,
+:root[data-motion='reduced'] .scroll-cue-pill::after,
+:root[data-motion='reduced'] .scroll-cue-arrow {
+  animation: none;
+}
