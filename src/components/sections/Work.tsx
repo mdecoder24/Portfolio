@@ -10,7 +10,6 @@ import { caseStudyHref } from '@/content';
 import type { CaseStudy } from '@/content/schema';
 import { cn } from '@/lib/cn';
 import { DeviceStage } from './DeviceStage';
-import { ProjectRail } from './ProjectRail';
 import { ProjectReadme } from './ProjectReadme';
 import { BRAND_PATHS } from './stack-logos';
 
@@ -184,7 +183,7 @@ function Card({
   return (
     <article
       className={cn(
-        'project-card relative isolate grid h-full content-start gap-5 rounded-md border border-rule bg-paper-veil p-4 sm:p-6',
+        'project-card relative isolate grid content-start gap-5 rounded-md border border-rule bg-paper-veil p-4 sm:p-6',
         !inPanel && 'reveal',
       )}
       style={{ '--reveal-delay': `${column * 80}ms` } as CSSProperties}
@@ -216,14 +215,11 @@ function Group({
         <span className="type-code text-ink-2">{studies.length} projects</span>
       </h3>
       {compact ? (
-        // Each card is a little under half the row, so the next one peeks in and the row reads as scrollable
-        <ProjectRail label={title}>
+        <div className="grid gap-x-8 gap-y-16 md:grid-cols-2 lg:gap-y-20">
           {studies.map((s, i) => (
-            <li key={s.slug} className="w-[85%] shrink-0 snap-start md:w-[46%]">
-              <Card study={s} n={offset + i + 1} column={i % 2} />
-            </li>
+            <Card key={s.slug} study={s} n={offset + i + 1} column={i % 2} />
           ))}
-        </ProjectRail>
+        </div>
       ) : (
         <div className="grid gap-20 lg:gap-28">
           {studies.map((s, i) => (
@@ -247,8 +243,8 @@ function MoreProjects({ studies, offset }: { studies: CaseStudy[]; offset: numbe
       {/* An invitation card rather than a bare button, so the hidden projects read as worth a look */}
       <div className="invite relative isolate grid w-full max-w-2xl justify-items-center gap-6 overflow-hidden rounded-lg border border-rule bg-paper-veil px-6 py-10 text-center shadow-float backdrop-blur-md sm:px-12 sm:py-12">
         <div className="grid gap-2">
-          <p className="invite-item type-h3 text-ink [--i:0]">Want to see more projects I&rsquo;ve worked on?</p>
-          <p className="invite-item type-body text-ink-2 [--i:1]">A few more builds, each with its own write-up.</p>
+          <p className="invite-item type-h3 text-ink [--i:0]">These aren&rsquo;t the only things I&rsquo;ve built</p>
+          <p className="invite-item type-body text-ink-2 [--i:1]">I&rsquo;ve also built client websites, my studio&rsquo;s own site and a GST invoice maker. Each one has its own write-up.</p>
         </div>
         {/* The wrapper takes the entrance, so the button keeps its own press transition */}
         <div className="invite-item [--i:2]">

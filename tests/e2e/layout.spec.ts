@@ -324,26 +324,9 @@ test('experience cards stack as a deck on scroll, and an opened card stops stick
   await expect(card).toHaveCSS('position', 'relative');
 });
 
-test('the featured projects scroll sideways, by the arrows or the row itself', async ({ page }) => {
-  await page.goto('/?3d=off#work');
-  const row = page.locator('#work').getByRole('list', { name: 'My projects' });
-  await expect(row.getByRole('listitem')).toHaveCount(4);
-  await expect(row).toHaveCSS('overflow-x', 'auto');
-  const prev = page.locator('#work').getByRole('button', { name: 'Previous project' });
-  const next = page.locator('#work').getByRole('button', { name: 'Next project' });
-  await expect(prev).toBeDisabled();
-  await expect(next).toBeEnabled();
-  await next.click();
-  await expect.poll(() => row.evaluate((el) => el.scrollLeft)).toBeGreaterThan(0);
-  await expect(prev).toBeEnabled();
-  // At the far end the next arrow switches off
-  await row.evaluate((el) => el.scrollTo({ left: el.scrollWidth, behavior: 'instant' }));
-  await expect(next).toBeDisabled();
-});
-
 test('View more projects opens a panel of the other projects, with the same links and README', async ({ page }) => {
   await page.goto('/?3d=off#work');
-  await expect(page.locator('#work').getByText('Want to see more projects I’ve worked on?')).toBeVisible();
+  await expect(page.locator('#work').getByText('These aren’t the only things I’ve built')).toBeVisible();
   const open = page.locator('#work').getByRole('button', { name: /^View more projects/ });
   await expect(open).toHaveText('View more projects');
   await expect(page.locator('#work').getByRole('list', { name: 'Also in the panel' })).toHaveCount(0);

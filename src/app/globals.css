@@ -1305,7 +1305,7 @@ ul:has(> .stack-card) {
 }
 
 /*
- * Scrollbars that stay on screen, for the project row and the more-projects panel, so it is clear they scroll. macOS
+ * Scrollbars that stay on screen, for the view-more panels, so it is clear they scroll. macOS
  * hides overlay scrollbars until you scroll; Chrome and Safari keep a styled ::-webkit-scrollbar visible, and only
  * when no scrollbar-color is set (the page's is inherited, so it is reset here). Firefox gets a thin standard bar.
  */
