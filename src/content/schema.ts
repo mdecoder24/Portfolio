@@ -154,7 +154,7 @@ export const Profile = z.object({
     .array(z.object({ term: z.string(), detail: z.string() }))
     .min(2)
     .max(5),
-  interests: z.array(z.string()).min(1).max(5),
+  interests: z.array(z.string()).min(1).max(8),
   now: z.string(),
   /**
    * The hero photograph: a path under /public, cropped 4:5. Until it is set, the 3D KR monogram fills the frame. It has
