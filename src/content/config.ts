@@ -6,7 +6,7 @@ export const config = Config.parse({
     openToRoles: false,
     replyTime: 'within 24 hours',
   },
-  flags: { pearl: false, threeD: true, showCgpa: true },
+  flags: { pearl: true, threeD: true, showCgpa: true },
   links: {
     email: 'kushwant.work@gmail.com',
     linkedin: 'https://www.linkedin.com/in/kushwant-kr',

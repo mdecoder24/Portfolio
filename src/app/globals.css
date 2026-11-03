@@ -41,6 +41,21 @@
   }
 }
 
+/*
+ * The CSS pearl: Pearl's only icon (Nacre: "the pearl is the icon"). Layers, top to bottom: a soft specular highlight,
+ * a cool rim where the sphere turns away, a warm nacre sheen at the lower edge, then the shaded body. Built from tokens,
+ * so it follows the theme; a hairline rim keeps it legible on the cream launcher.
+ */
+@utility kr-pearl {
+  border-radius: 9999px;
+  background:
+    radial-gradient(circle at 34% 28%, var(--metal-1) 0 9%, color-mix(in oklab, var(--metal-1) 0%, transparent) 30%),
+    radial-gradient(circle at 50% 50%, transparent 58%, color-mix(in oklab, var(--metal-3) 55%, transparent) 100%),
+    radial-gradient(circle at 70% 82%, color-mix(in oklab, var(--accent) 38%, transparent) 0, transparent 48%),
+    radial-gradient(circle at 40% 35%, var(--cream) 0%, var(--metal-2) 62%, var(--metal-3) 100%);
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--metal-3) 45%, transparent);
+}
+
 @utility kr-caret {
   animation: kr-blink 1.1s steps(1) infinite;
 }

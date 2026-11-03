@@ -2,6 +2,7 @@ import { BackdropMount } from '@/components/layout/BackdropMount';
 import { RevealObserver } from '@/components/layout/RevealObserver';
 import { SiteChrome } from '@/components/layout/SiteChrome';
 import { StickyIntro } from '@/components/layout/StickyIntro';
+import { PearlMount } from '@/components/pearl/PearlMount';
 import { About } from '@/components/sections/About';
 import { Certifications } from '@/components/sections/Certifications';
 import { Contact } from '@/components/sections/Contact';
@@ -11,6 +12,7 @@ import { Freelance } from '@/components/sections/Freelance';
 import { Hero } from '@/components/sections/Hero';
 import { Work } from '@/components/sections/Work';
 import * as content from '@/content';
+import { buildKnowledge } from '@/lib/pearl-local/knowledge';
 import { jsonLd, personLd } from '@/lib/seo';
 
 export default function Home() {
@@ -34,6 +36,15 @@ export default function Home() {
         <Contact index={next()} config={config} profile={profile} projectHref={content.freelance.cta?.href} />
         <RevealObserver />
       </SiteChrome>
+      {config.flags.pearl && (
+        <PearlMount
+          data={{
+            sections: buildKnowledge(content),
+            skills: content.skills.map((s) => ({ name: s.name, evidence: s.evidence })),
+            email: config.links.email,
+          }}
+        />
+      )}
     </>
   );
 }
