@@ -17,6 +17,6 @@ export const profile = Profile.parse({
     { term: 'Freelance', detail: '14+ projects shipped' },
   ],
   interests: ['LLM apps and RAG', 'Full-stack web', 'Computer vision'],
-  now: 'Running the Knowvation Learnings website',
+  now: 'Founder of Krudex Global, ASE at Knowvation Learnings, and freelancing',
   portrait: '/media/portrait.png',
 });
