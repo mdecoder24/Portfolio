@@ -6,13 +6,13 @@ export const experience = Experience.array().parse([
   {
     id: 'krudex',
     role: 'Founder',
-    org: 'Krudex Technologies',
+    org: 'Krudex Global',
     logo: '/media/logos/krudex.png',
     start: '2025-09',
     current: true,
     // From krudex.in and the company's LinkedIn page
     points: [
-      'Founded Krudex Technologies, a remote-first studio in Hyderabad that builds SaaS products, web and mobile apps, and AI features',
+      'Founded Krudex Global, a remote-first studio in Hyderabad that builds SaaS products, web and mobile apps, and AI features',
       'Run each build through one process: a scoping call, an architecture document and statement of work, a senior-led build, then launch with a 30-day warranty',
       'Hand clients 100% of the source code and IP at the end of every project',
       'Also offer Google Ads and digital marketing, and student training with NovaSkill Hub',
